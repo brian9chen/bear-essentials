@@ -19,9 +19,16 @@ Brian Chen
     After the meeting, he focused on designing the relevant entities and relationships for the reviews feature and outlined these specifications in the Review table. 
     He worked on linking the Review entity with the users, sellers, and products, as well as outlining how the reviews feature will be integrated into the website in the Google Slides mockup of the website. 
     Finally, he described the constraints and assumptions of the Review entity in the REPORT PDF.
-
 Claire Luo
+    Claire met with all members to fork and set up the GitLab repository and Google Drive folder containing shared documents, draft an E/R diagram for the website database, and plan individual next steps.
+    After the meeting, she designed the interface for the user internal profile view, public profile view, and purchases pages on the page-by-page Google Slides mockups.
+    She also wrote up the description and logical flow for the user login, internal profile, and public profile pages.
+    She helped work on the user flow and E/R diagram drawings. Finally, she outlined content for the README file.
 Hannah Wang
+    Hannah met with all members to fork and set up the team GitLab repository and Google Drive folder, draft an E/R diagram for the website database, and plan individual next steps.
+    After the meeting, she focused on the inventory and order-fulfillment pages, adding bulleted descriptions, logical flow and diagrams to the page-by-page Google Slides mockup of the website.
+    She also did final edits on the E/R diagram, and described the inventory and order-fulfillment related tables in the REPORT PDF.
+    Finally, she outlined content for the README text file.
 Kayla Liang
     Kayla met with all members to fork and set up the team GitLab repository and Google Drive folder, draft an E/R diagram for the website database, and plan individual next steps.
     After the meeting, she focused on the cart and order pages, adding bulleted information and diagrams to the page-by-page Google Slides mockup of the website.
