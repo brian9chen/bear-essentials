@@ -15,7 +15,7 @@ Our team/website name is Kawaii Korner.
 
 Our Work:
 Brian Chen
-	Met with all members to fork and set up the team GitLab repository and Google Drive folder, draft an E/R diagram for the website database, and plan individual next steps. 
+    Met with all members to fork and set up the team GitLab repository and Google Drive folder, draft an E/R diagram for the website database, and plan individual next steps. 
     After the meeting, he focused on designing the relevant entities and relationships for the reviews feature and outlined these specifications in the Review table. 
     He worked on linking the Review entity with the users, sellers, and products, as well as outlining how the reviews feature will be integrated into the website in the Google Slides mockup of the website. 
     Finally, he described the constraints and assumptions of the Review entity in the REPORT PDF.
