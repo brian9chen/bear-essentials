@@ -13,7 +13,7 @@ CREATE TABLE Users (
     state VARCHAR(50) NOT NULL,
     country_code VARCHAR(3) NOT NULL,
     postal_code VARCHAR(9) NOT NULL,
-    main_phone VARCHAR(20) NOT NULL
+    main_phone VARCHAR(20) NOT NULL,
     balance DECIMAL(10, 2) DEFAULT 0.00
 );
 
