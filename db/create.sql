@@ -24,7 +24,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2),
     description TEXT,
-    SKU VARCHAR(255) NOT NULL,
+    -- SKU VARCHAR(255) NOT NULL, take out for now 
     category VARCHAR(255) NOT NULL,
     discount_code VARCHAR(20),
     prod_avg_rating DECIMAL(12,2) DEFAULT 0,
