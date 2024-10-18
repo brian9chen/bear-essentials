@@ -8,6 +8,8 @@ from .models.purchase import Purchase
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+from flask import request 
+
 
 @bp.route('/')
 def index():
@@ -23,3 +25,10 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases)
+@bp.route('/most_expensive_products', methods=('GET', 'POST'))
+def top_k():
+    if request.method == 'POST':
+        k = request.form.get('k', type=int)
+        products = Product.most_expensive_products(k)
+        return render_template('index.html', avail_products=products)
+    return render_template('index.html')
