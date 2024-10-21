@@ -4,6 +4,12 @@
 
 <br><br>
 
+<form action="{{ url_for('index.top_k') }}" method="POST">
+  <label for="k">Enter the number of most expensive products you'd like to search for:</label>
+  <input type="number" name="k" id="k" placeholder=" " required>
+  <input type="submit" value="submit"/>
+</form>
+
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -11,6 +17,7 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col">Description</th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +26,7 @@
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+        <td>{{product.description}}</td>
       </tr>
     {% endfor %}
   </tbody>
