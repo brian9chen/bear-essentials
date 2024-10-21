@@ -2,13 +2,11 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, uid, pid, time_purchased, quantity, price):
+    def __init__(self, id, uid, pid, time_purchased):
         self.id = id
         self.uid = uid
         self.pid = pid
         self.time_purchased = time_purchased
-        self.quantity = quantity
-        self.price = price
 
     @staticmethod
     def get(id):
@@ -47,7 +45,7 @@ WHERE uid = :uid
     @staticmethod
     def get_by_uid(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased, quantity, price
+SELECT id, uid, pid, time_purchased
 FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
@@ -60,7 +58,5 @@ ORDER BY time_purchased DESC
             'id': self.id,
             'uid': self.uid,
             'pid': self.pid,
-            'time_purchased': self.time_purchased.isoformat(),
-            'quantity': self.quantity,
-            'price': self.price
+            'time_purchased': self.time_purchased.isoformat()
         }
