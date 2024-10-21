@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>User Purchases</h1>
+<form id="user-purchases-form">
+  <label for="user-id">User ID:</label>
+  <input type="number" id="user-id" name="user-id" required>
+  <button type="submit">Get Purchases</button>
+</form>
+
+<div id="purchases-results"></div>
+
+<script>
+document.getElementById('user-purchases-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const userId = document.getElementById('user-id').value;
+  fetch(`/api/user_purchases?user_id=${userId}`)
+    .then(response => response.json())
+    .then(data => {
+      const resultsDiv = document.getElementById('purchases-results');
+      if (data.error) {
+        resultsDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+      } else if (data.length === 0) {
+        resultsDiv.innerHTML = '<p>No purchases found for this user.</p>';
+      } else {
+        let html = '<h2>Purchases:</h2><ul>';
+        data.forEach(purchase => {
+          html += `<li>Product ID: ${purchase.pid}, Quantity: ${purchase.quantity}, Price: $${purchase.price}, Time: ${new Date(purchase.time_purchased).toLocaleString()}</li>`;
+        });
+        html += '</ul>';
+        resultsDiv.innerHTML = html;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('purchases-results').innerHTML = '<p>An error occurred while fetching the data.</p>';
+    });
+});
+</script>
+{% endblock %}

@@ -3,7 +3,6 @@ from flask_login import LoginManager
 from .config import Config
 from .db import DB
 
-
 login = LoginManager()
 login.login_view = 'users.login'
 
@@ -20,5 +19,9 @@ def create_app():
 
     from .users import bp as user_bp
     app.register_blueprint(user_bp)
+    
+    from .purchases import bp as purchases_bp
+    app.register_blueprint(purchases_bp)
 
     return app
+
