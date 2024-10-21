@@ -67,7 +67,7 @@
         <td>{{ user.email }}</td>
         <td>
           <form action="{{ url_for('index.get_top_reviews', user_id=user.id) }}" method="GET">
-            <input type="submit" value="See Reviews" class="btn btn-primary"/>
+            <input type="submit" value="See Recent Reviews" class="btn btn-primary"/>
           </form>
         </td>
       </tr>
