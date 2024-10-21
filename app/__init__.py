@@ -21,4 +21,7 @@ def create_app():
     from .users import bp as user_bp
     app.register_blueprint(user_bp)
 
+    from .cartitem import bp as cartitem_bp
+    app.register_blueprint(cartitem_bp)
+
     return app

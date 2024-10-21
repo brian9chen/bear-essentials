@@ -9,7 +9,7 @@ from flask import jsonify
 bp = Blueprint('index', __name__)
 
 
-@bp.route('/cart')
+@bp.route('/carts')
 def index():
     # get cart of current_user
     products = Product.get(current_user.id)
