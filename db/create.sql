@@ -6,7 +6,7 @@ CREATE TABLE Users (
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL
+    lastname VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     balance DECIMAL DEFAULT 0,
     CHECK(balance >= 0)
@@ -19,7 +19,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2),
     description TEXT,
-    SKU VARCHAR(255) NOT NULL,
+    -- SKU VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     discount_code VARCHAR(20),
     prod_avg_rating DECIMAL(12,2) DEFAULT 0,
