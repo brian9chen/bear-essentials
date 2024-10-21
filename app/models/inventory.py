@@ -23,8 +23,7 @@ class Inventory:
     def get_all_by_user(user_id):
         rows = app.db.execute('''
             SELECT i.id, i.user_id, i.pid, i.quantity_in_stock, i.quantity_to_fulfill, i.quantity_back_to_stock,
-                   p.name, p.price, p.description, p.category
-            FROM Inventory i
+       p.name, p.price, p.description, p.category FROM Inventory i 
             JOIN Products p ON i.pid = p.id
             WHERE i.user_id = :user_id
         ''', user_id=user_id)
