@@ -3,7 +3,6 @@ from flask_login import LoginManager
 from .config import Config
 from .db import DB
 
-
 login = LoginManager()
 login.login_view = 'users.login'
 
@@ -23,5 +22,8 @@ def create_app():
 
     from .cartitem import bp as cartitem_bp
     app.register_blueprint(cartitem_bp)
+
+    from .inventory import bp as inventory_bp
+    app.register_blueprint(inventory_bp)  
 
     return app
