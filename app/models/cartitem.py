@@ -24,7 +24,7 @@ class CartItem:
         rows = app.db.execute('''
         SELECT c.id, c.uid, c.inv_id, c.quantity, c.time_created, c.time_modified, p.name, p.price
         FROM CartItems c, Inventory i, Products p
-        WHERE c.uid = 0 AND c.inv_id = i.id AND i.pid = p.id
+        WHERE c.uid = :uid AND c.inv_id = i.id AND i.pid = p.id
         ORDER BY time_created DESC
         ''',
                               uid=uid)

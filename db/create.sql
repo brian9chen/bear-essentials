@@ -56,3 +56,6 @@ CREATE TABLE CartItems (
     time_created timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
 );
+
+ALTER TABLE Users
+ALTER COLUMN address DROP NOT NULL;
