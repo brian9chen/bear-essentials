@@ -46,7 +46,7 @@ CREATE TABLE Reviews (
     product_id INT NOT NULL REFERENCES Products(id),
     rating DECIMAL(12,2),
     description TEXT,
-    time_created timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
-    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
-    num_upvotes INTEGER DEFAULT 0,
+    time_created timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    num_upvotes INTEGER DEFAULT 0
 );
