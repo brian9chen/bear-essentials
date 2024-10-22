@@ -42,16 +42,16 @@ WHERE uid = :uid
         return [Purchase(*row) for row in rows]
     
 
-    @staticmethod
-    def get_by_uid(uid):
-        rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
-FROM Purchases
-WHERE uid = :uid
-ORDER BY time_purchased DESC
-''', 
-                              uid=uid)
-        return [Purchase(*row) for row in rows]
+#     @staticmethod
+#     def get_by_uid(uid):
+#         rows = app.db.execute('''
+# SELECT id, uid, pid, time_purchased
+# FROM Purchases
+# WHERE uid = :uid
+# ORDER BY time_purchased DESC
+# ''', 
+#                               uid=uid)
+#         return [Purchase(*row) for row in rows]
 
     def to_dict(self):
         return {

@@ -45,13 +45,16 @@ WHERE email = :email
     def register(email, password, firstname, lastname):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
+INSERT INTO Users(email, password, firstname, lastname, address, balance)
+VALUES(:email, :password, :firstname, :lastname, :address, :balance)
 RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname, lastname=lastname)
+                                  firstname=firstname,
+                                  lastname=lastname,
+                                  address='',  # You may want to add an address field to your registration form
+                                  balance=0)  # Set a default balance
             id = rows[0][0]
             return User.get(id)
         except Exception as e:
@@ -64,7 +67,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
+SELECT id, email, firstname, lastname, address, balance
 FROM Users
 WHERE id = :id
 """,

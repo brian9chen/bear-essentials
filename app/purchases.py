@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, render_template
-from .models.purchase import Purchase
+from .models.product import Product
 from flask_login import login_required
 
 bp = Blueprint('purchases', __name__)
@@ -9,14 +9,9 @@ def get_user_purchases():
     user_id = request.args.get('user_id')
     if not user_id:
         return jsonify({"error": "User ID is required"}), 400
-    
 
-
-    purchases = Purchase.get_by_uid(user_id)
-    return jsonify([purchase.to_dict() for purchase in purchases])
-    # except Exception as e:
-    #     current_app.logger.error(f"Error fetching purchases for user {user_id}: {e}")
-    #     return jsonify({"error": "An error occurred while fetching the data"}), 500
+    purchased_products = Product.getPurchasesProducts(user_id)
+    return jsonify(purchased_products)
 
 @bp.route('/purchases')
 def purchases():
