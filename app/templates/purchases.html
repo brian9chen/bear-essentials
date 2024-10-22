@@ -43,5 +43,7 @@
     </table>
 {% elif user %}
     <p>No purchases found for this user.</p>
+{% else %}
+    <p>Please enter a User ID to view purchases.</p>
 {% endif %}
 {% endblock %}
