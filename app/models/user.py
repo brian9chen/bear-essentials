@@ -2,9 +2,6 @@ from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .. import login
-
-
 class User(UserMixin):
     def __init__(self, id, email, firstname, lastname):
         self.id = id
@@ -13,12 +10,22 @@ class User(UserMixin):
         self.lastname = lastname
 
     @staticmethod
+    def get(id):
+        rows = app.db.execute('''
+SELECT id, email, firstname, lastname
+FROM Users
+WHERE id = :id
+''',
+                              id=id)
+        return User(*(rows[0])) if rows else None
+
+    @staticmethod
     def get_by_auth(email, password):
-        rows = app.db.execute("""
+        rows = app.db.execute('''
 SELECT password, id, email, firstname, lastname
 FROM Users
 WHERE email = :email
-""",
+''',
                               email=email)
         if not rows:  # email not found
             return None
@@ -30,11 +37,11 @@ WHERE email = :email
 
     @staticmethod
     def email_exists(email):
-        rows = app.db.execute("""
+        rows = app.db.execute('''
 SELECT email
 FROM Users
 WHERE email = :email
-""",
+''',
                               email=email)
         return len(rows) > 0
 
@@ -58,12 +65,9 @@ RETURNING id
             return None
 
     @staticmethod
-    @login.user_loader
-    def get(id):
-        rows = app.db.execute("""
+    def get_all():
+        rows = app.db.execute('''
 SELECT id, email, firstname, lastname
 FROM Users
-WHERE id = :id
-""",
-                              id=id)
-        return User(*(rows[0])) if rows else None
+''')
+        return [User(*row) for row in rows]
