@@ -32,3 +32,10 @@ def top_k():
         products = Product.most_expensive_products(k)
         return render_template('index.html', avail_products=products)
     return render_template('index.html')
+@bp.route('/filter_by_keyword', methods=('GET', 'POST'))
+def search_keyword():
+    if request.method == 'POST':
+        keyword = request.form.get('keyword', type=str)
+        products = Product.filter_by_keyword(keyword)
+        return render_template('index.html', avail_products=products)
+    return render_template('index.html')
