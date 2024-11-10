@@ -4,10 +4,23 @@
 
 <br><br>
 
-<form action="{{ url_for('index.top_k') }}" method="POST">
-  <label for="k">Enter the number of most expensive products you'd like to search for:</label>
-  <input type="number" name="k" id="k" placeholder=" " required>
-  <input type="submit" value="submit"/>
+<!-- Sort buttons-->
+<div>
+  <a href="{{ url_for('index.index', sort_order='asc') }}">Price Lowest to Highest&nbsp;&nbsp;</a>
+  <a href="{{ url_for('index.index', sort_order='desc') }}">Price Highest to Lowest</a>
+</div>
+
+<form method="POST" action="{{ url_for('index.index') }}">
+  <label for="category">Select Category:</label>
+  <select name="category" id="category">
+      <option value="">--Select a Category--</option>
+      {% for category in categories %}
+          <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
+              {{ category }}
+          </option>
+      {% endfor %}
+  </select>
+  <button type="submit">Filter</button>
 </form>
 
 <form action="{{ url_for('index.search_keyword') }}" method="POST">
@@ -15,6 +28,8 @@
   <input type="string" name="keyword" id="keyword" placeholder=" " required>
   <input type="submit" value="submit"/>
 </form>
+
+<br><br>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
@@ -24,15 +39,33 @@
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Description</th>
+      <th scope="col">Image</th>
+      <th scope="col">Average Rating</th>
+      <th scope="col">Category</th>
     </tr>
   </thead>
   <tbody>
-    {% for product in avail_products%}
+    {% for product in avail_products %}
       <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-        <td>{{product.description}}</td>
+        <th scope="row">{{ product.id }}</th>
+        <!-- Link the product name to the product detail page -->
+        <td>
+          <a href="{{ url_for('index.product_detail', id=product.id) }}">
+            {{ product.name }}
+          </a>
+        </td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.description }}</td>
+        <!-- Display the product image if available, otherwise show a placeholder -->
+        <td>
+          {% if product.image_path %}
+            <img src="{{ product.image_path }}" alt="Image of {{ product.name }}" style="width: 50px; height: auto;">
+          {% else %}
+            <span>No image</span>
+          {% endif %}
+        </td>
+        <td>{{ product.prod_avg_rating }}</td>
+        <td>{{ product.category }}</td>
       </tr>
     {% endfor %}
   </tbody>
@@ -69,31 +102,5 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
-
-<h2>User List:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">User ID</th>
-      <th scope="col">User Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-      <tr>
-        <th scope="row">{{ user.id }}</th>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <form action="{{ url_for('index.get_top_reviews', user_id=user.id) }}" method="GET">
-            <input type="submit" value="See Recent Reviews" class="btn btn-primary"/>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 {% endblock %}

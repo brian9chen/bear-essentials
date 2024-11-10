@@ -1,5 +1,5 @@
 from flask import current_app as app
-
+# need to fix SQL injection attacks 
 
 class Product:
     def __init__(self, id, creator_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available):
@@ -36,6 +36,16 @@ WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]
+
+# get all categories 
+    @staticmethod
+    def get_categories():
+        rows = app.db.execute('''
+SELECT DISTINCT category
+FROM Products
+WHERE category IS NOT NULL
+''')
+        return [row[0] for row in rows]
 
 # FILTER & SORT METHODS 
 # filter by category 
