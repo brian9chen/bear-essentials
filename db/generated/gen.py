@@ -4,19 +4,20 @@ from faker import Faker
 import random
 import markovify
 
-num_users = 100
+num_users = 200
 num_products = 2000
-num_sellers = 100
+num_sellers = 50
 num_purchases = 2500
-num_reviews = 1000
+num_reviews = (num_users - num_sellers)*5
 
 Faker.seed(0)
 fake = Faker()
 
 def get_csv_writer(f):
-    return csv.writer(f, dialect='unix')
+    # return csv.writer(f, dialect='unix')
+    return csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
-
+#id, email, password, first_name, last_name, address, balance
 def gen_users(num_users):
     with open('Users.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -31,7 +32,9 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            writer.writerow([uid, email, password, firstname, lastname])
+            balance = random.randint(0, 10000)
+            address = fake.address()
+            writer.writerow([uid, email, password, firstname, lastname, address, balance])
         print(f'{num_users} generated')
     return
 
@@ -39,12 +42,21 @@ def gen_users(num_users):
 #     with open('Sellers.csv', 'w') as f:
 #         writer = get_csv_writer(f)
 #         print('Sellers...', end=' ', flush=True)
-#         for sid in range(num_sellers):
-#             writer.writerow([sid, shop_name, seller_avg_rating])
+
+
+
+#         # choose 'num_sellers' random users to be sellers
+#         randomIndices = random.sample(range(num_users), num_sellers)
+#         for i in randomIndices:
+#             uid = i
+#             #copy other attributes from user with uid?
+
+#             writer.writerow([uid, shop_name, seller_avg_rating])
 #         print(f'{num_sellers} generated')
 #     return
 
 
+#id, seller_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available
 def gen_products(num_products):
     available_pids = []
     with open('Products.csv', 'w') as f:
@@ -53,16 +65,25 @@ def gen_products(num_products):
         for pid in range(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
+
+            sellerid = 0 # CHANGE ONCE gen_sellers is implemented
+
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 available_pids.append(pid)
+
+            description = "Description for " + name # IMPLEMENT!!!!
+            category = "category" # IMPLEMENT!!!!
+            discount_code = None # IMPLEMENT!!!!
+            prod_avg_rating = 0 # IMPLEMENT!!!!
+            image_path = None # IMPLEMENT!!!!
+            available = True # IMPLEMENT!!!!
+
             writer.writerow([pid, sellerid, name, price, description, category, discount_code, prod_avg_rating, image_path, available])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
-
-#id, creator_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available
 
 
 def gen_purchases(num_purchases, available_pids):
