@@ -22,6 +22,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Description</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -31,6 +32,15 @@
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
         <td>{{product.description}}</td>
+        <td>
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('reviews.write_review', product_id=product.id) }}" class="btn btn-primary">
+              Write a Review
+            </a>
+          {% else %}
+            <span>Login to review</span>
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
   </tbody>
@@ -67,31 +77,5 @@
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
-
-<h2>User List:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">User ID</th>
-      <th scope="col">User Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-      <tr>
-        <th scope="row">{{ user.id }}</th>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <form action="{{ url_for('index.get_top_reviews', user_id=user.id) }}" method="GET">
-            <input type="submit" value="See Recent Reviews" class="btn btn-primary"/>
-          </form>
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 {% endblock %}

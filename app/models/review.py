@@ -1,6 +1,5 @@
 from flask import current_app as app
 
-
 class Review:
     def __init__(self, id, user_id, product_id, rating, description, time_created, time_modified, num_upvotes):
         self.id = id
@@ -15,7 +14,7 @@ class Review:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT *
+SELECT * 
 FROM Reviews
 WHERE id = :id
 ''',
@@ -43,3 +42,11 @@ LIMIT 5
 ''',
                               user_id=user_id)
         return [Review(*row) for row in rows]
+    
+    @staticmethod
+    def get_total_reviews():
+        result = app.db.execute('''
+SELECT COUNT(*) AS total_reviews
+FROM Reviews
+''')
+        return int(result[0][0]) if result else 0
