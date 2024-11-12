@@ -6,8 +6,8 @@
 
 <!-- Sort buttons-->
 <div>
-  <a href="{{ url_for('index.index', sort_order='asc') }}">Price Lowest to Highest&nbsp;&nbsp;</a>
-  <a href="{{ url_for('index.index', sort_order='desc') }}">Price Highest to Lowest</a>
+  <a href="{{ url_for('index.sort_by_price', sort_order='asc') }}">Price Lowest to Highest&nbsp;&nbsp;</a>
+  <a href="{{ url_for('index.sort_by_price', sort_order='desc') }}">Price Highest to Lowest</a>
 </div>
 
 <form method="POST" action="{{ url_for('index.index') }}">
