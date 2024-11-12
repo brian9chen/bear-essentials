@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash
 import csv
 from faker import Faker
+import pandas as pd
 
 num_users = 100
 num_products = 2000
@@ -15,6 +16,8 @@ def get_csv_writer(f):
 
 
 def gen_users(num_users):
+    inventory_df = pd.read_csv('/Users/claire/Documents/CS316/mini-amazon-24-fall/db/generated/Inventory.csv', names=['id', 'user_id', 'product_id', 'qis', 'qtf', 'qbts'])
+
     with open('Users.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
@@ -28,7 +31,15 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            writer.writerow([uid, email, password, firstname, lastname])
+            address = fake.address()
+
+            if uid in inventory_df['user_id']:
+                 is_seller = True
+            else:
+                 is_seller = False
+            
+                 
+            writer.writerow([uid, email, password, firstname, lastname, address, is_seller])
         print(f'{num_users} generated')
     return
 

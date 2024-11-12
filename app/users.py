@@ -6,11 +6,27 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
 from .models.user import User
+from .models.review import Review
 
 
-from flask import Blueprint
+from flask import Blueprint, render_template, abort
 bp = Blueprint('users', __name__)
 
+@bp.route('/user/<int:user_id>', methods=['GET'])
+def public_view(user_id):
+    # Retrieve user data
+    user = User.get(user_id)
+    if not user:
+        abort(404)  # User not found
+
+    # Check if the user is a seller
+    is_seller = user.is_seller if hasattr(user, 'is_seller') else False
+
+    # Fetch reviews if the user is a seller
+    reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
+
+    # Render the public view template
+    return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -42,10 +58,10 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired()])  # New address field
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(),
-                                       EqualTo('password')])
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
     def validate_email(self, email):
@@ -59,10 +75,17 @@ def register():
         return redirect(url_for('index.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        if User.register(form.email.data,
-                         form.password.data,
-                         form.firstname.data,
-                         form.lastname.data):
+        # Use default values for balance and is_seller
+        if User.register(
+            uid=User.get_total_users(),  # Generate a new user ID
+            email=form.email.data,
+            password=form.password.data,
+            firstname=form.firstname.data,
+            lastname=form.lastname.data,
+            address=form.address.data,       # New address field
+            balance=0,                       # Default balance
+            is_seller=False                  # Default to non-seller
+        ):
             flash('Congratulations, you are now a registered user!')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
@@ -72,3 +95,11 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+@bp.route('/user/<int:id>')
+def product(id):
+    user = User.get(id)
+    if user:
+        return render_template('public_view.html', user=user)
+    else:
+        return render_template('public_view.html', user=None)

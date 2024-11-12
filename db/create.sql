@@ -8,8 +8,7 @@ CREATE TABLE Users (
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    balance DECIMAL DEFAULT 0,
-    CHECK(balance >= 0)
+    balance DECIMAL DEFAULT 0 CHECK(balance >= 0)
 );
 
 CREATE TABLE Sellers (
@@ -70,3 +69,7 @@ CREATE TABLE CartItems (
 
 ALTER TABLE Users
 ALTER COLUMN address DROP NOT NULL;
+
+ALTER TABLE Users
+ADD COLUMN is_seller BOOLEAN DEFAULT FALSE;
+

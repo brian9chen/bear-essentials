@@ -3,71 +3,67 @@ from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, password, firstname, lastname, address, balance=0, is_seller=False):
         self.id = id
         self.email = email
+        self.password = password  # Assume this is the hashed password
         self.firstname = firstname
         self.lastname = lastname
+        self.address = address
+        self.balance = balance
+        self.is_seller = is_seller
 
     @staticmethod
-    def get(id):
+    def get(user_id):
         rows = app.db.execute('''
-SELECT id, email, firstname, lastname
-FROM Users
-WHERE id = :id
-''',
-                              id=id)
-        return User(*(rows[0])) if rows else None
+        SELECT id, email, password, firstname, lastname, address, balance, is_seller
+        FROM Users
+        WHERE id = :user_id
+        ''', user_id=user_id)
+        
+        return User(*rows[0]) if rows else None
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute('''
-SELECT password, id, email, firstname, lastname
-FROM Users
-WHERE email = :email
-''',
-                              email=email)
-        if not rows:  # email not found
-            return None
-        elif not check_password_hash(rows[0][0], password):
-            # incorrect password
-            return None
-        else:
-            return User(*(rows[0][1:]))
+        SELECT id, email, password, firstname, lastname, address, balance, is_seller
+        FROM Users
+        WHERE email = :email
+        ''', email=email)
+        
+        if not rows:
+            return None  # Email not found
+
+        # Verify the password
+        if not check_password_hash(rows[0][2], password):
+            return None  # Incorrect password
+
+        # Return the User object without re-hashing the password
+        return User(id=rows[0][0], email=rows[0][1], password=rows[0][2],
+                    firstname=rows[0][3], lastname=rows[0][4], address=rows[0][5],
+                    balance=rows[0][6], is_seller=rows[0][7])
 
     @staticmethod
     def email_exists(email):
         rows = app.db.execute('''
-SELECT email
-FROM Users
-WHERE email = :email
-''',
-                              email=email)
+        SELECT email
+        FROM Users
+        WHERE email = :email
+        ''', email=email)
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(uid, email, password, firstname, lastname, address, balance=0, is_seller=False):
         try:
-            rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING id
-""",
-                                  email=email,
-                                  password=generate_password_hash(password),
-                                  firstname=firstname, lastname=lastname)
-            id = rows[0][0]
-            return User.get(id)
+            hashed_password = generate_password_hash(password)
+            app.db.execute('''
+            INSERT INTO Users(id, email, password, firstname, lastname, address, balance, is_seller)
+            VALUES(:id, :email, :password, :firstname, :lastname, :address, :balance, :is_seller)
+            ''',
+            id=uid, email=email, password=hashed_password,
+            firstname=firstname, lastname=lastname, address=address,
+            balance=balance, is_seller=is_seller)
+            return True
         except Exception as e:
-            # likely email already in use; better error checking and reporting needed;
-            # the following simply prints the error to the console:
             print(str(e))
-            return None
-
-    @staticmethod
-    def get_all():
-        rows = app.db.execute('''
-SELECT id, email, firstname, lastname
-FROM Users
-''')
-        return [User(*row) for row in rows]
+            return False
