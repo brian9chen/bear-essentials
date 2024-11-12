@@ -9,8 +9,8 @@
     <p>Description: {{ product.description }}</p>
     <p>Category: {{ product.category }}</p>
     <p>Average Rating: {{ product.prod_avg_rating }}</p>
-    <!--  <img src="{{ product.image_path }}" alt="{{ product.name }} image"> -->
-
+    <img src="{{ product.image_path }}" alt="{{ product.name }} image"> 
+    <br><br>
     <!-- Link back to home page or previous page -->
     <a href="{{ url_for('index.index') }}">Back to all products</a>
 
