@@ -90,4 +90,3 @@ def submit_review(product_id):
 
     # Logic to save the review, e.g., store it in the database
     return redirect(url_for('index.index'))  # Redirect back to the landing page or a success page
-
