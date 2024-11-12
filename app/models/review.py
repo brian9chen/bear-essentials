@@ -45,12 +45,22 @@ LIMIT 5
         return [Review(*row) for row in rows]
     
     @staticmethod
-    def get_total_reviews():
+    def count_total_reviews():
         result = app.db.execute('''
 SELECT COUNT(*) AS total_reviews
 FROM Reviews
 ''')
         return int(result[0][0]) if result else 0
+    
+#     @staticmethod
+#     def count_reviews_bypid(product_id):
+#         result = app.db.execute('''
+# SELECT COUNT(*) AS total_reviews
+# FROM Reviews
+# WHERE product_id = :product_id
+# ''',
+#                             product_id=int(product_id))
+#         return int(result[0][0]) if result else 0
     
     @staticmethod
     def get_sortedByUpvote_by_pid(product_id):

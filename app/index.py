@@ -76,6 +76,24 @@ def product_detail(id):
         # Handle case if product is not found
         abort(404)
 
-    reviews = Review.get_sortedByUpvote_by_pid(id)
+    # Fetch all reviews for the given product ID, sorted by upvotes
+    all_reviews = Review.get_sortedByUpvote_by_pid(id)
 
-    return render_template('product.html', product=product, reviews=reviews)
+    # Define the number of reviews per page
+    REVIEWS_PER_PAGE = 10
+
+    # Get the page number from the request (default to 1 if not specified)
+    page = request.args.get('page', 1, type=int)
+
+    # Calculate start and end indices for the current page
+    start_index = (page - 1) * REVIEWS_PER_PAGE
+    end_index = start_index + REVIEWS_PER_PAGE
+
+    # Slice the list to get only the reviews for the current page
+    reviews = all_reviews[start_index:end_index]
+
+    # Calculate total pages based on the number of reviews
+    total_reviews = len(all_reviews)
+    total_pages = (total_reviews + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE  # Round up for any remainder
+
+    return render_template('product.html', product=product, reviews=reviews, page=page, total_pages=total_pages)

@@ -60,7 +60,7 @@ def submit_review(product_id):
     review_text = request.form.get('review_text')
 
     # Write this new review to the CSV file
-    review_id = Review.get_total_reviews()
+    review_id = Review.count_total_reviews()
     user_id = current_user.id
     print("ID: " + str(current_user.id) + " Name: " + str(current_user.firstname))
     # csv_file_path = '../db/data/Reviews.csv'

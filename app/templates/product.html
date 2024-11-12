@@ -16,27 +16,6 @@
 
     <br><br>
 
-<!-- Reviews Table -->
-<h2>Reviews</h2>
-<table>
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Review</th>
-            <th>Upvotes</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for review in reviews %}
-        <tr>
-            <td>{{ review.user_id }}</td> <!-- Assuming user ID is part of the Review object -->
-            <td>{{ review.description }}</td>  <!-- Assuming 'content' field holds the review text -->
-            <td>{{ review.num_upvotes }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
     {% if current_user.is_authenticated %}
     <br><br>
     <!-- ADD CORRECT FORM ACTION URL -->
@@ -48,5 +27,41 @@
     <a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
 
     {% endif %}
+
+<!-- Reviews Table -->
+<h2>Reviews</h2>
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Upvotes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+        <tr>
+            <td>{{ review.user_id }}</td> 
+            <td>{{ review.rating }}</td> 
+            <td>{{ review.description }}</td>
+            <td>{{ review.num_upvotes }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ page }} of {{ total_pages }}</span>
+
+    {% if page < total_pages %}
+        <a href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}">Next</a>
+    {% endif %}
+</div>
 
 {% endblock %}
