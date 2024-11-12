@@ -40,7 +40,7 @@ WHERE user_id = :user_id
 ORDER BY time_created DESC
 LIMIT 5
 ''',
-                              user_id=user_id)
+                              user_id=int(user_id))
         return [Review(*row) for row in rows]
     
     @staticmethod

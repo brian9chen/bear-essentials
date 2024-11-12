@@ -28,6 +28,7 @@ def review():
         user_id = request.form.get('user_id', type=int)
         if user_id:
             all_reviews = Review.get_5recent_reviews_by_uid(user_id)
+            print(user_id)
             if not all_reviews:
                 # Handle case where no reviews are found
                 message = f"No reviews found for user with ID {user_id}."
@@ -58,7 +59,7 @@ def submit_review(product_id):
     rating = request.form.get('rating')
     review_text = request.form.get('review_text')
 
-    # Write this new review to the database
+    # Write this new review to the CSV file
     review_id = Review.get_total_reviews()
     user_id = current_user.id
     print("ID: " + str(current_user.id) + " Name: " + str(current_user.firstname))
@@ -73,6 +74,7 @@ def submit_review(product_id):
         writer = csv.writer(csv_file)
         writer.writerow([review_id, user_id, product_id, rating, review_text, time_created, time_modified, num_upvotes])
 
+    # Write to the database
     app.db.execute('''
     INSERT INTO Reviews (id, user_id, product_id, rating, description, time_created, time_modified, num_upvotes)
     VALUES (:review_id, :user_id, :product_id, :rating, :review_text, :time_created, :time_modified, :num_upvotes)
