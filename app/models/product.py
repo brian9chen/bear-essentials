@@ -9,10 +9,10 @@ class Product:
         self.price = price
         self.description = description 
         self.category = category
-        self.discount_code = discount_code 
+        self.discount_code = discount_code
         self.prod_avg_rating = prod_avg_rating
         self.image_path = image_path
-        self.available = available 
+        self.available = available
 
 # GET METHODS  
 # get product based on id 

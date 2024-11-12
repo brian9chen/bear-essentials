@@ -38,3 +38,27 @@ class CartItem:
             "product_name": row[6],
             "product_price": row[7]
         } for row in rows] if rows else []
+    
+    @staticmethod
+    def add(pid, inv_uid, uid, quantity):
+        # gets inventory id from product id and inventory user id
+        inv_id = app.db.execute(
+            """
+            SELECT i.id
+            FROM Inventory i
+            WHERE i.pid = :pid AND i.user_id = :inv_uid
+            """,
+            pid=pid,
+            inv_uid=inv_uid
+        )[0][0]
+        # uses attributes to make new cartitem
+        rows = app.db.execute("""
+        INSERT INTO CartItems(uid, inv_id, quantity)
+        VALUES(:uid, :inv_id, :quantity)
+        RETURNING id
+        """,
+                              uid=uid,
+                              inv_id=inv_id,
+                              quantity=quantity)
+        id = rows[0][0]
+        return CartItem.get(id)
