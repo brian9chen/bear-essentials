@@ -124,6 +124,8 @@ def gen_reviews(num_reviews):
             while review is None:
                 review = text_model.make_sentence()
 
+            review = review.replace(",", "") # make sure there are no commas
+
             # randomly generate a time of creation
             time_posted = fake.date_time()
             time_modified = time_posted
