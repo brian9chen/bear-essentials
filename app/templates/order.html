@@ -5,13 +5,13 @@
 <br><br>
 
 {% if current_user.is_authenticated %}
-<h2>Your Cart:</h2>
+<h2>Your Order:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">Product Name</th>
       <th scope="col">Quantity</th>
-      <th scope="col">Unit Price</th>
+      <th scope="col">Final Price</th>
     </tr>
   </thead>
   <tbody>
@@ -24,11 +24,10 @@
     {% endfor %}
   </tbody>
 </table>
-<h2>Total Price: ${{total_price}}</h2>
-<a class="btn btn-secondary" href="{{url_for('order.submit')}}" role="button">Submit Order</a>
+<h2>Final Price: ${{total_price}}</h2>
 
 {% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your order!</p>
 {% endif %}
 
 {% endblock %}
