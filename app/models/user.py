@@ -3,7 +3,7 @@ from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin):
-    def __init__(self, id, email, password, firstname, lastname, address, balance=0, is_seller=False):
+    def __init__(self, id, email, password, firstname, lastname, address, balance, is_seller):
         self.id = id
         self.email = email
         self.password = password  # Assume this is the hashed password

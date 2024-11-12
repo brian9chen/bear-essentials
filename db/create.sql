@@ -7,9 +7,10 @@ CREATE TABLE Users (
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
-    address VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
     balance DECIMAL DEFAULT 0,
-    CHECK(balance >= 0)
+    CHECK(balance >= 0),
+    is_seller BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Products (
@@ -69,19 +70,21 @@ CREATE TABLE CartItems (
     inv_id INT NOT NULL REFERENCES Inventory(id),
     quantity INT NOT NULL,
     time_created timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
+    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    order_id INT REFERENCES Orders(id),
+    time_fulfilled timestamp without time zone
 );
 
-ALTER TABLE Users
-ALTER COLUMN address DROP NOT NULL;
+-- ALTER TABLE Users
+-- ALTER COLUMN address DROP NOT NULL;
 
-ALTER TABLE CartItems
-ADD COLUMN order_id INT REFERENCES Orders(id);
+-- ALTER TABLE CartItems
+-- ADD COLUMN order_id INT REFERENCES Orders(id);
 
-ALTER TABLE CartItems
-ADD COLUMN time_fulfilled timestamp without time zone;
+-- ALTER TABLE CartItems
+-- ADD COLUMN time_fulfilled timestamp without time zone;
 
-ALTER TABLE Users
-ADD COLUMN is_seller BOOLEAN DEFAULT FALSE;
+-- ALTER TABLE Users
+-- ADD COLUMN is_seller BOOLEAN DEFAULT FALSE;
 
 

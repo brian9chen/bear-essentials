@@ -17,7 +17,7 @@ fake = Faker()
 
 
 def get_csv_writer(f):
-    return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar='\\', dialect='unix')
+    return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
 
 
 def gen_users(num_users):
