@@ -87,8 +87,16 @@ def gen_reviews(num_reviews):
 
         userProductPairs = set()
 
-        positiveReview = "I enjoyed this product and would recommend to others."
-        negativeReview = "This product did not match my expectations and I would not buy it again."
+        positiveReview = """
+        I enjoyed this product and would recommend to others.
+        Excellent quality and worth the price.
+        Very happy with my purchase; it exceeded my expectations.
+        """
+        negativeReview = """
+        This product did not match my expectations and I would not buy it again.
+        The quality was disappointing for the price.
+        Not satisfied with this purchase, and it doesn't work as advertised.
+        """
         reviewModel = [positiveReview, negativeReview]
 
         for id in range(num_reviews):
