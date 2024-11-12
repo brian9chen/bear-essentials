@@ -2,18 +2,22 @@ from werkzeug.security import generate_password_hash
 import csv
 from faker import Faker
 import markovify
+import pandas as pd
 
 num_users = 100
 num_products = 2000
 num_purchases = 2500
 num_reviews = 300
+num_inventory = 50
+num_orders = 70
+num_cart_items = 100
 
 Faker.seed(0)
 fake = Faker()
 
 
 def get_csv_writer(f):
-    return csv.writer(f, dialect='unix')
+    return csv.writer(f, quoting=csv.QUOTE_NONE, dialect='unix')
 
 
 def gen_users(num_users):
@@ -30,11 +34,10 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            address_num = str(fake.random_int(min=1, max=900))
-            address_street = fake.sentence(nb_words=2)[:-1]
-            address = address_num + " " + address_street
+            address = fake.address()
             balance = f'{str(fake.random_int(max=800))}.{fake.random_int(max=99):02}'
-            writer.writerow([uid, email, password, firstname, lastname, address, balance])
+            is_seller = False
+            writer.writerow([uid, email, password, firstname, lastname, address, balance, is_seller])
         print(f'{num_users} generated')
     return
 
@@ -118,13 +121,80 @@ def gen_reviews(num_reviews):
             time_posted = fake.date_time()
             time_modified = time_posted
 
-            writer.writerow([id, uid, pid, rating, review, time_posted, time_modified])
+            writer.writerow([id, uid, pid, rating, review, time_posted, time_modified, 0])
         print(f'{num_reviews} generated')
     return
 
+def gen_inventory(num_inventory):
+    with open('Inventory.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Inventory...', end=' ', flush=True)
+        
+        for inventory_id in range(num_inventory):
+            if inventory_id % 10 == 0:
+                print(f'{inventory_id}', end=' ', flush=True)
+            user_id = fake.random_int(min=0, max=num_users-1) 
+            shop_name = f"{fake.word()} Shop"
+            seller_avg_rating = f'{fake.random_int(min=30, max=50) / 10:.2f}'  
+            pid = fake.random_int(min=0, max=num_products-1)  
+            quantity_in_stock = fake.random_int(min=1, max=100)
+            quantity_to_fulfill = fake.random_int(min=0, max=50)
+            quantity_back_to_stock = fake.random_int(min=0, max=quantity_in_stock // 2)
 
+            writer.writerow([inventory_id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating])
+        
+        print(f'{num_inventory} generated')
+    return
+
+def gen_orders(num_orders):
+    with open('Orders.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Orders...', end=' ', flush=True)
+        order_ids = []
+        for order_id in range(num_orders):
+            if order_id % 10 == 0:
+                print(f'{order_id}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)  
+            total_price = f'{fake.random_int(min=20, max=500)}.{fake.random_int(0, 99):02}' 
+            time_created = fake.date_time_this_year()
+            if fake.boolean(chance_of_getting_true=50): 
+                time_fulfilled = fake.date_time_between_dates(datetime_start=time_created)
+            else:
+                time_fulfilled = None 
+            writer.writerow([order_id, uid, total_price, time_created, time_fulfilled])
+            order_ids.append(order_id) 
+            
+        print(f'{num_orders} generated')
+    return order_ids
+
+def gen_cart_items(num_cart_items, order_ids):
+    with open('CartItems.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('CartItems...', end=' ', flush=True)
+        
+        for cart_id in range(num_cart_items):
+            if cart_id % 10 == 0:
+                print(f'{cart_id}', end=' ', flush=True)
+            uid = fake.random_int(min=0, max=num_users-1)  
+            inv_id = fake.random_int(min=0, max=num_inventory-1)  
+            quantity = fake.random_int(min=1, max=10)  
+            time_created = fake.date_time_this_year()
+            time_modified = fake.date_time_between_dates(datetime_start=time_created)
+            if fake.boolean(chance_of_getting_true=30):  # 30% chance of being part of an order
+                order_id = fake.random_element(elements=order_ids)
+                time_fulfilled = fake.date_time_between_dates(datetime_start=time_created) if fake.boolean(chance_of_getting_true=70) else None
+            else:
+                order_id = None
+                time_fulfilled = None
+            writer.writerow([cart_id, uid, inv_id, quantity, time_created, time_modified, order_id, time_fulfilled])
+        
+        print(f'{num_cart_items} generated')
+    return
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_reviews)
+gen_inventory(num_inventory)
+order_ids = gen_orders(num_orders)
+gen_cart_items(num_cart_items, order_ids)
