@@ -67,3 +67,13 @@ class User(UserMixin):
         except Exception as e:
             print(str(e))
             return False
+
+    @staticmethod
+    def get_total_users():
+        rows = app.db.execute(
+            '''
+            SELECT COUNT(*)
+            FROM Users
+            '''
+        )
+        return rows[0][0]

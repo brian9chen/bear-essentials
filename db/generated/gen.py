@@ -8,7 +8,7 @@ num_users = 100
 num_products = 2000
 num_purchases = 2500
 num_reviews = 300
-num_inventory = 50
+num_inventory = 4000
 num_orders = 70
 num_cart_items = 100
 
@@ -33,7 +33,7 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            address = fake.address()
+            address = fake.street_address()
             balance = f'{str(fake.random_int(max=800))}.{fake.random_int(max=99):02}'
             is_seller = False
             writer.writerow([uid, email, password, firstname, lastname, address, balance, is_seller])
@@ -50,17 +50,18 @@ def gen_products(num_products):
         for pid in range(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
-            creator_id = fake.random_int(min=1, max=100)
+            creator_id = fake.random_int(min=1, max=(num_users-1))
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             category = fake.random_element(elements=categories)
             description = f"{category} inspired product: {fake.sentence(nb_words=8)}"
             discount_code = None
+            prod_avg_rating = None
             image_path = None 
             available = fake.random_element(elements=('True', 'False'))
             if available == 'True':
                 available_pids.append(pid)
-            writer.writerow([pid, creator_id, name, price, description, category, discount_code, image_path, available])
+            writer.writerow([pid, creator_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
@@ -125,6 +126,7 @@ def gen_reviews(num_reviews):
     return
 
 def gen_inventory(num_inventory):
+    products_df = pd.read_csv('Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
     with open('Inventory.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end=' ', flush=True)

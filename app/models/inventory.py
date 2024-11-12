@@ -64,9 +64,9 @@ class Inventory:
         # Insert the new product into the Inventory table with initial quantity
         if product_id:
             app.db.execute('''
-                INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock)
-                VALUES (:user_id, :product_id, :quantity, 0, 0)
-            ''', user_id=user_id, product_id=product_id[0][0], quantity=quantity)
+                INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
+                VALUES (:user_id, :product_id, :quantity, 0, 0, :name, 0)
+            ''', user_id=user_id, product_id=product_id[0][0], quantity=quantity, name="sample name")
 
     @staticmethod
     def update_quantity(inventory_id, new_quantity):

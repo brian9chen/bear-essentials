@@ -43,15 +43,15 @@ class CartItem:
     @staticmethod
     def add(pid, inv_uid, uid, quantity):
         # gets inventory id from product id and inventory user id
-        inv_id = app.db.execute(
+        inv = app.db.execute(
             """
             SELECT i.id
             FROM Inventory i
-            WHERE i.pid = :pid AND i.user_id = :inv_uid
+            WHERE i.pid = :pid
             """,
-            pid=pid,
-            inv_uid=inv_uid
-        )[0][0]
+            pid=pid
+        )
+        inv_id = inv[0][0]
         # uses attributes to make new cartitem
         rows = app.db.execute("""
         INSERT INTO CartItems(uid, inv_id, quantity)
