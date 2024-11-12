@@ -17,7 +17,7 @@ fake = Faker()
 
 
 def get_csv_writer(f):
-    return csv.writer(f, quoting=csv.QUOTE_NONE, dialect='unix')
+    return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar='\\', dialect='unix')
 
 
 def gen_users(num_users):
@@ -58,8 +58,8 @@ def gen_products(num_products):
             description = f"{category} inspired product: {fake.sentence(nb_words=8)}"
             discount_code = None
             image_path = None 
-            available = fake.random_element(elements=('true', 'false'))
-            if available == 'true':
+            available = fake.random_element(elements=('True', 'False'))
+            if available == 'True':
                 available_pids.append(pid)
             writer.writerow([pid, creator_id, name, price, description, category, discount_code, image_path, available])
         print(f'{num_products} generated; {len(available_pids)} available')
