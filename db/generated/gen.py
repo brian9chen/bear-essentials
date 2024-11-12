@@ -87,16 +87,12 @@ def gen_reviews(num_reviews):
 
         userProductPairs = set()
 
-        positiveReview = """
-        I enjoyed this product and would recommend to others.
-        Excellent quality and worth the price.
-        Very happy with my purchase; it exceeded my expectations.
-        """
-        negativeReview = """
-        This product did not match my expectations and I would not buy it again.
-        The quality was disappointing for the price.
-        Not satisfied with this purchase, and it doesn't work as advertised.
-        """
+        with open("goodReviews.txt", "r") as f:
+            positiveReview = f.read()
+
+        with open("badReviews.txt", "r") as f:
+            negativeReview = f.read()
+
         reviewModel = [positiveReview, negativeReview]
 
         for id in range(num_reviews):
@@ -105,7 +101,7 @@ def gen_reviews(num_reviews):
             uid = fake.random_int(min=0, max=num_users-1)
             pid = fake.random_int(min=0, max=num_products-1)
 
-            # make sure that a user can only leave 1 review an a product
+            # make sure that a user can only leave 1 review on a product
             pair = str(uid) + "," + str(pid)
             while pair in userProductPairs:
                 pid = fake.random_int(min=0, max=num_products-1)
@@ -117,13 +113,16 @@ def gen_reviews(num_reviews):
 
             # generate rating based on sentiment
             if sentiment == 0: # positive   
-                rating = fake.random_int(min=3, max=5)
+                rating = fake.random_int(min=4, max=5)
             else: # negative
                 rating = fake.random_int(min=0, max=3)
 
             # generate review based on randomly chosen sentiment
             text_model = markovify.Text(reviewModel[sentiment])
             review = text_model.make_sentence()
+
+            while review is None:
+                review = text_model.make_sentence()
 
             # randomly generate a time of creation
             time_posted = fake.date_time()
