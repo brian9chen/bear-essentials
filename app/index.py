@@ -4,6 +4,7 @@ import datetime
  
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.review import Review
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -75,4 +76,6 @@ def product_detail(id):
         # Handle case if product is not found
         abort(404)
 
-    return render_template('product.html', product=product)
+    reviews = Review.get_sortedByUpvote_by_pid(id)
+
+    return render_template('product.html', product=product, reviews=reviews)
