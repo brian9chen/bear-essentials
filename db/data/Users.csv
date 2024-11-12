@@ -1,5 +1,5 @@
-0,icecream@tastes.good,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Joey,Shmoey,123 Ice Cream Lane,0,FALSE
-1,coolbeans@coffee.strong,pbkdf2:sha256:260000$abcde12345$bbf3f911c176c0c3489d50e2d8f15c0297d7f565e1b2c59d0f6bc832df21e9b5,Mary,Jane,127 Ice Cream Lane,0,FALSE
-2,randomuser@internet.com,pbkdf2:sha256:260000$efgh6789$9cdedf22bb517ccfbb0217a154fe4b6b95b9aabc809595e1790e50fa2cb529fd,John,Doe,639 Fudge Lane,0,FALSE
-3,fluffy@cats.meow,pbkdf2:sha256:260000$randomcode$sx9a812jfds89fj1k208fkajf2sfk1af12,Fluffington,McPaws,567 Cool Drive,0,FALSE
-4,fruits@bananasplit.com,pbkdf2:sha256:260000$yummypassword$9cdedf22bb517ccfbb0217a154fe4b6b95b9aabc809595e1790e50fa2cb529fd,Alice,Wonderland,980 Briar Creek,0,FALSE
+0,icecream@tastes.good,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Joey,Shmoey,123 Ice Cream Lane,0
+1,coolbeans@coffee.strong,pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb,Mary,Jane,127 Ice Cream Lane,0
+2,randomuser@internet.com,pbkdf2:sha256:260000$efgh6789$9cdedf22bb517ccfbb0217a154fe4b6b95b9aabc809595e1790e50fa2cb529fd,John,Doe,639 Fudge Lane,0
+3,fluffy@cats.meow,pbkdf2:sha256:260000$randomcode$sx9a812jfds89fj1k208fkajf2sfk1af12,Fluffington,McPaws,567 Cool Drive,0
+4,fruits@bananasplit.com,pbkdf2:sha256:260000$yummypassword$9cdedf22bb517ccfbb0217a154fe4b6b95b9aabc809595e1790e50fa2cb529fd,Alice,Wonderland,980 Briar Creek,0

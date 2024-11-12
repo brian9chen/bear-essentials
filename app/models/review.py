@@ -15,7 +15,7 @@ class Review:
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT *
+SELECT * 
 FROM Reviews
 WHERE id = :id
 ''',
@@ -41,7 +41,26 @@ WHERE user_id = :user_id
 ORDER BY time_created DESC
 LIMIT 5
 ''',
-                              user_id=user_id)
+                              user_id=int(user_id))
+        return [Review(*row) for row in rows]
+    
+    @staticmethod
+    def get_total_reviews():
+        result = app.db.execute('''
+SELECT COUNT(*) AS total_reviews
+FROM Reviews
+''')
+        return int(result[0][0]) if result else 0
+    
+    @staticmethod
+    def get_sortedByUpvote_by_pid(product_id):
+        rows = app.db.execute('''
+SELECT *
+FROM Reviews
+WHERE product_id = :product_id
+ORDER BY num_upvotes DESC
+''',
+                              product_id=int(product_id))
         return [Review(*row) for row in rows]
     
     # @staticmethod

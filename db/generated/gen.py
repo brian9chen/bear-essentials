@@ -1,11 +1,13 @@
 from werkzeug.security import generate_password_hash
 import csv
 from faker import Faker
+import random
 import markovify
 import pandas as pd
 
-num_users = 100
+num_users = 200
 num_products = 2000
+num_sellers = 50
 num_purchases = 2500
 num_reviews = 300
 num_inventory = 4000
@@ -14,7 +16,6 @@ num_cart_items = 100
 
 Faker.seed(0)
 fake = Faker()
-
 
 def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
@@ -40,7 +41,25 @@ def gen_users(num_users):
         print(f'{num_users} generated')
     return
 
+# def gen_sellers(num_sellers):
+#     with open('Sellers.csv', 'w') as f:
+#         writer = get_csv_writer(f)
+#         print('Sellers...', end=' ', flush=True)
 
+
+
+#         # choose 'num_sellers' random users to be sellers
+#         randomIndices = random.sample(range(num_users), num_sellers)
+#         for i in randomIndices:
+#             uid = i
+#             #copy other attributes from user with uid?
+
+#             writer.writerow([uid, shop_name, seller_avg_rating])
+#         print(f'{num_sellers} generated')
+#     return
+
+
+#id, seller_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available
 def gen_products(num_products):
     available_pids = []
     categories = ['Fall', 'Winter', 'Spring', 'Summer'] 

@@ -14,6 +14,29 @@
     <!-- Link back to home page or previous page -->
     <a href="{{ url_for('index.index') }}">Back to all products</a>
 
+    <br><br>
+
+<!-- Reviews Table -->
+<h2>Reviews</h2>
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Review</th>
+            <th>Upvotes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+        <tr>
+            <td>{{ review.user_id }}</td> <!-- Assuming user ID is part of the Review object -->
+            <td>{{ review.description }}</td>  <!-- Assuming 'content' field holds the review text -->
+            <td>{{ review.num_upvotes }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
     {% if current_user.is_authenticated %}
     <br><br>
     <!-- ADD CORRECT FORM ACTION URL -->
