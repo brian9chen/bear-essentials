@@ -5,6 +5,8 @@
 <br><br>
 
 <h2>Your Inventory</h2>
+
+<!-- inventory -->
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
@@ -13,18 +15,88 @@
       <th scope="col">Quantity In Stock</th>
       <th scope="col">Price</th>
       <th scope="col">Product Category</th>
+      <th scope="col">Product Description</th>
+      <th scope="col">Remove Item</th>
     </tr>
   </thead>
   <tbody>
     {% for item in inventory_items %}
       <tr>
         <th scope="row">{{ item['inventory_id'] }}</th>
-        <td>{{ item['product_name'] }}</td>
-        <td>{{ item['quantity_in_stock'] }}</td>
-        <td>{{ item['product_price'] }}</td>
-        <td>{{ item['product_category'] }}</td>
+        
+        <!-- Update Product Name -->
+        <td>
+          <form action="{{ url_for('inventory.update_name', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <input type="text" name="new_name" value="{{ item['product_name'] }}" style="width: 120px; font-size: 0.9em;" required>
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; margin-left: 5px;">Update</button>
+          </form>
+        </td>
+
+        <!-- Update Quantity -->
+        <td>
+          <form action="{{ url_for('inventory.update_quantity', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <input type="number" name="new_quantity" value="{{ item['quantity_in_stock'] }}" style="width: 80px; font-size: 0.9em;" required>
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; margin-left: 5px;">Update</button>
+          </form>
+        </td>
+
+        <!-- Update Price -->
+        <td>
+          <form action="{{ url_for('inventory.update_price', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <input type="text" name="new_price" value="{{ item['product_price'] }}" style="width: 80px; font-size: 0.9em;" required>
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; margin-left: 5px;">Update</button>
+          </form>
+        </td>
+
+        <!-- Update Category -->
+        <td>
+          <form action="{{ url_for('inventory.update_category', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <select name="new_category" style="font-size: 0.9em; padding: 4px; width: 120px;">
+              {% for category in categories %}
+                <option value="{{ category }}" {% if category == item['product_category'] %} selected {% endif %}>{{ category }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; margin-left: 5px;">Update</button>
+          </form>
+        </td>
+
+        <!-- Update Description -->
+        <td>
+          <form action="{{ url_for('inventory.update_description', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <textarea name="new_description" style="font-size: 0.9em; width: 200px;">{{ item['product_description'] }}</textarea>
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; margin-left: 5px;">Update</button>
+          </form>
+        </td>
+
+        <!-- Remove Item -->
+        <td>
+          <form action="{{ url_for('inventory.remove_product', inventory_id=item['inventory_id']) }}" method="POST" style="display: inline;">
+            <button type="submit" style="font-size: 0.8em; padding: 2px 5px; background-color: #dc3545; color: white; border: none;">Remove</button>
+          </form>
+        </td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<!-- add new product -->
+<div style="margin-top: 20px; padding-left: 15px;">
+  <form action="{{ url_for('inventory.add_product') }}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+    <input type="text" name="product_name" placeholder="Product Name" required style="font-size: 0.9em; padding: 4px; width: 150px;">
+    <input type="number" name="quantity_in_stock" placeholder="Quantity" required style="font-size: 0.9em; padding: 4px; width: 80px;">
+    <input type="text" name="price" placeholder="USD Price" required style="font-size: 0.9em; padding: 4px; width: 80px;">
+    <textarea name="description" placeholder="Product Description" style="font-size: 0.9em; padding: 4px; width: 200px;"></textarea>
+
+    <!-- Category Dropdown -->
+    <select name="category" required style="font-size: 0.9em; padding: 4px; width: 120px; color: gray;">
+      <option value="" disabled selected style="color: gray;">Category</option>
+      {% for category in categories %}
+        <option value="{{ category }}" style="color: black;">{{ category }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" style="font-size: 0.9em; padding: 6px 12px; background-color: #007bff; color: white; border: none;">Add Product</button>
+  </form>
+</div>
+
 {% endblock %}
