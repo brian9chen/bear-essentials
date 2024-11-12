@@ -92,7 +92,7 @@ CREATE TABLE CartItems (
     inv_id INT NOT NULL REFERENCES Inventory(id),
     quantity INT NOT NULL,
     time_created timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
-    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    time_modified timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC')
     -- order_id INT REFERENCES Orders(id),
     -- time_fulfilled timestamp without time zone DEFAULT NULL
 );
