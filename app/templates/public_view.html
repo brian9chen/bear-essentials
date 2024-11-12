@@ -10,16 +10,16 @@
     <p><strong>Name:</strong> {{ user.firstname }} {{ user.lastname }}</p>
 </div>
 
-{% if is_seller %}
+<!-- {% if is_seller %} -->
     <!-- Seller additional information -->
-    <div>
+    <!-- <div>
         <h2>Seller Information</h2>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Address:</strong> {{ user.address }}</p>
-    </div>
+    </div> -->
 
     <!-- Reviews Section -->
-    <div>
+    <!-- <div>
         <h2>Reviews</h2>
         {% if reviews %}
             <ul>
@@ -37,7 +37,7 @@
     </div>
 {% else %}
     <p>This user is not a seller.</p>
-{% endif %}
+{% endif %} -->
 
 {% endblock %}
 

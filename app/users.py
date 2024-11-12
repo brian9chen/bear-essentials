@@ -23,10 +23,10 @@ def public_view(user_id):
     is_seller = user.is_seller if hasattr(user, 'is_seller') else False
 
     # Fetch reviews if the user is a seller
-    reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
+    # reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
 
     # Render the public view template
-    return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
+    return render_template('public_view.html', user=user, is_seller=is_seller) #took out reviews 
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])

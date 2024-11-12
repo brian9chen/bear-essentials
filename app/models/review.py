@@ -1,11 +1,11 @@
 from flask import current_app as app
 
-
 class Review:
     def __init__(self, id, user_id, product_id, rating, description, time_created, time_modified, num_upvotes):
         self.id = id
         self.user_id = user_id
         self.product_id = product_id
+        # self.seller_id = seller_id
         self.rating = rating
         self.description = description
         self.time_created = time_created
@@ -44,12 +44,12 @@ LIMIT 5
                               user_id=user_id)
         return [Review(*row) for row in rows]
     
-    @staticmethod
-    def get_reviews_by_seller_id(seller_id):
-        rows = app.db.execute('''
-        SELECT rating, description, time_created
-        FROM Reviews
-        WHERE seller_id = :seller_id
-        ''', seller_id=seller_id)
+    # @staticmethod
+    # def get_reviews_by_seller_id(seller_id):
+    #     rows = app.db.execute('''
+    #     SELECT rating, description, time_created
+    #     FROM Reviews
+    #     WHERE seller_id = :seller_id
+    #     ''', seller_id=seller_id)
         
-        return [Review(*row) for row in rows]
+    #     return [Review(*row) for row in rows]
