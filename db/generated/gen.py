@@ -19,7 +19,6 @@ fake = Faker()
 def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
 
-
 def gen_users(num_users):
     with open('Users.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -180,13 +179,13 @@ def gen_cart_items(num_cart_items, order_ids):
             quantity = fake.random_int(min=1, max=10)  
             time_created = fake.date_time_this_year()
             time_modified = fake.date_time_between_dates(datetime_start=time_created)
-            if fake.boolean(chance_of_getting_true=30):  # 30% chance of being part of an order
-                order_id = fake.random_element(elements=order_ids)
-                time_fulfilled = fake.date_time_between_dates(datetime_start=time_created) if fake.boolean(chance_of_getting_true=70) else None
-            else:
-                order_id = None
-                time_fulfilled = None
-            writer.writerow([cart_id, uid, inv_id, quantity, time_created, time_modified, order_id, time_fulfilled])
+            # if fake.boolean(chance_of_getting_true=30):  # 30% chance of being part of an order
+            #     order_id = fake.random_element(elements=order_ids)
+            #     time_fulfilled = fake.date_time_between_dates(datetime_start=time_created) if fake.boolean(chance_of_getting_true=70) else None
+            # else:
+            #     order_id = None
+            #     time_fulfilled = None
+            writer.writerow([cart_id, uid, inv_id, quantity, time_created, time_modified])
         
         print(f'{num_cart_items} generated')
     return

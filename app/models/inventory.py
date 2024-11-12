@@ -11,6 +11,15 @@ class Inventory:
         self.shop_name = shop_name
         self.seller_avg_rating = seller_avg_rating
 
+# class Inventory:
+#     def __init__(self, id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock):
+#         self.id = id
+#         self.user_id = user_id
+#         self.pid = pid
+#         self.quantity_in_stock = quantity_in_stock
+#         self.quantity_to_fulfill = quantity_to_fulfill
+#         self.quantity_back_to_stock = quantity_back_to_stock
+
     @staticmethod
     def get(id):
         rows = app.db.execute('''

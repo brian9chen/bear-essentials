@@ -1,16 +1,15 @@
 from flask import current_app as app
 
-
 class CartItem:
-    def __init__(self, id, uid, inv_id, quantity, time_created, time_modified, order_id, time_fulfilled):
+    def __init__(self, id, uid, inv_id, quantity, time_created, time_modified):
         self.id = id
         self.uid = uid
         self.inv_id = inv_id
         self.quantity = quantity
         self.time_created = time_created
         self.time_modified = time_modified
-        self.order_id = order_id
-        self.time_fulfilled = time_fulfilled
+
+# took out time fulfilled for now 
 
     @staticmethod
     def get(id):
