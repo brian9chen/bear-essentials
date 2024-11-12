@@ -31,7 +31,7 @@ def index():
     if selected_category:
         products = Product.filter_by_category(selected_category)
     else:
-        products = Product.get_all()  # Show all products by default 
+        products = Product.get_all(True)  # Show all products by default 
 
     return render_template('index.html',
                            avail_products=products,
