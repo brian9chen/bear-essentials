@@ -136,5 +136,12 @@ ORDER BY p.time_purchased DESC
             }
             for row in rows
         ]
+    @staticmethod
+    def get_unique_categories():
+        rows = app.db.execute('''
+            SELECT DISTINCT category
+            FROM Products
+        ''')
+        return [row[0] for row in rows]
 
     

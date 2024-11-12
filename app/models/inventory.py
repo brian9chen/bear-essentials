@@ -1,6 +1,5 @@
 from flask import current_app as app
 
-
 class Inventory:
     def __init__(self, id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock):
         self.id = id
@@ -15,15 +14,16 @@ class Inventory:
         rows = app.db.execute('''
             SELECT id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock
             FROM Inventory
-            WHERE id = :id
-        ''',id=id)
+            WHERE id = :idxxxssx
+        ''', id=id)
         return Inventory(*(rows[0])) if rows else None
 
     @staticmethod
     def get_all_by_user(user_id):
         rows = app.db.execute('''
             SELECT i.id, i.user_id, i.pid, i.quantity_in_stock, i.quantity_to_fulfill, i.quantity_back_to_stock,
-       p.name, p.price, p.description, p.category FROM Inventory i 
+                   p.name, p.price, p.description, p.category
+            FROM Inventory i
             JOIN Products p ON i.pid = p.id
             WHERE i.user_id = :user_id
         ''', user_id=user_id)
@@ -40,3 +40,86 @@ class Inventory:
             "product_description": row[8],
             "product_category": row[9]
         } for row in rows] if rows else []
+
+    @staticmethod
+    def add_product(user_id, product_name, quantity, price, category, description):
+        # Insert a new product into the Products table
+        product_id = app.db.execute('''
+            INSERT INTO Products (creator_id, name, price, category, description)
+            VALUES (:user_id, :product_name, :price, :category, :description)
+            RETURNING id
+        ''', user_id=user_id, product_name=product_name, price=price, category=category, description = description)
+        
+        # Insert the new product into the Inventory table with initial quantity
+        if product_id:
+            app.db.execute('''
+                INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock)
+                VALUES (:user_id, :product_id, :quantity, 0, 0)
+            ''', user_id=user_id, product_id=product_id[0][0], quantity=quantity)
+
+    @staticmethod
+    def update_quantity(inventory_id, new_quantity):
+        # Update the quantity_in_stock for a given inventory item
+        app.db.execute('''
+            UPDATE Inventory
+            SET quantity_in_stock = :new_quantity
+            WHERE id = :inventory_id
+        ''', new_quantity=new_quantity, inventory_id=inventory_id)
+
+    @staticmethod
+    def update_price(inventory_id, new_price):
+    # Update the price in Products for the product associated with the inventory_id
+        app.db.execute('''
+            UPDATE Products
+            SET price = :new_price
+            FROM Inventory
+            WHERE Products.id = Inventory.pid
+            AND Inventory.id = :inventory_id
+            AND Products.creator_id = Inventory.user_id
+        ''', new_price=new_price, inventory_id=inventory_id)
+
+
+    @staticmethod
+    def remove_product(inventory_id):
+        # delete an inventory item by id
+        app.db.execute('''
+            DELETE FROM Inventory
+            WHERE id = :inventory_id
+        ''', inventory_id=inventory_id)
+    @staticmethod
+
+    def update_description(inventory_id, new_description):
+         app.db.execute('''
+            UPDATE Products
+            SET description = :new_description
+            FROM Inventory
+            WHERE Products.id = Inventory.pid
+            AND Inventory.id = :inventory_id
+            AND Products.creator_id = Inventory.user_id
+    ''', new_description=new_description, inventory_id=inventory_id)
+         
+    @staticmethod
+    def update_category(inventory_id, new_category):
+        app.db.execute('''
+            UPDATE Products
+            SET category = :new_category
+            FROM Inventory
+            WHERE Products.id = Inventory.pid
+            AND Inventory.id = :inventory_id
+            AND Products.creator_id = Inventory.user_id
+        ''', new_category=new_category, inventory_id=inventory_id)
+    
+    @staticmethod
+    def update_name(inventory_id, new_name):
+        app.db.execute('''
+            UPDATE Products
+            SET name = :new_name
+            FROM Inventory
+            WHERE Products.id = Inventory.pid
+            AND Inventory.id = :inventory_id
+            AND Products.creator_id = Inventory.user_id
+        ''', new_name=new_name, inventory_id=inventory_id)
+
+            
+
+
