@@ -59,29 +59,24 @@ def gen_users(num_users):
 #id, seller_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available
 def gen_products(num_products):
     available_pids = []
+    categories = ['Fall', 'Winter', 'Spring', 'Summer'] 
     with open('Products.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Products...', end=' ', flush=True)
         for pid in range(num_products):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
-
-            sellerid = 0 # CHANGE ONCE gen_sellers is implemented
-
+            creator_id = fake.random_int(min=1, max=100)
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
+            category = fake.random_element(elements=categories)
+            description = f"{category} inspired product: {fake.sentence(nb_words=8)}"
+            discount_code = None
+            image_path = None 
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 available_pids.append(pid)
-
-            description = "Description for " + name # IMPLEMENT!!!!
-            category = "category" # IMPLEMENT!!!!
-            discount_code = None # IMPLEMENT!!!!
-            prod_avg_rating = 0 # IMPLEMENT!!!!
-            image_path = None # IMPLEMENT!!!!
-            available = True # IMPLEMENT!!!!
-
-            writer.writerow([pid, sellerid, name, price, description, category, discount_code, prod_avg_rating, image_path, available])
+            writer.writerow([pid, creator_id, name, price, description, category, discount_code, image_path, available])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
