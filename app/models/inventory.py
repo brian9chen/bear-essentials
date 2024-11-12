@@ -16,7 +16,7 @@ class Inventory:
         rows = app.db.execute('''
             SELECT id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock
             FROM Inventory
-            WHERE id = :idxxxssx
+            WHERE id = :id
         ''', id=id)
         return Inventory(*(rows[0])) if rows else None
 
