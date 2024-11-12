@@ -43,3 +43,13 @@ LIMIT 5
 ''',
                               user_id=user_id)
         return [Review(*row) for row in rows]
+    
+    @staticmethod
+    def get_reviews_by_seller_id(seller_id):
+        rows = app.db.execute('''
+        SELECT rating, description, time_created
+        FROM Reviews
+        WHERE seller_id = :seller_id
+        ''', seller_id=seller_id)
+        
+        return [Review(*row) for row in rows]
