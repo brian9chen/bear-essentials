@@ -38,11 +38,29 @@ def index():
     else:
         products = Product.get_all()  # Show all products by default 
 
-    return render_template('index.html',
-                           avail_products=products,
-                           purchase_history=purchases,
-                           categories=categories,
-                           selected_category=selected_category)
+    # Define the number of reviews per page
+    PRODUCTS_PER_PAGE = 25
+
+    # Get the page number from the request (default to 1 if not specified)
+    page = request.args.get('page', 1, type=int)
+
+    # Calculate start and end indices for the current page
+    start_index = (page - 1) * PRODUCTS_PER_PAGE
+    end_index = start_index + PRODUCTS_PER_PAGE
+
+    # Slice the list to get only the reviews for the current page
+    productsInPage = products[start_index:end_index]
+
+    # Calculate total pages based on the number of reviews
+    total_reviews = len(products)
+    total_pages = (total_reviews + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE  # Round up for any remainder
+
+    return render_template('index.html', avail_products=productsInPage, purchase_history=purchases, categories=categories, selected_category=selected_category, page=page, total_pages=total_pages)
+    # return render_template('index.html',
+    #                        avail_products=products,
+    #                        purchase_history=purchases,
+    #                        categories=categories,
+    #                        selected_category=selected_category)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():
