@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for
 from flask_login import current_user
 import datetime
+import pandas as pd
  
 from .models.product import Product
 from .models.purchase import Purchase
@@ -25,53 +26,46 @@ def index():
         purchases = None
     # render the page by adding information to the index.html file
 
+    # Redirect to user profile if user_id is provided in the URL
     user_id = request.args.get('user_id', type=int)
     if user_id:
         return redirect(url_for('users.public_view', user_id=user_id))
-    
-    sort_order = request.form.get('sort_order')    
-    if sort_order == 'asc':
-        products = Product.sort_by_price_asc()  # Sort by price ascending
-    else:
-        products = Product.sort_by_price_desc()  # Sort by price descending
 
-    # add filter by category 
-    categories = Product.get_categories()  # Fetch 
-    selected_category = request.form.get('category')  # Get 
+    # Fetch categories for filtering
+    categories = Product.get_categories()
 
+    # Handle sorting, filtering, and keyword search 
+    sort_order = request.form.get('sort_order')
+    selected_category = request.form.get('category')
+    keyword = request.form.get('keyword', type=str)
+
+    # Apply filtering by category if specified
     if selected_category:
         products = Product.filter_by_category(selected_category)
-    else:
-        products = Product.get_all()  # Show all products by default 
-    
-    # keyword = request.form.get('keyword', type=str)  
-    # products = Product.filter_by_keyword(keyword)
-        
-    # Define the number of reviews per page
+
+    # Apply keyword filtering if specified
+    if keyword:
+        products = Product.filter_by_keyword(keyword)
+
+    # Apply sorting based on price
+    if sort_order == 'asc':
+        products = Product.sort_by_price_asc()
+    elif sort_order == 'desc':
+        products = Product.sort_by_price_desc()
+
+    # Implement pagination
     PRODUCTS_PER_PAGE = 25
-
-    # Get the page number from the request (default to 1 if not specified)
     page = request.args.get('page', 1, type=int)
-
-    # Calculate start and end indices for the current page
+    total_products = len(products)
+    total_pages = (total_products + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE
     start_index = (page - 1) * PRODUCTS_PER_PAGE
     end_index = start_index + PRODUCTS_PER_PAGE
+    products_in_page = products[start_index:end_index]
 
-    # Slice the list to get only the reviews for the current page
-    productsInPage = products[start_index:end_index]
-
-    # Calculate total pages based on the number of reviews
-    total_products = len(products)
-    total_pages = (total_products + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE  # Round up for any remainder
-
-    return render_template('index.html', avail_products=productsInPage, purchase_history=purchases, 
-                           categories=categories, selected_category=selected_category, sort_order=sort_order,
-                           page=page, total_pages=total_pages)
-    # return render_template('index.html',
-    #                        avail_products=products,
-    #                        purchase_history=purchases,
-    #                        categories=categories,
-    #                        selected_category=selected_category)
+    # Render the page with relevant information
+    return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
+                           categories=categories, sort_order=sort_order, selected_category=selected_category,
+                           keyword=keyword, page=page, total_pages=total_pages)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():
@@ -81,13 +75,15 @@ def top_k():
         return render_template('index.html', avail_products=products)
     return render_template('index.html')
 
-@bp.route('/filter_by_keyword', methods=('GET', 'POST'))
-def search_keyword():
-    if request.method == 'POST':
-        keyword = request.form.get('keyword', type=str)
-        products = Product.filter_by_keyword(keyword)
-        return render_template('index.html', avail_products=products)
-    return render_template('index.html')
+# moved these to the main index 
+
+# @bp.route('/filter_by_keyword', methods=('GET', 'POST'))
+# def search_keyword():
+#     if request.method == 'POST':
+#         keyword = request.form.get('keyword', type=str)
+#         products = Product.filter_by_keyword(keyword)
+#         return render_template('index.html', avail_products=products)
+#     return render_template('index.html')
 
 #  sort by price 
 # @bp.route('/sort/<string:sort_order>', methods=['GET'])
