@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask_login import current_user
 import datetime
  
@@ -24,6 +24,10 @@ def index():
     else:
         purchases = None
     # render the page by adding information to the index.html file
+
+    user_id = request.args.get('user_id', type=int)
+    if user_id:
+        return redirect(url_for('users.public_view', user_id=user_id))
 
     # add filter by category 
     categories = Product.get_categories()  # Fetch 
@@ -97,3 +101,10 @@ def product_detail(id):
     total_pages = (total_reviews + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE  # Round up for any remainder
 
     return render_template('product.html', product=product, reviews=reviews, page=page, total_pages=total_pages)
+
+@bp.route('/view_user_profile', methods=['POST'])
+def view_user_profile():
+    user_id = request.form.get('user_id', type=int)
+    if user_id:
+        return redirect(url_for('users.public_view', user_id=user_id))
+    return redirect(url_for('index.index'))  # Redirect back to index if no user_id is provided

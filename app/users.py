@@ -13,20 +13,19 @@ from flask import Blueprint, render_template, abort
 bp = Blueprint('users', __name__)
 
 @bp.route('/user/<int:user_id>', methods=['GET'])
+
 def public_view(user_id):
-    # Retrieve user data
+    #user_id = request.args.get('user_id', type=int)
+    
     user = User.get(user_id)
     if not user:
         abort(404)  # User not found
 
-    # Check if the user is a seller
     is_seller = user.is_seller if hasattr(user, 'is_seller') else False
+    reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
 
-    # Fetch reviews if the user is a seller
-    # reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
+    return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
 
-    # Render the public view template
-    return render_template('public_view.html', user=user, is_seller=is_seller) #took out reviews 
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
