@@ -28,6 +28,12 @@ def index():
     user_id = request.args.get('user_id', type=int)
     if user_id:
         return redirect(url_for('users.public_view', user_id=user_id))
+    
+    sort_order = request.form.get('sort_order')    
+    if sort_order == 'asc':
+        products = Product.sort_by_price_asc()  # Sort by price ascending
+    else:
+        products = Product.sort_by_price_desc()  # Sort by price descending
 
     # add filter by category 
     categories = Product.get_categories()  # Fetch 
@@ -37,7 +43,10 @@ def index():
         products = Product.filter_by_category(selected_category)
     else:
         products = Product.get_all()  # Show all products by default 
-
+    
+    # keyword = request.form.get('keyword', type=str)  
+    # products = Product.filter_by_keyword(keyword)
+        
     # Define the number of reviews per page
     PRODUCTS_PER_PAGE = 25
 
@@ -52,10 +61,12 @@ def index():
     productsInPage = products[start_index:end_index]
 
     # Calculate total pages based on the number of reviews
-    total_reviews = len(products)
-    total_pages = (total_reviews + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE  # Round up for any remainder
+    total_products = len(products)
+    total_pages = (total_products + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE  # Round up for any remainder
 
-    return render_template('index.html', avail_products=productsInPage, purchase_history=purchases, categories=categories, selected_category=selected_category, page=page, total_pages=total_pages)
+    return render_template('index.html', avail_products=productsInPage, purchase_history=purchases, 
+                           categories=categories, selected_category=selected_category, sort_order=sort_order,
+                           page=page, total_pages=total_pages)
     # return render_template('index.html',
     #                        avail_products=products,
     #                        purchase_history=purchases,
@@ -79,16 +90,16 @@ def search_keyword():
     return render_template('index.html')
 
 #  sort by price 
-@bp.route('/sort/<string:sort_order>', methods=['GET'])
-def sort_by_price(sort_order):
-    # Fetch products from the database
-    if sort_order == 'asc':
-        products = Product.sort_by_price_asc()  # Sort by price ascending
-    else:
-        products = Product.sort_by_price_desc()  # Sort by price descending
+# @bp.route('/sort/<string:sort_order>', methods=['GET'])
+# def sort_by_price(sort_order):
+#     # Fetch products from the database
+#     if sort_order == 'asc':
+#         products = Product.sort_by_price_asc()  # Sort by price ascending
+#     else:
+#         products = Product.sort_by_price_desc()  # Sort by price descending
     
-    # Return the sorted products to the template
-    return render_template('index.html', avail_products=products, sort_order=sort_order)
+#     # Return the sorted products to the template
+#     return render_template('index.html', avail_products=products, sort_order=sort_order)
 
 @bp.route('/product/<int:id>', methods=['GET'])
 def product_detail(id):
