@@ -134,3 +134,31 @@ Social Guru:
      - Created the frontend page to show a button next to each user that will take you to all of their reviews
 
 Demo Video: https://drive.google.com/file/d/1QS7lCvNalI1q2NL1-6Jeg3v0WVc71H2H/view?usp=sharing 
+
+Milestone 4 Additions
+
+New Database
+ - db/generated/gen.py
+     - contains all of the functions used to generate randomized data in order to fill the csv files (listed below) and then populate our database
+ - db/create.sql
+     - contains the SQL functions to initialize our database schema
+ - db/load.sql
+     - contains the code to populate the database with the generated data in our csv files (listed below)
+ - db/setup.sh
+     - contains the code to run create.sql and load.sql in order to create our database schema and populate our database
+ - db/generated/CartItems.csv
+     - contains generated data about cart items in users’ carts
+ - db/generated/Inventory.csv
+     - contains generated data about the items in users’ inventories for users that are also sellers
+ - db/generated/Products.csv
+     - contains generated data about all of the products, both available and unavailable, that users can add to their carts
+ - db/generated/Purchases.csv
+     - contains generated data about a user’s purchases
+ - db/generated/Reviews.csv
+     - contains generated data about the reviews that have been made on various products by the users
+ - db/generated/Users.csv
+     - contains generated data about users: id, email, password, first and last name, address, and also an additional attribute is_seller
+
+Demo Video:
+https://drive.google.com/file/d/1imF42uUPAf9rzlQTkjQRRlHiRCMmkvV0/view?usp=sharing
+
