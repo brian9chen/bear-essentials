@@ -1,4 +1,4 @@
-README - Kawaii Korner
+README - Bear Essentials
 
 GitLab Repo: https://gitlab.oit.duke.edu/ksl48/mini-amazon-24-fall 
 
@@ -11,7 +11,7 @@ Kunling Tong - Products Guru: responsible for Products
 
 Project Details:
 We chose the standard project option (Mini-Amazon).
-Our team/website name is Kawaii Korner.
+Our team/website name is Bear Essentials.
 
 Our Work:
 Brian Chen
