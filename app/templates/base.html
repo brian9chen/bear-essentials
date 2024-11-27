@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
         font-family: "Lato", sans-serif;
@@ -26,6 +27,17 @@
         height: 100%;
         background-color: #f8edeb;
         overflow-x: hidden;
+        padding-top: 10px;
+    }
+
+    .topnav {
+        height: 100%;
+        background-color: #ffe98576;
+        color: #702106;
+        overflow-x: hidden;
+        text-align: center;
+        font-family: 'Gaegu', sans-serif;
+        font-size: 15px;
         padding-top: 10px;
     }
 
@@ -98,6 +110,9 @@
 </head>
 
 <body>
+  <div class="topnav">
+    <h1>don't let your bears go bare! bundle a basic bear with a kawaii knit for 20% off!</h1>
+  </div>
   <div class="sidenav">
     <a href="{{ url_for('index.index') }}">
       <img src="{{ url_for('static', filename='/bear_essentials_logo.gif') }}" 
@@ -117,18 +132,19 @@
                 <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Basic Bears</a>
             </div>
             <div style="text-align: center; padding-left: 20px;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Cuddle Closet</a>
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Kawaii Knits</a>
             </div>
             <div style="text-align: center; padding-left: 20px;">
                 <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Den Decor</a>
             </div>
             <div style="text-align: center; padding-left: 20px;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Kawaii Kitchen</a>
-            </div>
+              <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Bear Bundles</a>
+          </div>
         </div>
         <div style="text-align: right;">
             {% if current_user.is_authenticated %}
                 <span style="margin-right: 10px;">What's up {{ current_user.firstname }}!</span>
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i></a>
                 <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
             {% else %}
                 <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
