@@ -61,7 +61,7 @@
     .btn-brown {
         background-color: #702106;
         color: #f8edeb;
-        font-size: 20px;
+        font-size: 30px;
         font-family: 'Gaegu', sans-serif;
     }
 
@@ -102,20 +102,39 @@
     <a href="{{ url_for('index.index') }}">
       <img src="{{ url_for('static', filename='/bear_essentials_logo.gif') }}" 
            alt="Bear Essentials Logo" 
-           style="width: 400px; height: auto;" 
+           style="width: 500px; height: auto; padding-left: 50px;" 
            class="center">
     </a>
   </div>
   <div class="sticky-nav">
     {% block msg %}
-      <div style="color: #702106; font-size: 20px; text-align: right; margin-bottom: 25px; 
-        margin-right: 20px;">
-        {% if current_user.is_authenticated %}
-          What's up {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
-        {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
-        {% endif %}
-      </div>
+    <div style="color: #702106; font-size: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; width: 100%; padding-right: 20px;">
+        <div style="display: flex; justify-content: center; align-items: center; flex-grow: 0; padding-left: 20px;">
+            <div style="text-align: center; padding-left: 20px;">
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Shop All</a>
+            </div>
+            <div style="text-align: center; padding-left: 20px;">
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Basic Bears</a>
+            </div>
+            <div style="text-align: center; padding-left: 20px;">
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Cuddle Closet</a>
+            </div>
+            <div style="text-align: center; padding-left: 20px;">
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Den Decor</a>
+            </div>
+            <div style="text-align: center; padding-left: 20px;">
+                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Kawaii Kitchen</a>
+            </div>
+        </div>
+        <div style="text-align: right;">
+            {% if current_user.is_authenticated %}
+                <span style="margin-right: 10px;">What's up {{ current_user.firstname }}!</span>
+                <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
+            {% else %}
+                <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
+            {% endif %}
+        </div>
+    </div>
     {% endblock %}
   </div>
   <div class="main">
