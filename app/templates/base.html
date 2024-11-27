@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!--palette: 702106 af7e71 dba496 f8edeb ffe885 -->
+
 <head>
   <title>Bear Essentials</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
   <style>
@@ -21,9 +24,19 @@
 
     .sidenav {
         height: 100%;
-        background-color: #000;
+        background-color: #f8edeb;
         overflow-x: hidden;
+        padding-top: 10px;
+    }
+
+    .sticky-nav {
+        position: sticky;
+        top: 0; 
+        background-color: #f8edeb; 
+        z-index: 1000; 
         padding-top: 20px;
+        padding-bottom: 1px;
+        font-family: 'Gaegu', sans-serif;
     }
 
     .main {
@@ -44,18 +57,63 @@
         background-color: #000 !important;
         color: #fff;
     }
+
+    .btn-brown {
+        background-color: #702106;
+        color: #f8edeb;
+        font-size: 20px;
+        font-family: 'Gaegu', sans-serif;
+    }
+
+    .btn-brown:hover {
+        background-color: #702106b2; 
+        color: #f8edeb; 
+    }
+
+    .btn-brown:focus, .btn-brown.focus {
+        box-shadow: 0 0 0 0.2rem rgba(62, 5, 5, 0.801); /* Focus outline */
+    }
+
+    .btn-brown2 {
+        background-color: #af7e71;
+        color: #f8edeb;
+        font-size: 20px;
+        font-family: 'Gaegu', sans-serif;
+    }
+
+    .btn-brown3 {
+        background-color: #dba496;
+        color: #f8edeb;
+        font-size: 20px;
+        font-family: 'Gaegu', sans-serif;
+    }
+
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }
   </style>
 </head>
 
 <body>
   <div class="sidenav">
+    <a href="{{ url_for('index.index') }}">
+      <img src="{{ url_for('static', filename='/bear_essentials_logo.png') }}" 
+           alt="Bear Essentials Logo" 
+           style="width: 400px; height: auto;" 
+           class="center">
+    </a>
+  </div>
+  <div class="sticky-nav">
     {% block msg %}
-      <h1 style="color:aliceblue">Bear Essentials</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+      <div style="color: #702106; font-size: 20px; text-align: right; margin-bottom: 25px; 
+        margin-right: 20px;">
         {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
+          What's up {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
         {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
         {% endif %}
       </div>
     {% endblock %}

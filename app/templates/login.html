@@ -2,20 +2,18 @@
 
 {% block content %}
 
-<h1>Login</h1>
-
-<form action="" method="post" novalidate>
+<form action="" method="post" novalidate style="text-align: center; margin-top: 50px;">
   {{ form.hidden_tag() }}
   <p>
-    {{ form.email.label }}<br/>
-    {{ form.email(size=32) }}<br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Email</label><br/>
+    {{ form.email(size=100) }}<br/>
     {% for error in form.email.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    {{ form.password.label }}<br/>
-    {{ form.password(size=32) }}<br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Password</label><br/>
+    {{ form.password(size=100) }}<br/>
     {% for error in form.password.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
@@ -31,8 +29,10 @@
     {% endif %}
     {% endwith %}
   </p>
-  {{ form.submit(class_="btn btn-black") }}
-  <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
+  <div style="text-align: center; margin-top: 50px; margin-left: 20px">
+    {{ form.submit(class_="btn btn-brown", style="margin-right: 20px;") }}
+    <a class="btn btn-brown" href="{{ url_for('users.register') }}" role="button">New? Create Account</a>
+  </div>
 </form>
 
 {% endblock %}
