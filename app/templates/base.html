@@ -275,9 +275,6 @@
   <div class="topnav">
     don't let your bears go bare! bundle a basic bear with a kawaii knit for 20% off!
   </div>
-  <div class="topnav">
-    don't let your bears go bare! bundle a basic bear with a kawaii knit for 20% off!
-  </div>
   <div class="sidenav">
     <a href="{{ url_for('index.index') }}">
       <img src="{{ url_for('static', filename='/bear_essentials_logo.gif') }}" 
@@ -287,43 +284,7 @@
     </a>
   </div>
   <div class="sticky-nav">
-    <a href="{{ url_for('index.index') }}">
-      <img src="{{ url_for('static', filename='/bear_essentials_logo.gif') }}" 
-           alt="Bear Essentials Logo" 
-           style="width: 300px; height: auto; padding-left: 20px;" 
-           class="center">
-    </a>
-  </div>
-  <div class="sticky-nav">
     {% block msg %}
-    <div style="color: #702106; font-size: 15px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div style="display: flex; justify-content: center; align-items: center; flex-grow: 0; gap: 16px;">
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Shop All</a>
-            </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Basic Bears</a>
-            </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Kawaii Knits</a>
-            </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Den Decor</a>
-            </div>
-            <div style="text-align: center;">
-              <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Cute Confections</a>
-          </div>
-        </div>
-        <div style="text-align: right; gap: 10px;">
-            {% if current_user.is_authenticated %}
-                <span style="margin-top: 10px;">What's up {{ current_user.firstname }}!</span>
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i></a>
-                <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
-            {% else %}
-                <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
-            {% endif %}
-        </div>
-    </div>
     <div style="color: #702106; font-size: 15px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <div style="display: flex; justify-content: center; align-items: center; flex-grow: 0; gap: 16px;">
             <div style="text-align: center;">
