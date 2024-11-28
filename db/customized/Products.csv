@@ -1,101 +1,100 @@
-0, 0, Snugglezilla, 15.99, A bear so big, it might crush your problems. (Or your sofa.), Basic Bears, NULL, 5.0, bear1.jpg, TRUE,
-1, 1, Fluffington, 22.00, He’s a bear, he’s fluffy, and he’s probably secretly a pillow in disguise., Basic Bears, BEAR15, 4.9, bear2.jpg, TRUE,
-2, 2, Burt the Bear, 18.50, Burt’s not just a bear, he’s a cuddle enthusiast with a passion for snacks., Basic Bears, NULL, 4.8, bear3.jpg, TRUE,
-3, 3, Mr. Huggles, 20.00, He’s big, he’s soft, and he’ll hug you like he’s never going to let go. (He won’t.), Basic Bears, NULL, 5.0, bear4.jpg, TRUE,
-4, 4, Honey Bear, 17.50, Sweet as honey, but way more cuddly. Don’t worry, no actual honey involved., Basic Bears, NULL, 4.7, bear5.jpg, TRUE,
-5, 5, Sir Snugglesworth, 24.00, He’s royalty in the bear world. Prepare for an elegant cuddle experience., Basic Bears, NULL, 4.9, bear6.jpg, TRUE,
-6, 6, Bear Hug Boss, 19.99, The boss of all bear hugs. Be prepared to be overwhelmed with cuteness., Basic Bears, NULL, 4.8, bear7.jpg, TRUE,
-7, 7, Cuddle Beast, 25.00, Cuddle him. Squeeze him. He’s basically a soft cloud with a bear face., Basic Bears, CUDDLE10, 5.0, bear8.jpg, TRUE,
-8, 8, Fluffy McSnuggles, 18.99, The bear that’ll make you feel all warm inside. It’s like a hug from a pillow... forever., Basic Bears, NULL, 4.8, bear9.jpg, TRUE,
-9, 9, Sir Fluffington, 23.50, A gentleman and a bear all in one. Be prepared for some top-tier cuddling., Basic Bears, NULL, 5.0, bear10.jpg, TRUE,
-10, 10, Pillow Bear, 19.00, He’s not just a bear, he’s your new sleep buddy. Warning: He may cause excessive napping., Basic Bears, NULL, 4.7, bear11.jpg, TRUE,
-11, 11, Chubby Bear, 21.00, The bear that’s rounder than your schedule. He’s here to bring joy and cuddles., Basic Bears, CHUBBY, 4.8, bear12.jpg, TRUE,
-12, 12, Sleepy Snuggles, 16.00, For those days when you just need a nap buddy. He’s ready for those extra-long naps., Basic Bears, NULL, 4.9, bear13.jpg, TRUE,
-13, 13, Giant Softie, 27.99, So soft, he could probably solve your bad day with just one hug., Basic Bears, NULL, 4.8, bear14.jpg, TRUE,
-14, 14, Beary McSnuggles, 18.50, Your new bear best friend who’s great at keeping secrets and giving hugs., Basic Bears, NULL, 4.9, bear15.jpg, TRUE,
-15, 15, Big Bear Energy, 25.50, He’s got energy. He’s big. He’s the bear that brings all the positive vibes., Basic Bears, NULL, 5.0, bear16.jpg, TRUE,
-16, 16, Grizzly Hugger, 23.00, The grizzly bear that’s not so grizzly, but definitely the best at hugs., Basic Bears, NULL, 4.8, bear17.jpg, TRUE,
-17, 17, Baby Bear, 14.99, So small, so fluffy, and so full of love. Don’t let the size fool you—this bear’s a giant in the hug department., Basic Bears, NULL, 4.7, bear18.jpg, TRUE,
-18, 18, Bearcation Buddy, 21.00, For when you need a travel buddy who’s cute, fluffy, and always there for you., Basic Bears, NULL, 4.9, bear19.jpg, TRUE,
-19, 19, Cuddly Beast, 22.99, A bear with a mission: to cuddle you until your stress melts away., Basic Bears, NULL, 4.8, bear20.jpg, TRUE,
-20, 20, Fluff the Bear, 20.00, Fluffier than your pillow, cuddlier than your blanket. This bear knows how to snuggle., Basic Bears, NULL, 4.9, bear21.jpg, TRUE,
-21, 21, Hugging Champion, 24.00, Champion of all things cuddly. This bear knows no competition when it comes to giving bear hugs., Basic Bears, NULL, 4.7, bear22.jpg, TRUE,
-22, 22, Bear in a Blanket, 18.00, Wrapped in a blanket, this bear will make you wish you could live in this cuddle forever., Basic Bears, NULL, 5.0, bear23.jpg, TRUE,
-23, 23, Teddy the Giggle Monster, 21.99, A bear that giggles while you cuddle. It’s scientifically proven to make everything 10x funnier., Basic Bears, NULL, 4.8, bear24.jpg, TRUE,
-24, 24, Cuddly Paws, 19.50, He’s not just paws-itively adorable. He’s paws-itively the best at giving bear hugs., Basic Bears, NULL, 4.9, bear25.jpg, TRUE,
-25, 25, Heart-Shaped Hoodie, 28.00, A hoodie that says “I love you” without saying a word. Because sometimes, you just need to wear love., Kawaii Knits, NULL, 5.0, knit1.jpg, TRUE,
-26, 0, Bunny Ears Beanie, 15.50, The cutest beanie with bunny ears that will make you hop with joy. (Might cause spontaneous bunny impressions.), Kawaii Knits, NULL, 4.9, knit2.jpg, TRUE,
-27, 1, Rainbow Socks of Wonder, 8.99, Bright, colorful socks that’ll make your feet feel like they’re walking on sunshine. Literally., Kawaii Knits, NULL, 4.8, knit3.jpg, TRUE,
-28, 2, Cuddle Me Cardigan, 32.00, This cardigan is like a hug, but with more style. Get cozy and cute all at once., Kawaii Knits, CARDI10, 5.0, knit4.jpg, TRUE,
-29, 3, Pineapple Hat, 18.00, A hat that says “I’m sweet and tropical” all while keeping your head warm. (And a little sassy.), Kawaii Knits, NULL, 4.9, knit5.jpg, TRUE,
-30, 4, Kitten Mittens, 14.50, Mittens so cute, they might just meow at you. Okay, not really, but they’re still adorable., Kawaii Knits, NULL, 4.7, knit6.jpg, TRUE,
-31, 5, Cupcake Sweater, 25.99, Wear your love for cupcakes. It’s like a sugary, cozy hug on your body., Kawaii Knits, NULL, 5.0, knit7.jpg, TRUE,
-32, 6, Whisker Scarf, 19.50, A scarf with whiskers! Because why not add a little extra cuteness to your winter wardrobe?, Kawaii Knits, NULL, 4.8, knit8.jpg, TRUE,
-33, 7, Chibi Hoodie, 29.00, A hoodie that looks like it’s straight out of a manga, except it’s even cuter in real life., Kawaii Knits, NULL, 5.0, knit9.jpg, TRUE,
-34, 8, Panda Mittens, 16.50, Mittens with panda faces on them. Because your hands deserve to look adorable too!, Kawaii Knits, NULL, 4.9, knit10.jpg, TRUE,
-35, 9, Pancake Socks, 7.99, Socks that look like pancakes. Because who doesn’t want to walk on waffles and syrup?, Kawaii Knits, NULL, 4.7, knit11.jpg, TRUE,
-36, 10, Unicorn Tail Scarf, 22.00, A scarf that gives you a unicorn tail. Because everyone needs a little magic., Kawaii Knits, NULL, 4.8, knit12.jpg, TRUE,
-37, 11, Starry Night Socks, 7.99, Socks that’ll make your feet sparkle like the night sky. Astronauts should consider wearing these., Kawaii Knits, NULL, 4.7, knit13.jpg, TRUE,
-38, 12, Teddy Bear Slippers, 19.00, Slippers so cuddly, you’ll never want to take them off. The teddy bear of footwear., Kawaii Knits, NULL, 5.0, knit14.jpg, TRUE,
-39, 13, Cookie Monster Sweater, 24.99, For the cookie lover who wants to show their sweet side. (No actual cookies involved.), Kawaii Knits, NULL, 4.9, knit15.jpg, TRUE,
-40, 14, Llama Love Hat, 21.50, A hat that gives you all the love of a llama. And you won’t even need to travel to the Andes., Kawaii Knits, NULL, 5.0, knit16.jpg, TRUE,
-41, 15, Koala Cuddles Cardigan, 26.00, A cardigan with a koala face. It’s like cuddling with a koala... without the eucalyptus., Kawaii Knits, NULL, 4.8, knit17.jpg, TRUE,
-42, 16, Cupcake Headband, 10.00, A headband with a tiny cupcake on it. Because cupcakes belong on your head too., Kawaii Knits, NULL, 4.7, knit18.jpg, TRUE,
-43, 17, Otterly Cute Gloves, 17.00, Gloves so cute, they might just make you want to swim like an otter., Kawaii Knits, NULL, 4.9, knit19.jpg, TRUE,
-44, 18, Fishy Scarf, 20.00, A scarf that looks like a fish. It’s just as cozy as it is funny., Kawaii Knits, NULL, 4.8, knit20.jpg, TRUE,
-45, 19, Fuzzy Buns Beanie, 16.00, A beanie with fluffy bunny ears that’s almost as cute as the fluffiest bunny ever., Kawaii Knits, NULL, 5.0, knit21.jpg, TRUE,
-46, 20, Pug Life Hoodie, 27.50, A hoodie that screams pug life, because pugs are the kings of cozy., Kawaii Knits, NULL, 4.9, knit22.jpg, TRUE,
-47, 21, Sloth Sweater, 23.00, For those who prefer their sweaters as relaxed as sloths. So comfy, it might cause napping., Kawaii Knits, NULL, 4.7, knit23.jpg, TRUE,
-48, 22, Whale Tail Scarf, 21.00, A scarf that makes you feel like you’re part whale. Warning: Might cause spontaneous swimming., Kawaii Knits, NULL, 4.8, knit24.jpg, TRUE,
-49, 23, Panda Pajama Set, 32.99, A pajama set so cozy, even pandas would approve. Perfect for hibernating., Kawaii Knits, NULL, 5.0, knit25.jpg, TRUE
-50, 24, Cosmic Cushion, 35.00, A cushion that brings the stars into your home. Perfect for laying back and dreaming of space., Den Decor, NULL, 5.0, decor1.jpg, TRUE,
-51, 25, Fluff Rug, 50.00, This rug feels like stepping on a cloud. Also, it doubles as a nap zone., Den Decor, NULL, 4.9, decor2.jpg, TRUE,
-52, 0, Pillow Mountain, 45.00, Who needs a pillow fort when you have a pillow mountain in your living room?, Den Decor, NULL, 5.0, decor3.jpg, TRUE,
-53, 1, Rainbow Lamp, 29.99, Light up your room with every color of the rainbow. Just try not to get hypnotized., Den Decor, NULL, 4.8, decor4.jpg, TRUE,
-54, 2, Penguin Statue, 60.00, A penguin statue that’ll keep watch over your living room with a calm, dignified look., Den Decor, NULL, 5.0, decor5.jpg, TRUE,
-55, 3, Cactus Friend, 22.00, The cactus that’s as cute as a button and doesn’t require watering. Win-win!, Den Decor, NULL, 4.9, decor6.jpg, TRUE,
-56, 4, Hedgehog Wall Art, 40.00, A beautiful, spiky piece of art that’s literally “prickly” in the best way possible., Den Decor, NULL, 5.0, decor7.jpg, TRUE,
-57, 5, Bamboo Bliss, 33.00, A calming bamboo plant that’ll make you feel like you’re on a tropical vacation every day., Den Decor, NULL, 4.7, decor8.jpg, TRUE,
-58, 6, Unicorn Dreamcatcher, 28.00, This unicorn dreamcatcher will capture only the sweetest dreams—and leave behind the bad ones., Den Decor, NULL, 5.0, decor9.jpg, TRUE,
-59, 7, Llama Lamp, 25.00, A lamp that brings a little llama love to your bedroom or office. Glow up with style., Den Decor, NULL, 4.9, decor10.jpg, TRUE,
-60, 8, Cat Cushion, 23.00, A cushion so cute, your cat will be jealous. Good luck sharing this one., Den Decor, NULL, 5.0, decor11.jpg, TRUE,
-61, 9, Foxy Throw Blanket, 35.00, A cozy fox-themed blanket that’ll make your couch the perfect place to hibernate., Den Decor, NULL, 4.8, decor12.jpg, TRUE,
-62, 10, Koala Shelf, 42.00, A shelf shaped like a koala. It’s the cutest place to store your knick-knacks., Den Decor, NULL, 4.9, decor13.jpg, TRUE,
-63, 11, Butterfly Mirror, 38.00, A mirror framed by delicate butterflies. It’s like stepping into a fairy tale every time you look., Den Decor, NULL, 5.0, decor14.jpg, TRUE,
-64, 12, Galaxy Poster, 18.00, A poster that brings the entire galaxy to your wall. Who needs a telescope when you have this?, Den Decor, NULL, 4.7, decor15.jpg, TRUE,
-65, 13, Elephant Plant Pot, 30.00, A plant pot that’s shaped like a cute elephant. Grow your plants with a dash of personality., Den Decor, NULL, 5.0, decor16.jpg, TRUE,
-66, 14, Flower Fairy Lamp, 29.99, A lamp that casts a magical glow, bringing flowers and fairies into your home., Den Decor, NULL, 4.9, decor17.jpg, TRUE,
-67, 15, Sloth Wall Clock, 26.00, A clock with a sloth hanging from it. It’s the perfect way to say, “It’s time to chill.”, Den Decor, NULL, 4.8, decor18.jpg, TRUE,
-68, 16, Panda Pillow, 20.50, Pillow in the shape of a panda’s face. Nap time just got a whole lot cuter., Den Decor, NULL, 5.0, decor19.jpg, TRUE,
-69, 17, Bunny Bookshelf, 45.00, A bookshelf shaped like a bunny. Now your books are hopping to the next level., Den Decor, NULL, 4.9, decor20.jpg, TRUE,
-70, 18, Cloud Chair, 60.00, Sit on a cloud. Literally. This chair will make you feel like you’re floating in the sky., Den Decor, NULL, 5.0, decor21.jpg, TRUE,
-71, 19, Narwhal Nightlight, 25.00, A nightlight shaped like a narwhal. Sleep like a unicorn, glow like a narwhal., Den Decor, NULL, 4.8, decor22.jpg, TRUE,
-72, 20, Wooden Fox Tray, 32.00, A serving tray that’s as cute as a fox. Perfect for bringing snacks to your friends., Den Decor, NULL, 4.7, decor23.jpg, TRUE,
-73, 21, Cute Cat Rug, 24.00, A rug that looks like a cat. What’s better than having a cute cat at your feet all the time?, Den Decor, NULL, 5.0, decor24.jpg, TRUE,
-74, 22, Giraffe Coat Hook, 22.00, A coat hook that’s tall enough to reach the heavens and cute enough to make you smile every time., Den Decor, NULL, 4.9, decor25.jpg, TRUE,
-75, 23, Donut Delight, 18.50, A donut so sweet it could charm your pants off. Perfect for snack enthusiasts and nap aficionados., Cute Confections, NULL, 5.0, confection1.jpg, TRUE
-76, 24, Candy Cane Crunch, 12.00, Like a candy cane and a chocolate bar had a baby. Sweet, crunchy, and festive, even if it's not December., Cute Confections, NULL, 4.9, confection2.jpg, TRUE
-77, 25, Macaron Magic, 15.00, Bite-sized magic that’ll make you feel like a fancy French pastry chef—without the accent., Cute Confections, NULL, 5.0, confection3.jpg, TRUE
-78, 0, Donut Candies, 11.00, Donuts you can eat without the carbs. Gummy, chewy, and definitely not a real donut. Sorry, but they’re still pretty sweet., Cute Confections, NULL, 4.8, confection4.jpg, TRUE
-79, 1, Cupcake Bath Bombs, 9.99, Bath bombs shaped like cupcakes. No, you can’t eat them (sorry), but they smell like heaven and will make you feel like a cupcake in a bubble bath., Cute Confections, NULL, 5.0, confection5.jpg, TRUE
-80, 2, Chocolate Truffle Kit, 18.00, Ever wanted to make chocolate truffles that are fancier than your last date? Now you can! WARNING: May cause chocolate-induced happiness., Cute Confections, NULL, 4.9, confection6.jpg, TRUE
-81, 3, Lollipop Light, 13.50, Not just a light, it’s a candy-powered mood enhancer. Brighten your room, and your day, with some serious lollipop energy., Cute Confections, NULL, 5.0, confection7.jpg, TRUE
-82, 4, Gummy Bear Candies, 16.00, These gummy bears are here to bring the party. They’ll wiggle, they’ll jiggly, and they’ll definitely make you smile., Cute Confections, NULL, 4.7, confection8.jpg, TRUE
-83, 5, Sugar Cookie Bites, 22.00, Soft, sugary cookies that are literally sugar-coated happiness. You won’t even need milk (but you can still dunk them if you want)., Cute Confections, NULL, 5.0, confection9.jpg, TRUE
-84, 6, Candy Corn Delights, 10.00, Not just for Halloween, these candy corn treats are packed with nostalgia and a touch of sugar overload., Cute Confections, NULL, 4.9, confection10.jpg, TRUE
-85, 7, Cotton Candy Fluff, 8.00, Fluffier than your pillow, but way sweeter. It’s basically air, but with a flavor that’ll blow your mind (and your diet)., Cute Confections, NULL, 4.8, confection11.jpg, TRUE
-86, 8, Cupcake Bites, 7.50, Mini cupcakes that are almost too cute to eat. But not too cute to stop eating, so... enjoy., Cute Confections, NULL, 5.0, confection12.jpg, TRUE
-87, 9, Chocolate Bar, 16.00, A chocolate bar so rich, even your wallet would be jealous. Perfect for snacking, sharing, or just hoarding all to yourself., Cute Confections, NULL, 4.7, confection13.jpg, TRUE
-88, 10, Candy Necklace, 5.00, A necklace made of candy that you can wear and snack on (just not all at once, or you’ll have no necklace left). Sweet and stylish, two-in-one., Cute Confections, NULL, 4.9, confection14.jpg, TRUE
-89, 11, Cake Pop Treats, 12.50, Cake pops that are so cute, you might actually cry. Don’t worry, though—they’ll cheer you up with every bite., Cute Confections, NULL, 5.0, confection15.jpg, TRUE
-90, 12, Ice Cream Cone, 13.99, Ice cream in a cone, but it’s way more fun than that plain old bowl. The cone is crispy, the ice cream is creamy, and the joy is endless., Cute Confections, NULL, 4.8, confection16.jpg, TRUE
-91, 13, Donut Bites, 8.00, Little donuts that are so cute you might start calling them "miniature donuts" and treating them like royalty., Cute Confections, NULL, 4.9, confection17.jpg, TRUE
-92, 14, Cupcake Minis, 10.00, Tiny cupcakes that pack a punch. Small in size, big in flavor. Who needs a full-size cupcake anyway?, Cute Confections, NULL, 5.0, confection18.jpg, TRUE
-93, 15, Pie Chart Cookies, 14.00, Sugar cookies shaped like pie charts. They're a slice of learning and a bite of deliciousness. You can eat your data, literally!, Cute Confections, NULL, 4.7, confection19.jpg, TRUE
-94, 16, Lollipop Candies, 7.00, These lollipops are made for eating, not just sucking on. Taste the rainbow, and then some!, Cute Confections, NULL, 4.9, confection20.jpg, TRUE
-95, 17, Cookie Cutter Set, 12.00, A set of cookie cutters that will make you feel like a baking wizard. Stars, hearts, and cookies that are too cute to eat (but you still will)., Cute Confections, NULL, 5.0, confection21.jpg, TRUE
-96, 18, Caramel Drizzle, 9.00, Caramel so smooth you’ll wonder why it isn’t a luxury skincare product. Drizzle over anything for a sweet, silky upgrade., Cute Confections, NULL, 4.8, confection22.jpg, TRUE
-97, 19, Ice Cream Sandwich, 18.00, The classic ice cream sandwich, now with extra indulgence. It’s like a hug in dessert form. You won’t want to share, promise., Cute Confections, NULL, 5.0, confection23.jpg, TRUE
-98, 20, Gummy Bear Candy Bag, 15.00, A whole bag of gummy bears. Perfect for when you need to share your happiness, or just eat it all yourself. We won’t judge., Cute Confections, NULL, 4.9, confection24.jpg, TRUE
-99, 21, Fruit Tart, 6.50, A fruit tart that's basically a fruity, buttery dream. Perfect for when you want to feel fancy and eat something delicious., Cute Confections, NULL, 5.0, confection25.jpg, TRUE
-
+0,0,"Snugglezilla",15.99,"A bear so big, it might crush your problems. (Or your sofa.)",Basic Bears,NULL,5.0,bear1.jpg,TRUE
+1,1,"Fluffington",22.00,"He’s a bear, he’s fluffy, and he’s probably secretly a pillow in disguise.",Basic Bears,BEAR15,4.9,bear2.jpg,TRUE
+2,2,"Burt the Bear",18.50,"Burt’s not just a bear, he’s a cuddle enthusiast with a passion for snacks.",Basic Bears,NULL,4.8,bear3.jpg,TRUE
+3,3,"Mr. Huggles",20.00,"He’s big, he’s soft, and he’ll hug you like he’s never going to let go. (He won’t.)",Basic Bears,NULL,5.0,bear4.jpg,TRUE
+4,4,"Honey Bear",17.50,"Sweet as honey, but way more cuddly. Don’t worry, no actual honey involved.",Basic Bears,NULL,4.7,bear5.jpg,TRUE
+5,5,"Sir Snugglesworth",24.00,"He’s royalty in the bear world. Prepare for an elegant cuddle experience.",Basic Bears,NULL,4.9,bear6.jpg,TRUE
+6,6,"Bear Hug Boss",19.99,"The boss of all bear hugs. Be prepared to be overwhelmed with cuteness.",Basic Bears,NULL,4.8,bear7.jpg,TRUE
+7,7,"Cuddle Beast",25.00,"Cuddle him. Squeeze him. He’s basically a soft cloud with a bear face.",Basic Bears,CUDDLE10,5.0,bear8.jpg,TRUE
+8,8,"Fluffy McSnuggles",18.99,"The bear that’ll make you feel all warm inside. It’s like a hug from a pillow... forever.",Basic Bears,NULL,4.8,bear9.jpg,TRUE
+9,9,"Sir Fluffington",23.50,"A gentleman and a bear all in one. Be prepared for some top-tier cuddling.",Basic Bears,NULL,5.0,bear10.jpg,TRUE
+10,10,"Pillow Bear",19.00,"He’s not just a bear, he’s your new sleep buddy. Warning: He may cause excessive napping.",Basic Bears,NULL,4.7,bear11.jpg,TRUE
+11,11,"Chubby Bear",21.00,"The bear that’s rounder than your schedule. He’s here to bring joy and cuddles.",Basic Bears,CHUBBY,4.8,bear12.jpg,TRUE
+12,12,"Sleepy Snuggles",16.00,"For those days when you just need a nap buddy. He’s ready for those extra-long naps.",Basic Bears,NULL,4.9,bear13.jpg,TRUE
+13,13,"Giant Softie",27.99,"So soft, he could probably solve your bad day with just one hug.",Basic Bears,NULL,4.8,bear14.jpg,TRUE
+14,14,"Beary McSnuggles",18.50,"Your new bear best friend who’s great at keeping secrets and giving hugs.",Basic Bears,NULL,4.9,bear15.jpg,TRUE
+15,15,"Big Bear Energy",25.50,"He’s got energy. He’s big. He’s the bear that brings all the positive vibes.",Basic Bears,NULL,5.0,bear16.jpg,TRUE
+16,16,"Grizzly Hugger",23.00,"The grizzly bear that’s not so grizzly, but definitely the best at hugs.",Basic Bears,NULL,4.8,bear17.jpg,TRUE
+17,17,"Baby Bear",14.99,"So small, so fluffy, and so full of love. Don’t let the size fool you—this bear’s a giant in the hug department.",Basic Bears,NULL,4.7,bear18.jpg,TRUE
+18,18,"Bearcation Buddy",21.00,"For when you need a travel buddy who’s cute, fluffy, and always there for you.",Basic Bears,NULL,4.9,bear19.jpg,TRUE
+19,19,"Cuddly Beast",22.99,"A bear with a mission: to cuddle you until your stress melts away.",Basic Bears,NULL,4.8,bear20.jpg,TRUE
+20,20,"Fluff the Bear",20.00,"Fluffier than your pillow, cuddlier than your blanket. This bear knows how to snuggle.",Basic Bears,NULL,4.9,bear21.jpg,TRUE
+21,21,"Hugging Champion",24.00,"Champion of all things cuddly. This bear knows no competition when it comes to giving bear hugs.",Basic Bears,NULL,4.7,bear22.jpg,TRUE
+22,22,"Bear in a Blanket",18.00,"Wrapped in a blanket, this bear will make you wish you could live in this cuddle forever.",Basic Bears,NULL,5.0,bear23.jpg,TRUE
+23,23,"Teddy the Giggle Monster",21.99,"A bear that giggles while you cuddle. It’s scientifically proven to make everything 10x funnier.",Basic Bears,NULL,4.8,bear24.jpg,TRUE
+24,24,"Cuddly Paws",19.50,"He’s not just paws-itively adorable. He’s paws-itively the best at giving bear hugs.",Basic Bears,NULL,4.9,bear25.jpg,TRUE
+25,25,"Heart-Shaped Hoodie",28.00,"A hoodie that says “I love you” without saying a word. Because sometimes, you just need to wear love.",Kawaii Knits,NULL,5.0,knit1.jpg,TRUE
+26,0,"Bunny Ears Beanie",15.50,"The cutest beanie with bunny ears that will make you hop with joy. (Might cause spontaneous bunny impressions.)",Kawaii Knits,NULL,4.9,knit2.jpg,TRUE
+27,1,"Rainbow Socks of Wonder",8.99,"Bright, colorful socks that’ll make your feet feel like they’re walking on sunshine. Literally.",Kawaii Knits,NULL,4.8,knit3.jpg,TRUE
+28,2,"Cuddle Me Cardigan",32.00,"This cardigan is like a hug, but with more style. Get cozy and cute all at once.",Kawaii Knits,CARDI10,5.0,knit4.jpg,TRUE
+29,3,"Pineapple Hat",18.00,"A hat that says “I’m sweet and tropical” all while keeping your head warm. (And a little sassy.)",Kawaii Knits,NULL,4.9,knit5.jpg,TRUE
+30,4,"Kitten Mittens",14.50,"Mittens so cute, they might just meow at you. Okay, not really, but they’re still adorable.",Kawaii Knits,NULL,4.7,knit6.jpg,TRUE
+31,5,"Cupcake Sweater",25.99,"Wear your love for cupcakes. It’s like a sugary, cozy hug on your body.",Kawaii Knits,NULL,5.0,knit7.jpg,TRUE
+32,6,"Whisker Scarf",19.50,"A scarf with whiskers! Because why not add a little extra cuteness to your winter wardrobe?",Kawaii Knits,NULL,4.8,knit8.jpg,TRUE
+33,7,"Chibi Hoodie",29.00,"A hoodie that looks like it’s straight out of a manga, except it’s even cuter in real life.",Kawaii Knits,NULL,5.0,knit9.jpg,TRUE
+34,8,"Panda Mittens",16.50,"Mittens with panda faces on them. Because your hands deserve to look adorable too!",Kawaii Knits,NULL,4.9,knit10.jpg,TRUE
+35,9,"Pancake Socks",7.99,"Socks that look like pancakes. Because who doesn’t want to walk on waffles and syrup?",Kawaii Knits,NULL,4.7,knit11.jpg,TRUE
+36,10,"Unicorn Tail Scarf",22.00,"A scarf that gives you a unicorn tail. Because everyone needs a little magic.",Kawaii Knits,NULL,4.8,knit12.jpg,TRUE
+37,11,"Starry Night Socks",7.99,"Socks that’ll make your feet sparkle like the night sky. Astronauts should consider wearing these.",Kawaii Knits,NULL,4.7,knit13.jpg,TRUE
+38,12,"Teddy Bear Slippers",19.00,"Slippers so cuddly, you’ll never want to take them off. The teddy bear of footwear.",Kawaii Knits,NULL,5.0,knit14.jpg,TRUE
+39,13,"Cookie Monster Sweater",24.99,"For the cookie lover who wants to show their sweet side. (No actual cookies involved.)",Kawaii Knits,NULL,4.9,knit15.jpg,TRUE
+40,14,"Llama Love Hat",21.50,"A hat that gives you all the love of a llama. And you won’t even need to travel to the Andes.",Kawaii Knits,NULL,5.0,knit16.jpg,TRUE
+41,15,"Koala Cuddles Cardigan",26.00,"A cardigan with a koala face. It’s like cuddling with a koala... without the eucalyptus.",Kawaii Knits,NULL,4.8,knit17.jpg,TRUE
+42,16,"Cupcake Headband",10.00,"A headband with a tiny cupcake on it. Because cupcakes belong on your head too.",Kawaii Knits,NULL,4.7,knit18.jpg,TRUE
+43,17,"Otterly Cute Gloves",17.00,"Gloves so cute, they might just make you want to swim like an otter.",Kawaii Knits,NULL,4.9,knit19.jpg,TRUE
+44,18,"Fishy Scarf",20.00,"A scarf that looks like a fish. It’s just as cozy as it is funny.",Kawaii Knits,NULL,4.8,knit20.jpg,TRUE
+45,19,"Fuzzy Buns Beanie",16.00,"A beanie with fluffy bunny ears that’s almost as cute as the fluffiest bunny ever.",Kawaii Knits,NULL,5.0,knit21.jpg,TRUE
+46,20,"Pug Life Hoodie",27.50,"A hoodie that screams pug life, because pugs are the kings of cozy.",Kawaii Knits,NULL,4.9,knit22.jpg,TRUE
+47,21,"Sloth Sweater",23.00,"For those who prefer their sweaters as relaxed as sloths. So comfy, it might cause napping.",Kawaii Knits,NULL,4.7,knit23.jpg,TRUE
+48,22,"Whale Tail Scarf",21.00,"A scarf that makes you feel like you’re part whale. Warning: Might cause spontaneous swimming.",Kawaii Knits,NULL,4.8,knit24.jpg,TRUE
+49,23,"Panda Pajama Set",32.99,"A pajama set so cozy, even pandas would approve. Perfect for hibernating.",Kawaii Knits,NULL,5.0,knit25.jpg,TRUE
+50,24,"Cosmic Cushion",35.00,"A cushion that brings the stars into your home. Perfect for laying back and dreaming of space.",Den Decor,NULL,5.0,decor1.jpg,TRUE
+51,25,"Fluff Rug",50.00,"This rug feels like stepping on a cloud. Also, it doubles as a nap zone.",Den Decor,NULL,4.9,decor2.jpg,TRUE
+52,0,"Pillow Mountain",45.00,"Who needs a pillow fort when you have a pillow mountain in your living room?",Den Decor,NULL,5.0,decor3.jpg,TRUE
+53,1,"Rainbow Lamp",29.99,"Light up your room with every color of the rainbow. Just try not to get hypnotized.",Den Decor,NULL,4.8,decor4.jpg,TRUE
+54,2,"Penguin Statue",60.00,"A penguin statue that’ll keep watch over your living room with a calm, dignified look.",Den Decor,NULL,5.0,decor5.jpg,TRUE
+55,3,"Cactus Friend",22.00,"The cactus that’s as cute as a button and doesn’t require watering. Win-win!",Den Decor,NULL,4.9,decor6.jpg,TRUE
+56,4,"Hedgehog Wall Art",40.00,"A beautiful, spiky piece of art that’s literally “prickly” in the best way possible.",Den Decor,NULL,5.0,decor7.jpg,TRUE
+57,5,"Bamboo Bliss",33.00,"A calming bamboo plant that’ll make you feel like you’re on a tropical vacation every day.",Den Decor,NULL,4.7,decor8.jpg,TRUE
+58,6,"Unicorn Dreamcatcher",28.00,"This unicorn dreamcatcher will capture only the sweetest dreams—and leave behind the bad ones.",Den Decor,NULL,5.0,decor9.jpg,TRUE
+59,7,"Llama Lamp",25.00,"A lamp that brings a little llama love to your bedroom or office. Glow up with style.",Den Decor,NULL,4.9,decor10.jpg,TRUE
+60,8,"Cat Cushion",23.00,"A cushion so cute, your cat will be jealous. Good luck sharing this one.",Den Decor,NULL,5.0,decor11.jpg,TRUE
+61,9,"Foxy Throw Blanket",35.00,"A cozy fox-themed blanket that’ll make your couch the perfect place to hibernate.",Den Decor,NULL,4.8,decor12.jpg,TRUE
+62,10,"Koala Shelf",42.00,"A shelf shaped like a koala. It’s the cutest place to store your knick-knacks.",Den Decor,NULL,4.9,decor13.jpg,TRUE
+63,11,"Butterfly Mirror",38.00,"A mirror framed by delicate butterflies. It’s like stepping into a fairy tale every time you look.",Den Decor,NULL,5.0,decor14.jpg,TRUE
+64,12,"Galaxy Poster",18.00,"A poster that brings the entire galaxy to your wall. Who needs a telescope when you have this?",Den Decor,NULL,4.7,decor15.jpg,TRUE
+65,13,"Elephant Plant Pot",30.00,"A plant pot that’s shaped like a cute elephant. Grow your plants with a dash of personality.",Den Decor,NULL,5.0,decor16.jpg,TRUE
+66,14,"Flower Fairy Lamp",29.99,"A lamp that casts a magical glow, bringing flowers and fairies into your home.",Den Decor,NULL,4.9,decor17.jpg,TRUE
+67,15,"Sloth Wall Clock",26.00,"A clock with a sloth hanging from it. It’s the perfect way to say, “It’s time to chill.”",Den Decor,NULL,4.8,decor18.jpg,TRUE
+68,16,"Panda Pillow",20.50,"Pillow in the shape of a panda’s face. Nap time just got a whole lot cuter.",Den Decor,NULL,5.0,decor19.jpg,TRUE
+69,17,"Bunny Bookshelf",45.00,"A bookshelf shaped like a bunny. Now your books are hopping to the next level.",Den Decor,NULL,4.9,decor20.jpg,TRUE
+70,18,"Cloud Chair",60.00,"Sit on a cloud. Literally. This chair will make you feel like you’re floating in the sky.",Den Decor,NULL,5.0,decor21.jpg,TRUE
+71,19,"Narwhal Nightlight",25.00,"A nightlight shaped like a narwhal. Sleep like a unicorn, glow like a narwhal.",Den Decor,NULL,4.8,decor22.jpg,TRUE
+72,20,"Wooden Fox Tray",32.00,"A serving tray that’s as cute as a fox. Perfect for bringing snacks to your friends.",Den Decor,NULL,4.7,decor23.jpg,TRUE
+73,21,"Cute Cat Rug",24.00,"A rug that looks like a cat. What’s better than having a cute cat at your feet all the time?",Den Decor,NULL,5.0,decor24.jpg,TRUE
+74,22,"Giraffe Coat Hook",22.00,"A coat hook that’s tall enough to reach the heavens and cute enough to make you smile every time.",Den Decor,NULL,4.9,decor25.jpg,TRUE
+75,23,"Donut Delight",18.50,"A donut so sweet it could charm your pants off. Perfect for snack enthusiasts and nap aficionados.",Cute Confections,NULL,5.0,confection1.jpg,TRUE
+76,24,"Candy Cane Crunch",12.00,"Like a candy cane and a chocolate bar had a baby. Sweet, crunchy, and festive, even if it's not December.",Cute Confections,NULL,4.9,confection2.jpg,TRUE
+77,25,"Macaron Magic",15.00,"Bite-sized magic that’ll make you feel like a fancy French pastry chef—without the accent.",Cute Confections,NULL,5.0,confection3.jpg,TRUE
+78,0,"Donut Candies",11.00,"Donuts you can eat without the carbs. Gummy, chewy, and definitely not a real donut. Sorry, but they’re still pretty sweet.",Cute Confections,NULL,4.8,confection4.jpg,TRUE
+79,1,"Cupcake Bath Bombs",9.99,"Bath bombs shaped like cupcakes. No, you can’t eat them (sorry), but they smell like heaven and will make you feel like a cupcake in a bubble bath.",Cute Confections,NULL,5.0,confection5.jpg,TRUE
+80,2,"Chocolate Truffle Kit",18.00,"Ever wanted to make chocolate truffles that are fancier than your last date? Now you can! WARNING: May cause chocolate-induced happiness.",Cute Confections,NULL,4.9,confection6.jpg,TRUE
+81,3,"Lollipop Light",13.50,"Not just a light, it’s a candy-powered mood enhancer. Brighten your room, and your day, with some serious lollipop energy.",Cute Confections,NULL,5.0,confection7.jpg,TRUE
+82,4,"Gummy Bear Candies",16.00,"These gummy bears are here to bring the party. They’ll wiggle, they’ll jiggly, and they’ll definitely make you smile.",Cute Confections,NULL,4.7,confection8.jpg,TRUE
+83,5,"Sugar Cookie Bites",22.00,"Soft, sugary cookies that are literally sugar-coated happiness. You won’t even need milk (but you can still dunk them if you want).",Cute Confections,NULL,5.0,confection9.jpg,TRUE
+84,6,"Candy Corn Delights",10.00,"Not just for Halloween, these candy corn treats are packed with nostalgia and a touch of sugar overload.",Cute Confections,NULL,4.9,confection10.jpg,TRUE
+85,7,"Cotton Candy Fluff",8.00,"Fluffier than your pillow, but way sweeter. It’s basically air, but with a flavor that’ll blow your mind (and your diet).",Cute Confections,NULL,4.8,confection11.jpg,TRUE
+86,8,"Cupcake Bites",7.50,"Mini cupcakes that are almost too cute to eat. But not too cute to stop eating, so... enjoy.",Cute Confections,NULL,5.0,confection12.jpg,TRUE
+87,9,"Chocolate Bar",16.00,"A chocolate bar so rich, even your wallet would be jealous. Perfect for snacking, sharing, or just hoarding all to yourself.",Cute Confections,NULL,4.7,confection13.jpg,TRUE
+88,10,"Candy Necklace",5.00,"A necklace made of candy that you can wear and snack on (just not all at once, or you’ll have no necklace left). Sweet and stylish, two-in-one.",Cute Confections,NULL,4.9,confection14.jpg,TRUE
+89,11,"Cake Pop Treats",12.50,"Cake pops that are so cute, you might actually cry. Don’t worry, though—they’ll cheer you up with every bite.",Cute Confections,NULL,5.0,confection15.jpg,TRUE
+90,12,"Ice Cream Cone",13.99,"Ice cream in a cone, but it’s way more fun than that plain old bowl. The cone is crispy, the ice cream is creamy, and the joy is endless.",Cute Confections,NULL,4.8,confection16.jpg,TRUE
+91,13,"Donut Bites",8.00,"Little donuts that are so cute you might start calling them 'miniature donuts' and treating them like royalty.",Cute Confections,NULL,4.9,confection17.jpg,TRUE
+92,14,"Cupcake Minis",10.00,"Tiny cupcakes that pack a punch. Small in size, big in flavor. Who needs a full-size cupcake anyway?",Cute Confections,NULL,5.0,confection18.jpg,TRUE
+93,15,"Pie Chart Cookies",14.00,"Sugar cookies shaped like pie charts. They're a slice of learning and a bite of deliciousness. You can eat your data, literally!",Cute Confections,NULL,4.7,confection19.jpg,TRUE
+94,16,"Lollipop Candies",7.00,"These lollipops are made for eating, not just sucking on. Taste the rainbow, and then some!",Cute Confections,NULL,4.9,confection20.jpg,TRUE
+95,17,"Cookie Cutter Set",12.00,"A set of cookie cutters that will make you feel like a baking wizard. Stars, hearts, and cookies that are too cute to eat (but you still will).",Cute Confections,NULL,5.0,confection21.jpg,TRUE
+96,18,"Caramel Drizzle",9.00,"Caramel so smooth you’ll wonder why it isn’t a luxury skincare product. Drizzle over anything for a sweet, silky upgrade.",Cute Confections,NULL,4.8,confection22.jpg,TRUE
+97,19,"Ice Cream Sandwich",18.00,"The classic ice cream sandwich, now with extra indulgence. It’s like a hug in dessert form. You won’t want to share, promise.",Cute Confections,NULL,5.0,confection23.jpg,TRUE
+98,20,"Gummy Bear Candy Bag",15.00,"A whole bag of gummy bears. Perfect for when you need to share your happiness, or just eat it all yourself. We won’t judge.",Cute Confections,NULL,4.9,confection24.jpg,TRUE
+99,21,"Fruit Tart",6.50,"A fruit tart that's basically a fruity, buttery dream. Perfect for when you want to feel fancy and eat something delicious.",Cute Confections,NULL,5.0,confection25.jpg,TRUE

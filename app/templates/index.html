@@ -70,7 +70,7 @@
   <div class="product-card">
     <div class="product-image">
       {% if product.image_path %}
-      <img src="{{ product.image_path }}" alt="Image of {{ product.name }}">
+      <img src="{{ url_for('static', filename=product.image_path.strip()) }}" alt="Image of {{ product.name }}" style="width: 200px; height: auto;">
       {% else %}
       <span>No image</span>
       {% endif %}
@@ -124,7 +124,7 @@
         <!-- Display the product image if available, otherwise show a placeholder -->
         <td>
           {% if product.image_path %}
-            <img src="{{ product.image_path }}" alt="Image of {{ product.name }}" style="width: 50px; height: auto;">
+            <img src="{{ url_for('static', filename=product.image_path) }}" alt="Image of {{ product.name }}" style="width: 50px; height: auto;">
           {% else %}
             <span>No image</span>
           {% endif %}
