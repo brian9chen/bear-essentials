@@ -77,3 +77,60 @@ class User(UserMixin):
             '''
         )
         return rows[0][0]
+    
+    #@staticmethod
+    def update_profile(self, firstname, lastname, email, address, password=None):
+        if password:
+            hashed_password = generate_password_hash(password)
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address,
+                    password = :password
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               password=hashed_password, user_id=self.id)
+        else:
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               user_id=self.id)
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.address = address
+        if password:
+            self.password = hashed_password
+    
+    def add_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to add must be positive.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance + :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance += amount
+    
+    def withdraw_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to withdraw must be positive.")
+        if amount > self.balance:
+            raise ValueError("Insufficient balance.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance - :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance -= amount
