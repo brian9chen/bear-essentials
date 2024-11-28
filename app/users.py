@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 
 from .models.user import User
 from .models.review import Review
@@ -85,6 +85,16 @@ class RegistrationForm(FlaskForm):
         if User.email_exists(email.data):
             raise ValidationError('Already a user with this email.')
 
+class AddBalanceForm(FlaskForm):
+    amount = DecimalField('Amount to Add ($)', validators=[DataRequired(), NumberRange(min=0.01, message="Amount must be greater than $0.")])
+    submit_add = SubmitField('Add to Balance')
+
+# Form to Withdraw Balance
+class WithdrawBalanceForm(FlaskForm):
+    amount = DecimalField('Amount to Withdraw ($)', validators=[DataRequired(), NumberRange(min=0.01, message="Amount must be greater than $0.")])
+    submit_withdraw = SubmitField('Withdraw from Balance')
+
+
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -126,19 +136,55 @@ def product(id):
 @login_required
 def profile():
     form = UpdateProfileForm()
-    if form.validate_on_submit():
-        current_user.update_profile(
-            firstname=form.firstname.data,
-            lastname=form.lastname.data,
-            email=form.email.data,
-            address=form.address.data,
-            password=form.password.data if form.password.data else None
-        )
-        flash('Your profile has been updated.', 'success')
-        return redirect(url_for('users.profile'))
+    add_balance_form = AddBalanceForm()
+    withdraw_balance_form = WithdrawBalanceForm()
+    if 'submit_update' in request.form and form.validate_on_submit():
+        try:
+            current_user.update_profile(
+                firstname=form.firstname.data,
+                lastname=form.lastname.data,
+                email=form.email.data,
+                address=form.address.data,
+                password=form.password.data if form.password.data else None
+            )
+            flash('Your profile has been updated.', 'success')
+            return redirect(url_for('users.profile'))
+        except Exception as e:
+            flash('Failed to update profile. Please try again.', 'danger')
+
+
+    elif 'submit_add' in request.form and add_balance_form.validate_on_submit():
+        try:
+            amount = float(add_balance_form.amount.data)
+            current_user.add_balance(amount)
+            flash(f"Successfully added ${amount:.2f} to your balance.", 'success')
+            return redirect(url_for('users.profile'))
+        except ValueError as ve:
+            flash(str(ve), 'danger')
+        except Exception as e:
+            flash('Failed to add balance. Please try again.', 'danger')
+
+    elif 'submit_withdraw' in request.form and withdraw_balance_form.validate_on_submit():
+        try:
+            amount = float(withdraw_balance_form.amount.data)
+            current_user.withdraw_balance(amount)
+            flash(f"Successfully withdrew ${amount:.2f} from your balance.", 'success')
+            return redirect(url_for('users.profile'))
+        except ValueError as ve:
+            flash(str(ve), 'danger')
+        except Exception as e:
+            flash('Failed to withdraw balance. Please try again.', 'danger')
+
     elif request.method == 'GET':
+        # Populate the profile form with current user data
         form.firstname.data = current_user.firstname
         form.lastname.data = current_user.lastname
         form.email.data = current_user.email
         form.address.data = current_user.address
-    return render_template('profile.html', title='Profile', form=form)
+
+    return render_template('profile.html',
+                           title='Profile',
+                           form=form,
+                           add_balance_form=add_balance_form,
+                           withdraw_balance_form=withdraw_balance_form,
+                           balance=current_user.balance)

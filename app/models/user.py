@@ -110,3 +110,27 @@ class User(UserMixin):
         self.address = address
         if password:
             self.password = hashed_password
+    
+    def add_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to add must be positive.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance + :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance += amount
+    
+    def withdraw_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to withdraw must be positive.")
+        if amount > self.balance:
+            raise ValueError("Insufficient balance.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance - :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance -= amount
