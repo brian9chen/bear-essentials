@@ -3,34 +3,34 @@
 {% block content %}
 
 <div style="text-align: center;">
-  <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 50px; margin-top: 50px">Join the Bear Family!</label><br/>
+  <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 25px; margin-top: 25px">Join the Bear Family!</label><br/>
 </div>
 
 <form action="" method="post" style="text-align: center;">
   {{ form.hidden_tag() }}
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">First Name</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">First Name</label><br/>
     {{ form.firstname(size=32) }}<br/>
     {% for error in form.firstname.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Last Name</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">Last Name</label><br/>
     {{ form.lastname(size=32) }}<br/>
     {% for error in form.lastname.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Email</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">Email</label><br/>
     {{ form.email(size=64) }}<br/>
     {% for error in form.email.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Address</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">Address</label><br/>
     {{ form.address(size=64) }}<br/>
     {% for error in form.address.errors %}
     <span style="color: red;">[{{ error }}]</span>
@@ -38,14 +38,14 @@
   </p>
 
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Password</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">Password</label><br/>
     {{ form.password(size=32) }}<br/>
     {% for error in form.password.errors %}
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
   <p>
-    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 30px;">Repeat Password</label><br/>
+    <label style="color: #702106; font-family: 'Gaegu', sans-serif; font-size: 20px;">Repeat Password</label><br/>
     {{ form.password2(size=32) }}<br/>
     {% for error in form.password2.errors %}
     <span style="color: red;">[{{ error }}]</span>
