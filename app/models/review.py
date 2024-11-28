@@ -1,11 +1,11 @@
 from flask import current_app as app
 
 class Review:
-    def __init__(self, id, user_id, product_id, rating, description, time_created, time_modified, num_upvotes):
+    def __init__(self, id, user_id, product_id, seller_id, rating, description, time_created, time_modified, num_upvotes):
         self.id = id
         self.user_id = user_id
         self.product_id = product_id
-        # self.seller_id = seller_id
+        self.seller_id = seller_id
         self.rating = rating
         self.description = description
         self.time_created = time_created
