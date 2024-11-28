@@ -77,3 +77,36 @@ class User(UserMixin):
             '''
         )
         return rows[0][0]
+    
+    #@staticmethod
+    def update_profile(self, firstname, lastname, email, address, password=None):
+        if password:
+            hashed_password = generate_password_hash(password)
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address,
+                    password = :password
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               password=hashed_password, user_id=self.id)
+        else:
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               user_id=self.id)
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.address = address
+        if password:
+            self.password = hashed_password

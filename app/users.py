@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
@@ -11,6 +11,24 @@ from .models.review import Review
 
 from flask import Blueprint, render_template, abort
 bp = Blueprint('users', __name__)
+
+
+#update profile form
+class UpdateProfileForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[DataRequired()])
+    password = PasswordField('New Password', validators=[])
+    password2 = PasswordField(
+        'Repeat New Password', validators=[EqualTo('password', message='Passwords must match')])
+    submit = SubmitField('Update Profile')
+
+    def validate_email(self, email):
+        if email.data != current_user.email and User.email_exists(email.data):
+            raise ValidationError('This email is already in use. Please choose a different one.')
+
+
 
 @bp.route('/user/<int:user_id>', methods=['GET'])
 
@@ -102,3 +120,25 @@ def product(id):
         return render_template('public_view.html', user=user)
     else:
         return render_template('public_view.html', user=None)
+
+#add profile route
+@bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        current_user.update_profile(
+            firstname=form.firstname.data,
+            lastname=form.lastname.data,
+            email=form.email.data,
+            address=form.address.data,
+            password=form.password.data if form.password.data else None
+        )
+        flash('Your profile has been updated.', 'success')
+        return redirect(url_for('users.profile'))
+    elif request.method == 'GET':
+        form.firstname.data = current_user.firstname
+        form.lastname.data = current_user.lastname
+        form.email.data = current_user.email
+        form.address.data = current_user.address
+    return render_template('profile.html', title='Profile', form=form)
