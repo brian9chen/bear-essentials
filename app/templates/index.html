@@ -65,7 +65,35 @@
 
 <a class="btn btn-secondary" href="{{url_for('reviews.review')}}" role="button">User Reviews</a>
 
-<br><br>
+<div class="products-grid container-fluid">
+  {% for product in avail_products %}
+  <div class="product-card">
+    <div class="product-image">
+      {% if product.image_path %}
+      <img src="{{ product.image_path }}" alt="Image of {{ product.name }}">
+      {% else %}
+      <span>No image</span>
+      {% endif %}
+    </div>
+    <div class="product-info">
+      <h3 class="product-name">
+        <a href="{{ url_for('index.product_detail', id=product.id) }}">{{ product.name }}</a>
+      </h3>
+      <p class="product-price">${{ product.price }}</p>
+      <p class="product-description">{{ product.description }}</p>
+      <p class="product-rating">Rating: {{ product.prod_avg_rating }}</p>
+      <p class="product-category">Category: {{ product.category }}</p>
+      <div class="product-actions">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('reviews.write_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
+        {% else %}
+        <span>Login to review</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
