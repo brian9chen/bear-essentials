@@ -74,3 +74,6 @@ CREATE TABLE Reviews (
     time_modified TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     num_upvotes INTEGER DEFAULT 0
 );
+
+ALTER TABLE CartItems ALTER COLUMN order_id DROP NOT NULL;
+ALTER TABLE CartItems ADD COLUMN is_fulfilled BOOLEAN DEFAULT FALSE;

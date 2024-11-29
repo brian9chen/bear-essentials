@@ -43,4 +43,7 @@ def create_app():
     from .order import bp as order_bp
     app.register_blueprint(order_bp)
 
+    from .seller_fulfillment import bp as fulfillment_bp
+    app.register_blueprint(fulfillment_bp)
+
     return app
