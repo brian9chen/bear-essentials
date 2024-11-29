@@ -30,12 +30,8 @@ class Order:
         return Order.get(id)
     
     @staticmethod
-    def get_seller_orders_with_items(seller_id, search=None):
-        """
-        Fetch orders involving the seller, allowing filtering by search term.
-        Results are sorted in reverse chronological order by default.
-        """
-        # search filter
+    def get_seller_orders_with_items(seller_id, search=None, status_filter="all"):
+        # Search clause to filter orders by product name or buyer name
         search_clause = ''
         if search:
             search_clause = '''
@@ -45,26 +41,36 @@ class Order:
             )
             '''
 
-        # main
+        # Status filter clause
+        status_clause = ''
+        if status_filter == "pending":
+            status_clause = 'AND c.is_fulfilled = FALSE'
+        elif status_filter == "fulfilled":
+            status_clause = 'AND c.is_fulfilled = TRUE'
+
+        # Main query
         query = f'''
-        SELECT o.id AS order_id, o.uid AS buyer_id, SUM(c.quantity * p.price) AS seller_total_price,
-            COUNT(c.id) AS total_items, o.time_created, o.time_fulfilled,
-            c.id AS cartitem_id, c.quantity, c.is_fulfilled, p.name AS product_name,
-            u.firstname || ' ' || u.lastname AS buyer_name, u.address AS buyer_address
-        FROM Orders o
-        JOIN CartItems c ON o.id = c.order_id
-        JOIN Inventory i ON c.inv_id = i.id
-        JOIN Products p ON i.pid = p.id
-        JOIN Users u ON o.uid = u.id
-        WHERE i.user_id = :seller_id
-        {search_clause}
-        GROUP BY o.id, o.uid, o.time_created, o.time_fulfilled, c.id, p.name, u.firstname, u.lastname, u.address
-        ORDER BY o.time_created DESC
-        '''
-        
+SELECT o.id AS order_id, o.uid AS buyer_id, SUM(c.quantity * p.price) AS seller_total_price,
+    COUNT(c.id) AS total_items, o.time_created, o.time_fulfilled,
+    c.id AS cartitem_id, c.quantity, c.is_fulfilled, p.name AS product_name,
+    u.firstname || ' ' || u.lastname AS buyer_name, u.address AS buyer_address
+FROM Orders o
+JOIN CartItems c ON o.id = c.order_id
+JOIN Inventory i ON c.inv_id = i.id
+JOIN Products p ON i.pid = p.id
+JOIN Users u ON o.uid = u.id
+WHERE i.user_id = :seller_id
+{search_clause}
+{status_clause}
+GROUP BY o.id, o.uid, o.time_created, o.time_fulfilled,
+         c.id, c.quantity, c.is_fulfilled, p.name,
+         u.firstname, u.lastname, u.address
+ORDER BY o.time_created DESC
+'''
+
         rows = app.db.execute(query, seller_id=seller_id, search=f"%{search}%" if search else None)
 
-        # organize
+        # Organize results
         orders = {}
         for row in rows:
             order_id = row[0]
@@ -77,9 +83,9 @@ class Order:
                     "time_created": row[4],
                     "time_fulfilled": row[5],
                     "items": [],
-                    "overall_fulfilled": True  # Assume fulfilled unless proven otherwise
+                    "overall_fulfilled": True  # Will be updated based on item statuses
                 }
-            if not row[8]:  # check if unfilfilled
+            if not row[8]:  # If any item is not fulfilled
                 orders[order_id]["overall_fulfilled"] = False
             orders[order_id]["items"].append({
                 "cartitem_id": row[6],
@@ -87,8 +93,6 @@ class Order:
                 "is_fulfilled": row[8],
                 "product_name": row[9],
                 "buyer_name": row[10],
-                "buyer_address": row[11]
+                "buyer_address": row[11],
             })
-
         return list(orders.values())
-

@@ -7,10 +7,12 @@ bp = Blueprint('fulfillment', __name__)
 
 @bp.route('/fulfillment', methods=['GET'])
 def seller_fulfillment():
-    seller_id = current_user.id  
-    search = request.args.get('search', '').strip()  
-    orders = Order.get_seller_orders_with_items(seller_id, search=search)
-    return render_template('seller_fulfillment.html', orders=orders, search=search)
+    seller_id = current_user.id
+    search = request.args.get("search", None)
+    status_filter = request.args.get("status_filter", "all")  # Default to 'all' if not provided
+    orders = Order.get_seller_orders_with_items(seller_id, search=search, status_filter=status_filter)
+    return render_template('seller_fulfillment.html', orders=orders, search=search, status_filter=status_filter)
+
 
 
 @bp.route('/fulfillment/mark_fulfilled/<int:cartitem_id>', methods=['POST'])
