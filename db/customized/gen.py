@@ -119,7 +119,15 @@ def gen_reviews(num_reviews):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
-            pid = fake.random_int(min=0, max=num_products-1)
+            
+            prod_or_seller = fake.random_int(min=0, max=1)
+            
+            if prod_or_seller == 0:
+                pid = fake.random_int(min=0, max=num_products-1)
+                seller_id = None
+            else:
+                pid = None
+                seller_id = fake.random_int(min=0, max=num_users-1) # change to valid sellers once gen.py generates sellers
 
             # make sure that a user can only leave 1 review on a product
             pair = str(uid) + "," + str(pid)
@@ -150,7 +158,7 @@ def gen_reviews(num_reviews):
             time_posted = fake.date_time()
             time_modified = time_posted
 
-            writer.writerow([id, uid, pid, rating, review, time_posted, time_modified, 0])
+            writer.writerow([id, uid, pid, seller_id, rating, review, time_posted, time_modified, 0])
         print(f'{num_reviews} generated')
     return
 
@@ -222,7 +230,8 @@ def gen_cart_items(num_cart_items, order_ids):
     return
 
 gen_users(num_users)
-available_pids = gen_products(num_products)
+# available_pids = gen_products(num_products)
+available_pids = range(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_reviews)
 gen_inventory(num_inventory)
