@@ -65,23 +65,24 @@ def submit_review(product_id):
     print("ID: " + str(current_user.id) + " Name: " + str(current_user.firstname))
     # csv_file_path = '../db/data/Reviews.csv'
     csv_file_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'data', 'Reviews.csv')
-    time_created = datetime.datetime.now()
+    time_created = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     time_modified = time_created
     num_upvotes = 0
 
-    with open(csv_file_path, mode='a', newline='') as csv_file:
-        # csv_file.write("\n")
-        writer = csv.writer(csv_file)
-        writer.writerow([review_id, user_id, product_id, rating, review_text, time_created, time_modified, num_upvotes])
+    # with open(csv_file_path, mode='a', newline='') as csv_file:
+    #     # csv_file.write("\n")
+    #     writer = csv.writer(csv_file)
+    #     writer.writerow([review_id, user_id, product_id, rating, review_text, time_created, time_modified, num_upvotes])
 
     # Write to the database
     app.db.execute('''
-    INSERT INTO Reviews (id, user_id, product_id, rating, description, time_created, time_modified, num_upvotes)
-    VALUES (:review_id, :user_id, :product_id, :rating, :review_text, :time_created, :time_modified, :num_upvotes)
+    INSERT INTO Reviews (id, user_id, product_id, seller_id, rating, description, time_created, time_modified, num_upvotes)
+    VALUES (:review_id, :user_id, :product_id, :seller_id, :rating, :review_text, :time_created, :time_modified, :num_upvotes)
     ''',
     review_id=review_id,
     user_id=user_id,
     product_id=product_id,
+    seller_id=None,
     rating=rating,
     review_text=review_text,
     time_created=time_created,

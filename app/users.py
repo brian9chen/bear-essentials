@@ -182,9 +182,51 @@ def profile():
         form.email.data = current_user.email
         form.address.data = current_user.address
 
+    page = request.args.get('page', 1, type=int)
+    reviews = Review.get_all_prodName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    
+    # Create a simple pagination-like object
+    class Pagination:
+        def __init__(self, items, page, per_page, total):
+            self.items = items
+            self.page = page
+            self.per_page = per_page
+            self.total = total
+            
+        @property
+        def pages(self):
+            return max(1, (self.total + self.per_page - 1) // self.per_page)
+            
+        @property
+        def has_prev(self):
+            return self.page > 1
+            
+        @property
+        def has_next(self):
+            return self.page < self.pages
+            
+        @property
+        def prev_num(self):
+            return self.page - 1
+            
+        @property
+        def next_num(self):
+            return self.page + 1
+            
+        def iter_pages(self):
+            for i in range(1, self.pages + 1):
+                yield i
+
+    # Get total count of reviews
+    total_reviews = Review.count_reviews_by_uid(current_user.id)
+    
+    # Create pagination object
+    my_reviews = Pagination(reviews, page, per_page=5, total=total_reviews)
+    
     return render_template('profile.html',
                            title='Profile',
                            form=form,
                            add_balance_form=add_balance_form,
                            withdraw_balance_form=withdraw_balance_form,
-                           balance=current_user.balance)
+                           balance=current_user.balance,
+                           my_reviews=my_reviews)
