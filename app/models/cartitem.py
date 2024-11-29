@@ -50,9 +50,37 @@ class CartItem:
         """
         app.db.execute('''
         UPDATE CartItems
-        SET is_fulfilled = TRUE, time_modified = CURRENT_TIMESTAMP
+        SET is_fulfilled = TRUE,
+            time_fulfilled = CURRENT_TIMESTAMP,
+            time_modified = CURRENT_TIMESTAMP
         WHERE id = :cartitem_id
         ''', cartitem_id=cartitem_id)
+
+        # get the order_id associated with the cart item
+        result = app.db.execute('''
+        SELECT order_id
+        FROM CartItems
+        WHERE id = :cartitem_id
+        ''', cartitem_id=cartitem_id)
+        if result:
+            order_id = result[0][0]
+
+            # check if all cart items in the order are fulfilled
+            unfulfilled_items = app.db.execute('''
+            SELECT COUNT(*)
+            FROM CartItems
+            WHERE order_id = :order_id AND is_fulfilled = FALSE
+            ''', order_id=order_id)
+            unfulfilled_count = unfulfilled_items[0][0]
+
+            if unfulfilled_count == 0:
+                # all items are fulfilled; update the order's time_fulfilled
+                app.db.execute('''
+                UPDATE Orders
+                SET time_fulfilled = CURRENT_TIMESTAMP
+                WHERE id = :order_id
+                ''', order_id=order_id)
+
 
 #long code to get stuff by order
     @staticmethod
