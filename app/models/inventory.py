@@ -45,14 +45,13 @@ class Inventory:
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
-        # Insert a new product into the Products table
         product_id = app.db.execute('''
             INSERT INTO Products (creator_id, name, price, category, description)
             VALUES (:user_id, :product_name, :price, :category, :description)
             RETURNING id
         ''', user_id=user_id, product_name=product_name, price=price, category=category, description = description)
         
-        # Insert the new product into the Inventory table with initial quantity
+        # insert the new product into the Inventory table with initial quantity
         if product_id:
             app.db.execute('''
                 INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
@@ -61,7 +60,6 @@ class Inventory:
 
     @staticmethod
     def update_quantity(inventory_id, new_quantity):
-        # Update the quantity_in_stock for a given inventory item
         app.db.execute('''
             UPDATE Inventory
             SET quantity_in_stock = :new_quantity
@@ -70,7 +68,6 @@ class Inventory:
 
     @staticmethod
     def update_price(inventory_id, new_price):
-    # Update the price in Products for the product associated with the inventory_id
         app.db.execute('''
             UPDATE Products
             SET price = :new_price
