@@ -25,7 +25,11 @@ def gen_users(num_users):
     with open('Users.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
-        for uid in range(num_users):
+        
+        writer.writerow([0, 'icecream@tastes.good', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Joey', 'Shmoey', '123 Ice Cream Lane', 0, False])
+        writer.writerow([1, 'coolbeans@coffee.strong', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Mary', 'Jane', '127 Ice Cream Lane', 0, False])
+        
+        for uid in range(2, num_users):
             if uid % 10 == 0:
                 print(f'{uid}', end=' ', flush=True)
             profile = fake.profile()
