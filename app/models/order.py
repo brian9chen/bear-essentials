@@ -80,7 +80,6 @@ class Order:
         '''
         rows = app.db.execute(query, seller_id=seller_id, search=f"%{search}%" if search else None)
 
-        # Organize results
         orders = {}
         for row in rows:
             order_id = row[0]
@@ -93,7 +92,7 @@ class Order:
                     "time_created": row[4],
                     "time_fulfilled": row[5],
                     "items": [],
-                    "overall_fulfilled": bool(row[12])  # Adjust index to match your SELECT clause
+                    "overall_fulfilled": bool(row[12]) 
                 }
             orders[order_id]["items"].append({
                 "cartitem_id": row[6],

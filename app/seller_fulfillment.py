@@ -13,8 +13,6 @@ def seller_fulfillment():
     orders = Order.get_seller_orders_with_items(seller_id, search=search, status_filter=status_filter)
     return render_template('seller_fulfillment.html', orders=orders, search=search, status_filter=status_filter)
 
-
-
 @bp.route('/fulfillment/mark_fulfilled/<int:cartitem_id>', methods=['POST'])
 def fulfill_cartitem(cartitem_id):
     CartItem.mark_as_fulfilled(cartitem_id)
