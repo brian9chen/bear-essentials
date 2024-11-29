@@ -26,6 +26,7 @@
         <th scope="col">Price</th>
         <th scope="col">Product Category</th>
         <th scope="col">Product Description</th>
+        <th scope="col">Product Image</th>
         <th scope="col">Remove Item</th>
       </tr>
     </thead>
@@ -69,6 +70,17 @@
             <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
           </form>
         </td>
+        <td>
+          {% if item['image_path'] %}
+            <img src="{{ url_for('static', filename=item['image_path']) }}" alt="Product Image" style="max-width: 100px;">
+          {% else %}
+            <p>No image available</p>
+          {% endif %}
+          <form action="{{ url_for('inventory.update_image', inventory_id=item['inventory_id']) }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" class="form-control form-control-sm mt-2">
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Upload</button>
+          </form>
+        </td>              
         <td>
           <form action="{{ url_for('inventory.remove_product', inventory_id=item['inventory_id']) }}" method="POST">
             <button type="submit" class="btn btn-brown3 btn-sm">Remove</button>

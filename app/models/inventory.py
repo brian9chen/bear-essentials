@@ -24,24 +24,26 @@ class Inventory:
     def get_all_by_user(user_id):
         rows = app.db.execute('''
             SELECT i.id, i.user_id, i.pid, i.quantity_in_stock, i.quantity_to_fulfill, i.quantity_back_to_stock,
-                   p.name, p.price, p.description, p.category
+                p.name, p.price, p.description, p.category, i.image_path
             FROM Inventory i
             JOIN Products p ON i.pid = p.id
             WHERE i.user_id = :user_id
         ''', user_id=user_id)
 
         return [{
-            "inventory_id": row[0],
-            "user_id": row[1],
-            "product_id": row[2],
-            "quantity_in_stock": row[3],
-            "quantity_to_fulfill": row[4],
-            "quantity_back_to_stock": row[5],
-            "product_name": row[6],
-            "product_price": row[7],
-            "product_description": row[8],
-            "product_category": row[9]
-        } for row in rows] if rows else []
+        "inventory_id": row[0],
+        "user_id": row[1],
+        "product_id": row[2],
+        "quantity_in_stock": row[3],
+        "quantity_to_fulfill": row[4],
+        "quantity_back_to_stock": row[5],
+        "product_name": row[6],
+        "product_price": row[7],
+        "product_description": row[8],
+        "product_category": row[9],
+        "image_path": row[10]  # Add this line
+    } for row in rows] if rows else []
+
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
@@ -119,6 +121,17 @@ class Inventory:
             AND Products.creator_id = Inventory.user_id
         ''', new_name=new_name, inventory_id=inventory_id)
 
-            
+
+
+    @staticmethod
+    def update_image_path(inventory_id, image_path):
+        """
+        Update the image path for a specific inventory item.
+        """
+        app.db.execute('''
+        UPDATE Inventory
+        SET image_path = :image_path
+        WHERE id = :inventory_id
+        ''', inventory_id=inventory_id, image_path=image_path)
 
 

@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app as app
 from flask_login import current_user
+import os
+from werkzeug.utils import secure_filename
 from .models.inventory import Inventory
 from .models.product import Product
 
@@ -22,7 +24,7 @@ def add_product():
         price = request.form.get('price')
         category = request.form.get('category')
         description = request.form.get('description')
-        
+       
         Inventory.add_product(current_user.id, product_name, quantity, price, category, description)
         return redirect(url_for('inventory.inventory'))
     return jsonify({}), 404
@@ -83,3 +85,28 @@ def update_name(inventory_id):
         Inventory.update_name(inventory_id, new_name)
         return redirect(url_for('inventory.inventory'))
     return jsonify({}), 404
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    """Check if the file has an allowed extension."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@bp.route('/inventory/update_image/<int:inventory_id>', methods=['POST'])
+def update_image(inventory_id):
+    if 'image' not in request.files:
+        return redirect(request.referrer or url_for('inventory.inventory'))
+    
+    file = request.files['image']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # Full file path
+        file.save(filepath)  # Save file to static/uploads/
+
+        # Save the relative path "uploads/<filename>" in the database
+        Inventory.update_image_path(inventory_id, os.path.join('uploads', filename))
+
+    return redirect(request.referrer or url_for('inventory.inventory'))
+
+
