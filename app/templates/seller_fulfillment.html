@@ -2,37 +2,37 @@
 
 {% block content %}
 
-<h1>Order Fulfillment</h1>
+<h1 style="font-family: 'Gaegu', sans-serif; color: #702106;">Order Fulfillment</h1>
 
-<!-- Back to Inventory Button -->
+<!-- back to inventory -->
 <div style="margin-bottom: 20px;">
-  <a href="{{ url_for('inventory.inventory') }}" class="btn btn-secondary" style="font-size: 1em; padding: 10px 20px;">
+  <a href="{{ url_for('inventory.inventory') }}" class="btn btn-brown" style="font-size: 1em; padding: 10px 20px;">
     Back to Inventory
   </a>
 </div>
 
-<!-- Search Bar and Fulfillment Status Filter -->
+<!-- search bar  -->
 <form method="GET" action="{{ url_for('fulfillment.seller_fulfillment') }}" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
   <input type="text" name="search" value="{{ search or '' }}" placeholder="Search by product or buyer name" 
          style="padding: 8px; width: 300px; font-size: 1em;">
 
-  <!-- Fulfillment Status Filter -->
-  <label for="status_filter">Filter by Fulfillment Status:</label>
+  <!-- fulfillment filter -->
+  <label for="status_filter"><strong>Filter by Fulfillment Status:</strong></label>
   <select name="status_filter" id="status_filter" style="padding: 4px; font-size: 1em;">
     <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Orders</option>
     <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending Orders</option>
     <option value="fulfilled" {% if status_filter == 'fulfilled' %}selected{% endif %}>Fulfilled Orders</option>
   </select>
 
-  <button type="submit" class="btn btn-primary" style="padding: 8px 20px;">Search</button>
+  <button type="submit" class="btn btn-brown" style="padding: 8px 20px;">Search</button>
 </form>
 
-<!-- Check if there are orders -->
+<!-- check if there are orders -->
 {% if orders and orders|length > 0 %}
-  <!-- Loop through orders -->
+  <!-- go through the orders -->
   {% for order in orders %}
   <div class="order" style="border: 1px solid #ddd; padding: 20px; margin-bottom: 20px;">
-      <h2>Order #{{ order['order_id'] }}</h2>
+    <h2 style="font-family: 'Gaegu', sans-serif; color: #702106;">Order #{{ order['order_id'] }}</h2>
       <p><strong>Buyer:</strong>
         {% if order['items'] and order['items']|length > 0 %}
             {{ order['items'][0]['buyer_name'] }}
@@ -71,7 +71,7 @@
                   <td>
                       {% if not item['is_fulfilled'] %}
                       <form action="{{ url_for('fulfillment.fulfill_cartitem', cartitem_id=item['cartitem_id']) }}" method="POST">
-                          <button type="submit" class="btn btn-success">Mark as Fulfilled</button>
+                          <button type="submit" class="btn btn-brown">Mark as Fulfilled</button>
                       </form>
                       {% endif %}
                   </td>
