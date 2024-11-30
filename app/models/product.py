@@ -48,48 +48,36 @@ WHERE category IS NOT NULL
         return [row[0] for row in rows]
 
 # FILTER & SORT METHODS 
-# filter by category 
     @staticmethod
-    def filter_by_category(category):
-        rows = app.db.execute('''
-SELECT *
-FROM Products
-WHERE category = :category
-''',
-                              category=category)
+    def sort_and_filter(category, sort_order, keyword):
+        query = '''
+        SELECT *
+        FROM Products
+        WHERE 1 = 1
+        '''
+
+        # Add filtering by category 
+        if category:
+            query += ' AND category = :category'
+
+        # Add filtering by keyword 
+        if keyword:
+            query += " AND (LOWER(name) LIKE LOWER(:keyword) OR LOWER(description) LIKE LOWER(:keyword))"
+
+        # Add sorting based on sort_order
+        if sort_order:
+            if sort_order == 'price_asc':
+                query += " ORDER BY price ASC"
+            elif sort_order == 'price_desc':
+                query += " ORDER BY price DESC"
+            elif sort_order == 'name_asc':
+                query += " ORDER BY name ASC"
+            elif sort_order == 'name_desc':
+                query += " ORDER BY name DESC"
+
+        rows = app.db.execute(query, category=category, keyword=f"%{keyword}%" if keyword else None)
         return [Product(*row) for row in rows]
 
-# filter by keywords in name / description 
-    @staticmethod
-    def filter_by_keyword(keyword):
-        rows = app.db.execute('''
-SELECT *
-FROM Products
-WHERE LOWER(name) LIKE LOWER(:keyword)
-    OR LOWER(description) LIKE LOWER(:keyword)
-''',
-                              keyword = f"%{keyword}%")
-        return [Product(*row) for row in rows]
-
-# sort by price asc
-    @staticmethod
-    def sort_by_price_asc():
-        rows = app.db.execute('''
-SELECT *
-FROM Products
-ORDER BY price ASC
-''')
-        return [Product(*row) for row in rows]
-
-# sort by price desc
-    @staticmethod
-    def sort_by_price_desc():
-        rows = app.db.execute('''
-SELECT *
-FROM Products
-ORDER BY price DESC
-''')
-        return [Product(*row) for row in rows]
 
 # rework this?
 # sort by rating 

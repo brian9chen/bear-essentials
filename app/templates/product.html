@@ -1,97 +1,108 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br></br>
+<br></br>
 
-<br><br>
+<div class="container">
+    <!-- Product Details Section -->
+    <div class="product-details">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename=product.image_path) }}" alt="Image of {{ product.name }}" class="img-fluid rounded">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ product.name }}</h1>
+                <p><strong>Price:</strong> ${{ product.price }}</p>
+                <p><strong></strong> {{ product.description }}</p>
+                <p class="product-rating">
+                    Rating:
+                    {% for _ in range(product.prod_avg_rating | round(0, 'floor') | int) %}
+                    <span class="star">&#9733;</span> <!-- Filled star -->
+                    {% endfor %}
+                    {% for _ in range(5 - (product.prod_avg_rating | round(0, 'floor') | int)) %}
+                    <span class="star empty">&#9734;</span> <!-- Empty star -->
+                    {% endfor %}
+                    <span class="rating-value">({{ product.prod_avg_rating | round(1) }})</span>
+                </p>
+                    
+                {% if current_user.is_authenticated %}
+                <h3>Add to Cart</h3>
+                <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity" required min="1">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </form>
+                <br>
+                <a class="btn btn-secondary" href="{{ url_for('cartitem.cartitem') }}" role="button">See Cart</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-<h1>{{ product.name }}</h1>
-    <p>Price: ${{ product.price }}</p>
-    <p>Description: {{ product.description }}</p>
-    <p>Category: {{ product.category }}</p>
-    <p>Average Rating: {{ product.prod_avg_rating }}</p>
-    <img src="{{ product.image_path }}" alt="{{ product.name }} image"> 
-    <br><br>
+    <hr>
+
+    <!-- Sellers Information -->
+    <div class="sellers-info">
+        <h2>Available From:</h2>
+        <ul class="list-group">
+            {% for seller in sellers %}
+            <li class="list-group-item">
+                <strong>{{ seller.firstname }} {{ seller.lastname }}</strong><br>
+                <!-- You can uncomment this line to show shop name and ratings if needed -->
+                <!-- Shop Name: {{ seller.shop_name }}<br> -->
+                <!-- Average Rating: {{ seller.seller_avg_rating }} -->
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <hr>
+
+    <!-- Reviews Section -->
+    <div class="reviews">
+        <h2>Reviews</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                    <th>Upvotes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr>
+                    <td>{{ review.user_id }}</td> 
+                    <td>{{ review.rating }}</td> 
+                    <td>{{ review.description }}</td>
+                    <td>{{ review.num_upvotes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}" class="btn btn-outline-primary">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page }} of {{ total_pages }}</span>
+
+        {% if page < total_pages %}
+            <a href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}" class="btn btn-outline-primary">Next</a>
+        {% endif %}
+    </div>
+
+    <hr>
+
     <!-- Link back to home page or previous page -->
-    <a href="{{ url_for('index.index') }}">Back to all products</a>
-
-    <br><br>
-
-    {% if current_user.is_authenticated %}
-    <br><br>
-    <!-- ADD CORRECT FORM ACTION URL -->
-    <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
-        <label>Quantity:</label>
-        <input type="string" name="quantity" id="quantity" placeholder=" " required>
-        <input type="submit" value="Add to Cart"/>
-      </form>
-    <a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
-
-    {% endif %}
-    <br><br>
-
-      <!-- Sellers Information -->
-    <h2>Available From:</h2>
-    <ul>
-        {% for seller in sellers %}
-        <li>
-            <strong>{{ seller.firstname }} {{ seller.lastname }}</strong><br>
-            <!-- Shop Name: {{ seller.shop_name }}<br>
-            Average Rating: {{ seller.seller_avg_rating }} -->
-        </li>
-        {% endfor %}
-    </ul>
-
-    <br><br>
-    <!-- Link back to home page or previous page -->
-    <a href="{{ url_for('index.index') }}">Back to all products</a>
-
-    <br><br>
-
-    {% if current_user.is_authenticated %}
-    <br><br>
-    <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" placeholder="Enter quantity" required min="1">
-        <input type="submit" value="Add to Cart"/>
-    </form>
-    <a class="btn btn-secondary" href="{{ url_for('cartitem.cartitem') }}" role="button">See Cart</a>
-    {% endif %}
-
-
-<!-- Reviews Table -->
-<h2>Reviews</h2>
-<table>
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Rating</th>
-            <th>Review</th>
-            <th>Upvotes</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for review in reviews %}
-        <tr>
-            <td>{{ review.user_id }}</td> 
-            <td>{{ review.rating }}</td> 
-            <td>{{ review.description }}</td>
-            <td>{{ review.num_upvotes }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Pagination Controls -->
-<div class="pagination">
-    {% if page > 1 %}
-        <a href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}">Previous</a>
-    {% endif %}
-
-    <span>Page {{ page }} of {{ total_pages }}</span>
-
-    {% if page < total_pages %}
-        <a href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}">Next</a>
-    {% endif %}
+    <a href="{{ url_for('index.index') }}" class="btn btn-secondary">Back to all products</a>
+    <br></br>
 </div>
-
 {% endblock %}

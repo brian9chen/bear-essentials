@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <form action="" method="post" novalidate style="text-align: center; margin-top: 50px;">
   {{ form.hidden_tag() }}
   <p>
@@ -29,10 +28,11 @@
     {% endif %}
     {% endwith %}
   </p>
-  <div style="text-align: center; margin-top: 50px; margin-left: 20px">
-    {{ form.submit(class_="btn btn-brown", style="margin-right: 20px;") }}
-    <a class="btn btn-brown" href="{{ url_for('users.register') }}" role="button">New? Create Account</a>
+  <div class="form-actions" style="text-align: center; margin-top: 50px;">
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      {{ form.submit(class_="btn btn-brown") }}
+      <a class="btn btn-brown" href="{{ url_for('users.register') }}" role="button">New? Create Account</a>
+    </div>
   </div>
 </form>
-
 {% endblock %}

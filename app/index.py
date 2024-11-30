@@ -36,23 +36,11 @@ def index():
     categories = Product.get_categories()
 
     # Handle sorting, filtering, and keyword search 
-    sort_order = request.form.get('sort_order')
+    sort_order = request.form.get('sort_order') 
     selected_category = request.form.get('category')
-    keyword = request.form.get('keyword', type=str)
+    keyword = request.form.get('keyword', '', type=str)
 
-    # Apply filtering by category if specified
-    if selected_category:
-        products = Product.filter_by_category(selected_category)
-
-    # Apply keyword filtering if specified
-    if keyword:
-        products = Product.filter_by_keyword(keyword)
-
-    # Apply sorting based on price
-    if sort_order == 'asc':
-        products = Product.sort_by_price_asc()
-    elif sort_order == 'desc':
-        products = Product.sort_by_price_desc()
+    products = Product.sort_and_filter(category=selected_category, sort_order=sort_order, keyword=keyword)
 
     # Implement pagination
     PRODUCTS_PER_PAGE = 25
@@ -75,28 +63,6 @@ def top_k():
         products = Product.most_expensive_products(k)
         return render_template('index.html', avail_products=products)
     return render_template('index.html')
-
-# moved these to the main index 
-
-# @bp.route('/filter_by_keyword', methods=('GET', 'POST'))
-# def search_keyword():
-#     if request.method == 'POST':
-#         keyword = request.form.get('keyword', type=str)
-#         products = Product.filter_by_keyword(keyword)
-#         return render_template('index.html', avail_products=products)
-#     return render_template('index.html')
-
-#  sort by price 
-# @bp.route('/sort/<string:sort_order>', methods=['GET'])
-# def sort_by_price(sort_order):
-#     # Fetch products from the database
-#     if sort_order == 'asc':
-#         products = Product.sort_by_price_asc()  # Sort by price ascending
-#     else:
-#         products = Product.sort_by_price_desc()  # Sort by price descending
-    
-#     # Return the sorted products to the template
-#     return render_template('index.html', avail_products=products, sort_order=sort_order)
 
 @bp.route('/product/<int:id>', methods=['GET'])
 def product_detail(id):

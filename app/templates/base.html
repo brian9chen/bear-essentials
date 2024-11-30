@@ -10,14 +10,15 @@
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Gaegu&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
-        font-family: "Lato", sans-serif;
+        font-family: 'Gaegu', cursive;
+        background-color: #f8edeb; 
+        color: #702106; 
     }
 
     .main-head {
@@ -27,15 +28,7 @@
 
     .sidenav {
         height: 100%;
-        background-color: #f8edeb;
-        overflow-x: hidden;
-    }
-
-    .topnav {
-        height: 100%;
-        background-color: #ffe98576;
-        color: #702106;
-        background-color: #f8edeb;
+        background-color: #e4d6d4;
         overflow-x: hidden;
     }
 
@@ -54,42 +47,12 @@
     .sticky-nav {
         position: sticky;
         top: 0;
-        background-color: #f8edeb;
+        background-color: #e4d6d4;
         z-index: 1000;
         padding: 10px;
         font-family: 'Gaegu', sans-serif;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap; 
-    }
-
-    .sticky-nav div {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap; 
-        text-align: center;
-        font-family: 'Gaegu', sans-serif;
-        font-size: 20px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-    }
-
-    .sticky-nav {
-        position: sticky;
-        top: 0;
-        background-color: #f8edeb;
-        z-index: 1000;
-        padding: 10px;
-        font-family: 'Gaegu', sans-serif;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap; 
-    }
-
-    .sticky-nav div {
-        display: flex;
         align-items: center;
         flex-wrap: wrap; 
     }
@@ -151,114 +114,172 @@
     }
 
     .products-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px; /* Space between cards */
-        margin: 0 auto; 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+        gap: 20px;
+        padding: 20px; 
+        justify-items: start; 
     }
 
     .product-card {
         display: flex;
         flex: 1 1 calc(25% - 16px);
         flex-direction: column;
+        gap: 10px;
         border: 1px solid #f8edeb;
         border-radius: 8px;
         overflow: hidden;
         background-color: #fff;
         box-shadow: 0 2px 4px rgba(231, 198, 198, 0.808);
         padding: 16px;
+        transition: transform 0.3s ease;
     }
 
-    /* need these? */
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
     .product-image {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 200px; 
+        height: 200px;
+        margin-top: 15px;
     }
 
     .product-image img {
         max-width: 100%;
         max-height: 100%;
-        object-fit: contain;
+        object-fit: cover;
+        border-radius: 5px;
     }
 
-    @media (max-width: 768px) {
-        .product-card {
-        flex: 1 1 calc(50% - 16px); /* 2 items per row on smaller screens */
-        }
-
-        .sticky-nav {
-            flex-direction: column; /* Stack navigation vertically */
-            text-align: center;
-        }
-
-        .sticky-nav div {
-            flex-direction: column; 
-            width: 100%; 
-        }
-
-        .btn {
-            width: 50%; 
-            height: auto;
-        }
-    }
-
-
-    .btn-brown {
-        background-color: #702106;
-        color: #f8edeb;
-        font-size: 15px;
-        font-family: 'Gaegu', sans-serif;
-    }
-
-    .btn-brown:hover {
-        background-color: #702106b2; 
-        color: #f8edeb; 
-    }
-
-    .btn-brown:focus, .btn-brown.focus {
-        box-shadow: 0 0 0 0.2rem rgba(62, 5, 5, 0.801); /* Focus outline */
-    }
-
-    .btn-brown2 {
-        background-color: #af7e71;
-        color: #f8edeb;
-        font-size: 20px;
-        font-family: 'Gaegu', sans-serif;
-    }
-
-    .btn-brown3 {
-        background-color: #dba496;
-        color: #f8edeb;
-        font-size: 20px;
-        font-family: 'Gaegu', sans-serif;
-    }
-
-    .center {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
-    }
-
-    .products-grid {
+    .product-info {
+        padding: 15px;
+        flex: 1;
         display: flex;
-        flex-wrap: wrap;
-        gap: 16px; /* Space between cards */
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .product-name a {
+        font-size: 1em; 
+        color: #702106; 
+        word-wrap: break-word; 
+        overflow-wrap: anywhere; 
+        text-align: center; 
+        white-space: normal; 
+        max-width: 200px; 
         margin: 0 auto; 
     }
 
-    .product-card {
+    .product-name a:hover {
+        color: #af7e71;
+    }
+
+    .product-price {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .product-description {
+        font-family: 'Roboto Slab', sans-serif;
+        font-weight: 300;
+        font-size: 1em;
+        margin: 10px 0;
+        word-spacing: normal; 
+        letter-spacing: normal;
+    }
+
+    .product-rating {
+        font-size: 1em;
+        color: #702106;
+        margin: 10px 0;
+    }
+
+    .star {
+        color: #af7e71; /* Filled star color */
+        font-size: 1.2em;
+    }
+
+    .star.empty {
+        color: #dba496; /* Empty star color */
+    }
+
+    /* .product-category {
+        font-size: 0.9em;
+        color: #702106;
+    } */
+
+    .product-actions {
+        margin-top: 15px;
         display: flex;
-        flex: 1 1 calc(20% - 16px);
-        flex-direction: column;
-        border: 1px solid #f8edeb;
-        border-radius: 8px;
-        overflow: hidden;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(231, 198, 198, 0.808);
-        padding: 16px;
+        justify-content: flex-end;
+    }
+
+    .product-actions a {
+        background-color: #af7e71;
+        color: #f8edeb;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .product-actions a:hover {
+        background-color: #702106;
+    }
+
+    .product-actions span {
+        font-size: 0.9em;
+        color: #af7e71;
+    }
+
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    }
+
+    .pagination-link {
+        background-color: #af7e71;
+        color: white;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .pagination-link:hover {
+        background-color: #702106;
+    }
+
+    .page-info {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .pagination a {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .pagination a.previous, .pagination a.next {
+        font-weight: bold;
+    }
+
+    .pagination a:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+
+    .pagination a.previous, .pagination a.next {
+        padding: 10px 20px;
     }
 
     @media (max-width: 768px) {
@@ -293,36 +314,40 @@
     <a href="{{ url_for('index.index') }}">
       <img src="{{ url_for('static', filename='/bear_essentials_logo.gif') }}" 
            alt="Bear Essentials Logo" 
-           style="width: 300px; height: auto; padding-left: 20px;" 
+           style="width: 300px; height: auto; padding-left: 20px; padding-bottom: 10px;" 
            class="center">
     </a>
   </div>
   <div class="sticky-nav">
     {% block msg %}
     <div style="color: #702106; font-size: 15px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div style="display: flex; justify-content: center; align-items: center; flex-grow: 0; gap: 16px;">
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Shop All</a>
+        <form method="POST" action="{{ url_for('index.index') }}">
+            <!-- Hidden inputs to carry over existing filters -->
+            <input type="hidden" name="sort_order" value="{{ sort_order }}">
+            <input type="hidden" name="keyword" value="{{ keyword }}">
+            <div style="display: flex; justify-content: center; align-items: center; flex-grow: 0; gap: 16px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <button type="submit" name="category" value="" class="btn btn-brown" style="min-width: 120px;">Shop All</button>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" name="category" value="Basic Bears" class="btn btn-brown" style="min-width: 120px;">Basic Bears</button>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" name="category" value="Kawaii Knits" class="btn btn-brown" style="min-width: 120px;">Kawaii Knits</button>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" name="category" value="Den Decor" class="btn btn-brown" style="min-width: 120px;">Den Decor</button>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" name="category" value="Cute Confections" class="btn btn-brown" style="min-width: 120px;">Cute Confections</button>
+                </div>
             </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Basic Bears</a>
-            </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Kawaii Knits</a>
-            </div>
-            <div style="text-align: center;">
-                <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Den Decor</a>
-            </div>
-            <div style="text-align: center;">
-              <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown">Bear Bundles</a>
-          </div>
-        </div>
-        <div style="text-align: right; gap: 10px;">
+        </form>                
+        <div class="profile-login-container" style="text-align: center; gap: 10px; display: flex; justify-content: center; align-items: center;">
             {% if current_user.is_authenticated %}
                 <span style="margin-top: 10px;">What's up {{ current_user.firstname }}!</span>
                 <!-- added link to profile: -->
                 <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i> Profile</a> 
-                <!-- <a href="{{ url_for('index.index') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i></a> -->
                 <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
             {% else %}
                 <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
@@ -330,7 +355,7 @@
         </div>
     </div>
     {% endblock %}
-  </div>
+</div>
   <div class="main">
     {% block content %}{% endblock %}
   </div>
