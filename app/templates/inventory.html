@@ -16,7 +16,7 @@
 <div class="container mt-5">
   <h2 style="font-family: 'Gaegu', sans-serif; color: #702106;">Inventory Products</h2>
 
-  <!-- Inventory Table -->
+  <!-- inventory Table -->
   <table class="table table-hover table-bordered">
     <thead style="background-color: #702106; color: #f8edeb;">
       <tr>
@@ -91,7 +91,7 @@
     </tbody>
   </table>
 
-  <!-- Add New Product -->
+  <!-- add new product -->
   <div class="mt-5">
     <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Add a Product:</h3>
     <form action="{{ url_for('inventory.add_product') }}" method="POST" class="form-inline">
@@ -109,17 +109,17 @@
     </form>
   </div>
 
-  <!-- Search for Existing Products -->
+  <!-- search for existing products -->
   <div class="mt-5">
     <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Search for an Existing Product:</h3>
 
-    <!-- Search Form -->
+    <!-- search form -->
     <form action="{{ url_for('inventory.search_products') }}" method="GET" class="mb-3">
       <input type="text" name="query" placeholder="Search for an existing product" class="form-control form-control-sm mr-2" required>
       <button type="submit" class="btn btn-brown">Search</button>
     </form>
 
-    <!-- Display Search Results -->
+    <!-- display search results -->
     {% if search_results %}
     <h4 style="font-family: 'Gaegu', sans-serif; color: #702106;">Search Results:</h4>
     <table class="table table-hover">

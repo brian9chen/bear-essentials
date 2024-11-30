@@ -102,10 +102,10 @@ def update_image(inventory_id):
     file = request.files['image']
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # Full file path
-        file.save(filepath)  # Save file to static/uploads/
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename) 
+        file.save(filepath)  
 
-        # Save the relative path "uploads/<filename>" in the database
+     
         Inventory.update_image_path(inventory_id, os.path.join('uploads', filename))
 
     return redirect(request.referrer or url_for('inventory.inventory'))
@@ -116,7 +116,7 @@ def search_products():
     if not query:
         return render_template('inventory.html', inventory_items=Inventory.get_all_by_user(current_user.id), categories=Product.get_unique_categories(), search_results=[])
 
-    results = Product.search(query)  # Assumes a Product.search(query) method
+    results = Product.search(query)  
     return render_template('inventory.html', inventory_items=Inventory.get_all_by_user(current_user.id), categories=Product.get_unique_categories(), search_results=results)
 
 
