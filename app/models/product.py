@@ -147,7 +147,7 @@ ORDER BY p.time_purchased DESC
     @staticmethod
     def get_sellers(product_id):
         rows = app.db.execute('''
-            SELECT u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
+            SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
             FROM Inventory i
             JOIN Users u ON i.user_id = u.id
             WHERE i.pid = :product_id
@@ -155,14 +155,17 @@ ORDER BY p.time_purchased DESC
         
         unique_sellers = {}
         for seller in rows:
-            firstname = seller[0]
-            lastname = seller[1]
-            shop_name = seller[2]
-            seller_avg_rating = seller[3]
+            # Access tuple elements by index
+            seller_id = seller[0]
+            firstname = seller[1]
+            lastname = seller[2]
+            shop_name = seller[3]
+            seller_avg_rating = seller[4]
             
-            key = (firstname, lastname, shop_name)
+            key = (seller_id, firstname, lastname, shop_name)
             if key not in unique_sellers:
                 unique_sellers[key] = {
+                    'id': seller_id,
                     'firstname': firstname,
                     'lastname': lastname,
                     'shop_name': shop_name,

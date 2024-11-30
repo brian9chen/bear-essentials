@@ -40,9 +40,12 @@ def public_view(user_id):
         abort(404)  # User not found
 
     is_seller = user.is_seller if hasattr(user, 'is_seller') else False
-    reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
+    #commented out reviews for now bc it was causing errors
+    #reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
+    return render_template('public_view.html', user=user, is_seller=is_seller)
 
-    return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
+    #return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
+
 
 
 class LoginForm(FlaskForm):

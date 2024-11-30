@@ -34,7 +34,11 @@
     <ul>
         {% for seller in sellers %}
         <li>
-            <strong>{{ seller.firstname }} {{ seller.lastname }}</strong><br>
+            <strong>
+                <a href="{{ url_for('users.public_view', user_id=seller.id) }}">
+                    {{ seller.firstname }} {{ seller.lastname }}
+                </a>
+            </strong><br>
             <!-- Shop Name: {{ seller.shop_name }}<br>
             Average Rating: {{ seller.seller_avg_rating }} -->
         </li>

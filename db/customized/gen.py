@@ -33,7 +33,7 @@ random.seed(0)
 # Predefine number of sellers (half of total number of users)
 num_sellers = 50
 # Generate a list of seller IDs excluding the first two users (uid=0 and uid=1)
-seller_ids = random.sample(range(2, num_users), num_sellers)
+seller_ids = random.sample(range(num_users), num_sellers)
 
 
 
@@ -65,6 +65,11 @@ def gen_users(num_users, seller_ids):
             address = fake.street_address()
             balance = f'{str(fake.random_int(max=800))}.{fake.random_int(max=99):02}'
             is_seller = uid in seller_ids #set to true if uid is in seller_ids
+
+
+            if is_seller:
+                print(f"User {uid} is a seller")
+
             writer.writerow([uid, email, password, firstname, lastname, address, balance, is_seller])
         print(f'{num_users} generated')
     return
@@ -134,10 +139,10 @@ def gen_reviews(num_reviews):
 
         userProductPairs = set()
 
-        with open("goodReviews.txt", "r") as f:
+        with open("db/customized/goodReviews.txt", "r") as f:
             positiveReview = f.read()
 
-        with open("badReviews.txt", "r") as f:
+        with open("db/customized/badReviews.txt", "r") as f:
             negativeReview = f.read()
 
         reviewModel = [positiveReview, negativeReview]
