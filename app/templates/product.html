@@ -89,13 +89,13 @@
     <!-- Pagination Controls -->
     <div class="pagination">
         {% if page > 1 %}
-            <a href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}" class="btn btn-outline-primary">Previous</a>
+            <a href="{{ url_for('index.index', page=page - 1, sort_order=sort_order, category=selected_category, keyword=keyword) }}" class="btn btn-outline-primary">Previous</a>
         {% endif %}
-
+    
         <span>Page {{ page }} of {{ total_pages }}</span>
-
+    
         {% if page < total_pages %}
-            <a href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}" class="btn btn-outline-primary">Next</a>
+            <a href="{{ url_for('index.index', page=page + 1, sort_order=sort_order, category=selected_category, keyword=keyword) }}" class="btn btn-outline-primary">Next</a>
         {% endif %}
     </div>
 

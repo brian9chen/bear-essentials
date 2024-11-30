@@ -36,14 +36,14 @@ def index():
     categories = Product.get_categories()
 
     # Handle sorting, filtering, and keyword search 
-    sort_order = request.form.get('sort_order') 
-    selected_category = request.form.get('category')
-    keyword = request.form.get('keyword', '', type=str)
+    sort_order = request.form.get('sort_order')  or request.args.get('sort_order')
+    selected_category = request.form.get('category', '') or request.args.get('category', '')
+    keyword = request.form.get('keyword', '', type=str) or request.args.get('keyword', '', type=str)
 
     products = Product.sort_and_filter(category=selected_category, sort_order=sort_order, keyword=keyword)
 
     # Implement pagination
-    PRODUCTS_PER_PAGE = 25
+    PRODUCTS_PER_PAGE = 24
     page = request.args.get('page', 1, type=int)
     total_products = len(products)
     total_pages = (total_products + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE
