@@ -124,8 +124,12 @@ def product_detail(id):
     # Calculate total pages based on the number of reviews
     total_reviews = len(all_reviews)
     total_pages = (total_reviews + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE  # Round up for any remainder
+    
+    # get num reviews and avg rating
+    num_reviews = len(all_reviews)
+    avg_rating = round(Review.get_avg_rating_by_pid(id), 2)
 
-    return render_template('product.html', product=product, reviews=reviews, page=page, total_pages=total_pages)
+    return render_template('product.html', product=product, reviews=reviews, page=page, total_pages=total_pages, num_reviews=num_reviews, avg_rating=avg_rating)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

@@ -182,8 +182,16 @@ def profile():
         form.email.data = current_user.email
         form.address.data = current_user.address
 
+
+    # For reviews table:
+
     page = request.args.get('page', 1, type=int)
-    reviews = Review.get_all_prodName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    
+    product_reviews = Review.get_all_prodName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    total_product_reviews = Review.count_product_reviews_by_uid(current_user.id)
+    
+    seller_reviews = Review.get_all_sellerName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    total_seller_reviews = Review.count_seller_reviews_by_uid(current_user.id)
     
     # Create a simple pagination-like object
     class Pagination:
@@ -216,12 +224,10 @@ def profile():
         def iter_pages(self):
             for i in range(1, self.pages + 1):
                 yield i
-
-    # Get total count of reviews
-    total_reviews = Review.count_reviews_by_uid(current_user.id)
     
     # Create pagination object
-    my_reviews = Pagination(reviews, page, per_page=5, total=total_reviews)
+    my_product_reviews = Pagination(product_reviews, page, per_page=5, total=total_product_reviews)
+    my_seller_reviews = Pagination(seller_reviews, page, per_page=5, total=total_seller_reviews)
     
     return render_template('profile.html',
                            title='Profile',
@@ -229,4 +235,5 @@ def profile():
                            add_balance_form=add_balance_form,
                            withdraw_balance_form=withdraw_balance_form,
                            balance=current_user.balance,
-                           my_reviews=my_reviews)
+                           my_product_reviews=my_product_reviews,
+                           my_seller_reviews=my_seller_reviews)

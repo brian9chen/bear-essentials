@@ -81,7 +81,6 @@
       </h3>
       <p class="product-price">${{ product.price }}</p>
       <p class="product-description">{{ product.description }}</p>
-      <p class="product-rating">Rating: {{ product.prod_avg_rating }}</p>
       <p class="product-category">Category: {{ product.category }}</p>
       <div class="product-actions">
         {% if current_user.is_authenticated %}
@@ -104,7 +103,6 @@
       <th scope="col">Price</th>
       <th scope="col">Description</th>
       <th scope="col">Image</th>
-      <th scope="col">Average Rating</th>
       <th scope="col">Category</th>
       <th scope="col">Actions</th>
     </tr>
@@ -129,7 +127,6 @@
             <span>No image</span>
           {% endif %}
         </td>
-        <td>{{ product.prod_avg_rating }}</td>
         <td>{{ product.category }}</td>
         <td>
           {% if current_user.is_authenticated %}
