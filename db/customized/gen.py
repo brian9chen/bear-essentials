@@ -15,17 +15,44 @@ num_orders = 70
 num_cart_items = 100
 available_pids = list(range(100))
 
+
+
+num_users = 100
+num_products = 100
+num_sellers = 50
+num_purchases = 2500
+num_reviews = 300
+num_inventory = 4000
+num_orders = 70
+num_cart_items = 100
+available_pids = list(range(100))
+
+Faker.seed(0)
+fake = Faker()
+random.seed(0)
+# Predefine number of sellers (half of total number of users)
+num_sellers = 50
+# Generate a list of seller IDs excluding the first two users (uid=0 and uid=1)
+seller_ids = random.sample(range(2, num_users), num_sellers)
+
+
+
+
 Faker.seed(0)
 fake = Faker()
 
 def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
 
-def gen_users(num_users):
+def gen_users(num_users, seller_ids):
     with open('Users.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
-        for uid in range(num_users):
+        
+        writer.writerow([0, 'icecream@tastes.good', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Joey', 'Shmoey', '123 Ice Cream Lane', 0, False])
+        writer.writerow([1, 'coolbeans@coffee.strong', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Mary', 'Jane', '127 Ice Cream Lane', 0, False])
+        
+        for uid in range(2, num_users):
             if uid % 10 == 0:
                 print(f'{uid}', end=' ', flush=True)
             profile = fake.profile()
@@ -37,7 +64,7 @@ def gen_users(num_users):
             lastname = name_components[-1]
             address = fake.street_address()
             balance = f'{str(fake.random_int(max=800))}.{fake.random_int(max=99):02}'
-            is_seller = False
+            is_seller = uid in seller_ids #set to true if uid is in seller_ids
             writer.writerow([uid, email, password, firstname, lastname, address, balance, is_seller])
         print(f'{num_users} generated')
     return
@@ -119,7 +146,15 @@ def gen_reviews(num_reviews):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)
-            pid = fake.random_int(min=0, max=num_products-1)
+            
+            prod_or_seller = fake.random_int(min=0, max=1)
+            
+            if prod_or_seller == 0:
+                pid = fake.random_int(min=0, max=num_products-1)
+                seller_id = None
+            else:
+                pid = None
+                seller_id = fake.random_int(min=0, max=num_users-1) # change to valid sellers once gen.py generates sellers
 
             # make sure that a user can only leave 1 review on a product
             pair = str(uid) + "," + str(pid)
@@ -150,11 +185,11 @@ def gen_reviews(num_reviews):
             time_posted = fake.date_time()
             time_modified = time_posted
 
-            writer.writerow([id, uid, pid, rating, review, time_posted, time_modified, 0])
+            writer.writerow([id, uid, pid, seller_id, rating, review, time_posted, time_modified, 0])
         print(f'{num_reviews} generated')
     return
 
-def gen_inventory(num_inventory):
+def gen_inventory(num_inventory, seller_ids):
     products_df = pd.read_csv('Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
     with open('Inventory.csv', 'w') as f:
         writer = get_csv_writer(f)
@@ -163,7 +198,7 @@ def gen_inventory(num_inventory):
         for inventory_id in range(num_inventory):
             if inventory_id % 10 == 0:
                 print(f'{inventory_id}', end=' ', flush=True)
-            user_id = fake.random_int(min=0, max=num_users-1) 
+            user_id = random.choice(seller_ids) #changed to assign inventory only to sellers
             shop_name = f"{fake.word()} Shop"
             seller_avg_rating = f'{fake.random_int(min=30, max=50) / 10:.2f}'  
             pid = fake.random_int(min=0, max=num_products-1)  
@@ -221,10 +256,11 @@ def gen_cart_items(num_cart_items, order_ids):
         print(f'{num_cart_items} generated')
     return
 
-gen_users(num_users)
-available_pids = gen_products(num_products)
+gen_users(num_users, seller_ids)
+# available_pids = gen_products(num_products)
+available_pids = range(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_reviews)
-gen_inventory(num_inventory)
+gen_inventory(num_inventory, seller_ids)
 order_ids = gen_orders(num_orders)
 gen_cart_items(num_cart_items, order_ids)

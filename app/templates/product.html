@@ -27,6 +27,36 @@
     <a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
 
     {% endif %}
+    <br><br>
+
+      <!-- Sellers Information -->
+    <h2>Available From:</h2>
+    <ul>
+        {% for seller in sellers %}
+        <li>
+            <strong>{{ seller.firstname }} {{ seller.lastname }}</strong><br>
+            <!-- Shop Name: {{ seller.shop_name }}<br>
+            Average Rating: {{ seller.seller_avg_rating }} -->
+        </li>
+        {% endfor %}
+    </ul>
+
+    <br><br>
+    <!-- Link back to home page or previous page -->
+    <a href="{{ url_for('index.index') }}">Back to all products</a>
+
+    <br><br>
+
+    {% if current_user.is_authenticated %}
+    <br><br>
+    <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="quantity" placeholder="Enter quantity" required min="1">
+        <input type="submit" value="Add to Cart"/>
+    </form>
+    <a class="btn btn-secondary" href="{{ url_for('cartitem.cartitem') }}" role="button">See Cart</a>
+    {% endif %}
+
 
 <!-- Reviews Table -->
 <h2>Reviews</h2>
