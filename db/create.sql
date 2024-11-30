@@ -77,3 +77,5 @@ CREATE TABLE Reviews (
 
 ALTER TABLE CartItems ALTER COLUMN order_id DROP NOT NULL;
 ALTER TABLE CartItems ADD COLUMN is_fulfilled BOOLEAN DEFAULT FALSE;
+ALTER TABLE Inventory ADD COLUMN image_path TEXT;
+ALTER TABLE Inventory ADD CONSTRAINT unique_user_product UNIQUE (user_id, pid);

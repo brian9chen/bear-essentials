@@ -47,18 +47,32 @@ class Inventory:
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
-        product_id = app.db.execute('''
-            INSERT INTO Products (creator_id, name, price, category, description)
-            VALUES (:user_id, :product_name, :price, :category, :description)
-            RETURNING id
-        ''', user_id=user_id, product_name=product_name, price=price, category=category, description = description)
-        
-        # insert the new product into the Inventory table with initial quantity
-        if product_id:
-            app.db.execute('''
-                INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
-                VALUES (:user_id, :product_id, :quantity, 0, 0, :name, 0)
-            ''', user_id=user_id, product_id=product_id[0][0], quantity=quantity, name="sample name")
+        # Check if the product already exists in the Products table
+        existing_product = app.db.execute('''
+            SELECT id FROM Products
+            WHERE name = :product_name AND category = :category
+        ''', product_name=product_name, category=category)
+
+        if existing_product:
+            # If product exists, get the product ID
+            product_id = existing_product[0][0]
+        else:
+            # If product doesn't exist, create it
+            new_product = app.db.execute('''
+                INSERT INTO Products (creator_id, name, price, category, description, available)
+                VALUES (:user_id, :product_name, :price, :category, :description, TRUE)
+                RETURNING id
+            ''', user_id=user_id, product_name=product_name, price=price, category=category, description=description)
+            product_id = new_product[0][0]
+
+        # Add or update the product in the user's inventory
+        app.db.execute('''
+            INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
+            VALUES (:user_id, :product_id, :quantity, 0, 0, :shop_name, 0)
+            ON CONFLICT (user_id, pid) DO UPDATE
+            SET quantity_in_stock = Inventory.quantity_in_stock + :quantity
+        ''', user_id=user_id, product_id=product_id, quantity=quantity, shop_name="sample shop")
+
 
     @staticmethod
     def update_quantity(inventory_id, new_quantity):
