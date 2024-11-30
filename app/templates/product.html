@@ -17,10 +17,17 @@
                         <strong>Category:</strong> <span class="badge bg-secondary">{{ product.category }}</span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Reviews:</strong> {{ num_reviews }}
+                        <strong>Number of Reviews:</strong> {{ num_reviews }}
                         <div class="d-inline-block ms-3">
                             <strong>Rating:</strong> 
-                            <span class="text-warning">★</span> {{ avg_rating }}
+                            {% for i in range(5) %}
+                                {% if i < avg_rating|int %}
+                                    <span class="text-warning">★</span>
+                                {% else %}
+                                    <span class="text-secondary">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ "%.1f"|format(avg_rating) }})
                         </div>
                     </li>
                 </ul>

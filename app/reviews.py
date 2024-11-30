@@ -91,3 +91,47 @@ def submit_review(product_id):
 
     # Logic to save the review, e.g., store it in the database
     return redirect(url_for('index.index'))  # Redirect back to the landing page or a success page
+
+@bp.route('/edit_review/<int:review_id>', methods=['GET', 'POST'])
+def edit_review(review_id):
+    if request.method == 'POST':
+        # Update the review
+        rating = request.form.get('rating')
+        review_text = request.form.get('review_text')
+        time_modified = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        app.db.execute('''
+        UPDATE Reviews
+        SET rating = :rating, 
+            description = :review_text,
+            time_modified = :time_modified
+        WHERE id = :review_id
+        AND user_id = :user_id
+        ''',
+        rating=rating,
+        review_text=review_text,
+        time_modified=time_modified,
+        review_id=review_id,
+        user_id=current_user.id)
+        
+        return redirect(url_for('users.profile'))
+    
+    # GET request - show edit form
+    review = Review.get_by_id(review_id)
+    if not review or review.user_id != current_user.id:
+        return redirect(url_for('users.profile'))
+    
+    return render_template('editReview.html', review=review)
+
+@bp.route('/delete_review/<int:review_id>', methods=['POST'])
+def delete_review(review_id):
+    # Verify the review belongs to current user and delete it
+    app.db.execute('''
+    DELETE FROM Reviews
+    WHERE id = :review_id
+    AND user_id = :user_id
+    ''',
+    review_id=review_id,
+    user_id=current_user.id)
+    
+    return redirect(url_for('users.profile'))

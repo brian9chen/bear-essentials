@@ -118,6 +118,16 @@ WHERE product_id = :product_id
                               product_id=int(product_id))
         return float(result[0][0]) if result and result[0][0] is not None else None
     
+    @staticmethod
+    def get_by_id(id):
+        rows = app.db.execute('''
+SELECT id, user_id, product_id, seller_id, rating, description, time_created, time_modified, num_upvotes
+FROM Reviews
+WHERE id = :id
+        ''',
+                                id=id)
+        return Review(*rows[0]) if rows else None
+    
 #     @staticmethod
 #     def get_reviews_by_seller_id(seller_id):
 #         rows = app.db.execute('''
