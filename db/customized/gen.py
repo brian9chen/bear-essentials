@@ -16,36 +16,20 @@ num_cart_items = 100
 available_pids = list(range(100))
 
 
-
-num_users = 100
-num_products = 100
-num_sellers = 50
-num_purchases = 2500
-num_reviews = 300
-num_inventory = 4000
-num_orders = 70
-num_cart_items = 100
-available_pids = list(range(100))
-
 Faker.seed(0)
 fake = Faker()
 random.seed(0)
-# Predefine number of sellers (half of total number of users)
-num_sellers = 50
-# Generate a list of seller IDs excluding the first two users (uid=0 and uid=1)
-seller_ids = random.sample(range(num_users), num_sellers)
+
+EXCLUDED_SELLER_IDS = [0, 1]  # Predefined non-seller users
+seller_ids = random.sample(range(2, num_users), num_sellers)
 
 
-
-
-Faker.seed(0)
-fake = Faker()
 
 def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
 
 def gen_users(num_users, seller_ids):
-    with open('Users.csv', 'w') as f:
+    with open('Users.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
         
@@ -67,8 +51,8 @@ def gen_users(num_users, seller_ids):
             is_seller = uid in seller_ids #set to true if uid is in seller_ids
 
 
-            if is_seller:
-                print(f"User {uid} is a seller")
+            #if is_seller:
+            #    print(f"User {uid} is a seller")
 
             writer.writerow([uid, email, password, firstname, lastname, address, balance, is_seller])
         print(f'{num_users} generated')
@@ -196,7 +180,7 @@ def gen_reviews(num_reviews):
 
 def gen_inventory(num_inventory, seller_ids):
     products_df = pd.read_csv('Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
-    with open('Inventory.csv', 'w') as f:
+    with open('Inventory.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end=' ', flush=True)
         

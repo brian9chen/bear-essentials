@@ -147,11 +147,12 @@ ORDER BY p.time_purchased DESC
     @staticmethod
     def get_sellers(product_id):
         rows = app.db.execute('''
-            SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
-            FROM Inventory i
-            JOIN Users u ON i.user_id = u.id
-            WHERE i.pid = :product_id
-        ''', product_id=product_id)
+        SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
+        FROM Inventory i
+        JOIN Users u ON i.user_id = u.id
+        WHERE i.pid = :product_id
+        AND u.is_seller = TRUE
+    ''', product_id=product_id)
         
         unique_sellers = {}
         for seller in rows:
