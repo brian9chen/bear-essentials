@@ -22,45 +22,26 @@ bp = Blueprint('reviews', __name__)
 #     return render_template('review.html',
 #                            my_reviews=all_reviews)
 
-@bp.route('/reviews', methods=['GET', 'POST'])
-def review():
-    if request.method == 'POST':
-        user_id = request.form.get('user_id', type=int)
-        if user_id:
-            all_reviews = Review.get_5recent_reviews_by_uid(user_id)
-            print(user_id)
-            if not all_reviews:
-                # Handle case where no reviews are found
-                message = f"No reviews found for user with ID {user_id}."
-                return render_template('review.html', my_reviews=[], message=message)
-            return render_template('review.html', my_reviews=all_reviews)
-    
-    # Default case for GET request
-    return render_template('review.html', my_reviews=[])
-
-@bp.route('/reviews/<int:user_id>', methods=['GET'])
-def get_recent_reviews(user_id):
-    # get the top 5 recent reviews for the provided user id
-    top5reviews = Review.get_5recent_reviews_by_uid(user_id)
-
-    # render the page by adding information to the index.html file
-    return render_template('review.html',
-                           top_reviews=top5reviews)
-
-@bp.route('/write_review/<int:product_id>', methods=['GET', 'POST'])
-def write_review(product_id):
+@bp.route('/write_product_review/<int:product_id>', methods=['GET', 'POST'])
+def write_product_review(product_id):
     # Logic to handle the review submission
     # Render the review form template, passing in product_id if needed
-    return render_template('writeReview.html', product_id=product_id)
+    return render_template('writeProductReview.html', product_id=product_id)
 
-@bp.route('/submit_review/<int:product_id>', methods=['POST'])
-def submit_review(product_id):
+@bp.route('/submit_product_review/<int:product_id>', methods=['POST'])
+def submit_product_review(product_id):
+    
     # Extract data from the form
     rating = request.form.get('rating')
     review_text = request.form.get('review_text')
 
     # Write this new review to the CSV file
-    review_id = Review.count_total_reviews()
+    rows = app.db.execute('''
+        SELECT MAX(id) FROM Reviews
+    ''')
+    max_id = rows[0][0] if rows else 0
+    review_id = max_id + 1
+    
     user_id = current_user.id
     print("ID: " + str(current_user.id) + " Name: " + str(current_user.firstname))
     # csv_file_path = '../db/data/Reviews.csv'
@@ -135,3 +116,31 @@ def delete_review(review_id):
     user_id=current_user.id)
     
     return redirect(url_for('users.profile'))
+
+
+# functions below here are no longer needed i think:
+
+@bp.route('/reviews', methods=['GET', 'POST'])
+def review():
+    if request.method == 'POST':
+        user_id = request.form.get('user_id', type=int)
+        if user_id:
+            all_reviews = Review.get_5recent_reviews_by_uid(user_id)
+            print(user_id)
+            if not all_reviews:
+                # Handle case where no reviews are found
+                message = f"No reviews found for user with ID {user_id}."
+                return render_template('review.html', my_reviews=[], message=message)
+            return render_template('review.html', my_reviews=all_reviews)
+    
+    # Default case for GET request
+    return render_template('review.html', my_reviews=[])
+
+@bp.route('/reviews/<int:user_id>', methods=['GET'])
+def get_recent_reviews(user_id):
+    # get the top 5 recent reviews for the provided user id
+    top5reviews = Review.get_5recent_reviews_by_uid(user_id)
+
+    # render the page by adding information to the index.html file
+    return render_template('review.html',
+                           top_reviews=top5reviews)

@@ -37,9 +37,13 @@
                 </div>
                 <div class="mt-3">
                     {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('reviews.write_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
+                        {% if product.has_review %}
+                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+                        {% else %}
+                            <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
+                        {% endif %}
                     {% else %}
-                    <span>Login to review</span>
+                        <span>Login to review</span>
                     {% endif %}
                 </div>
             </div>
