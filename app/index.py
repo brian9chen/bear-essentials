@@ -6,6 +6,7 @@ import pandas as pd
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
+from .models.inventory import Inventory
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -105,6 +106,10 @@ def product_detail(id):
         # Handle case if product is not found
         abort(404)
 
+
+    sellers_list = Product.get_sellers(id)
+
+
     # Fetch all reviews for the given product ID, sorted by upvotes
     all_reviews = Review.get_sortedByUpvote_by_pid(id)
 
@@ -125,7 +130,12 @@ def product_detail(id):
     total_reviews = len(all_reviews)
     total_pages = (total_reviews + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE  # Round up for any remainder
 
-    return render_template('product.html', product=product, reviews=reviews, page=page, total_pages=total_pages)
+    return render_template('product.html', 
+                           product=product, 
+                           sellers=sellers_list,
+                           reviews=reviews, 
+                           page=page, 
+                           total_pages=total_pages)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

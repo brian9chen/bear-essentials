@@ -144,4 +144,31 @@ ORDER BY p.time_purchased DESC
         ''')
         return [row[0] for row in rows]
 
-    
+    @staticmethod
+    def get_sellers(product_id):
+        rows = app.db.execute('''
+            SELECT u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
+            FROM Inventory i
+            JOIN Users u ON i.user_id = u.id
+            WHERE i.pid = :product_id
+        ''', product_id=product_id)
+        
+        unique_sellers = {}
+        for seller in rows:
+            firstname = seller[0]
+            lastname = seller[1]
+            shop_name = seller[2]
+            seller_avg_rating = seller[3]
+            
+            key = (firstname, lastname, shop_name)
+            if key not in unique_sellers:
+                unique_sellers[key] = {
+                    'firstname': firstname,
+                    'lastname': lastname,
+                    'shop_name': shop_name,
+                    'seller_avg_rating': seller_avg_rating
+                }
+        
+        return list(unique_sellers.values())
+
+        

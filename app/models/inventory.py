@@ -121,6 +121,16 @@ class Inventory:
             AND Inventory.id = :inventory_id
             AND Products.creator_id = Inventory.user_id
         ''', new_name=new_name, inventory_id=inventory_id)
+    
+    # @staticmethod
+    # def get_sellers_by_product(product_id):
+    #     rows = app.db.execute('''
+    #     SELECT u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
+    #     FROM Inventory i
+    #     JOIN Users u ON i.user_id = u.id
+    #     WHERE i.pid = :product_id
+    # ''', product_id=product_id)
+    #     return rows
 
             
 
