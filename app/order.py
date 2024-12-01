@@ -1,14 +1,19 @@
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify, render_template, flash, redirect, url_for
 from flask_login import current_user
 from .models.order import Order
 from .models.cartitem import CartItem
 
 bp = Blueprint('order', __name__)
 
-
 @bp.route('/submit', methods=['GET', 'POST'])
 def submit():
-    cart_items = CartItem.get_all_by_uid(current_user.id)
+    order_id = Order.submit(current_user.id)
+    if order_id == True:
+        flash('The quantity of an item in your cart exceeds the available quantity of this product.')
+        return redirect(url_for('cartitem.cartitem'))
+    if order_id == False:
+        flash('The total price of this order exceeds your current balance.')
+        return redirect(url_for('cartitem.cartitem'))
+    cart_items = CartItem.get_items_by_order_id(order_id)
     total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
-    Order.submit(current_user.id, total_price)
     return render_template('order.html', cart_items=cart_items, total_price=total_price)

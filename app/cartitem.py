@@ -27,9 +27,20 @@ def add(id):
     # ADD CORRECT VARIABLE INPUTS TO ADD
     added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
     if added == False:
-        flash('Quantity exceeded quantity in stock for this product.')
+        flash('Selected quantity exceeded quantity in stock for this product.')
         return redirect(url_for('index.product_detail', id=id, page=1))
     else:
         cart_items = CartItem.get_all_by_uid(current_user.id)
         total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
         return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
+
+@bp.route('/delete/<int:id>', methods=['GET','POST'])
+def delete(id):
+    CartItem.delete(id)
+    return redirect(url_for('cartitem.cartitem'))
+
+@bp.route('/change/<int:id>', methods=['GET','POST'])
+def change(id):
+    new_quantity = request.form.get('new_quantity')
+    CartItem.change(id, new_quantity)
+    return redirect(url_for('cartitem.cartitem'))

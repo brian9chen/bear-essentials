@@ -1,4 +1,5 @@
 from flask import current_app as app
+from .cartitem import CartItem
 
 class Order:
     def __init__(self, id, uid, total_price, time_created, time_fulfilled):
@@ -18,16 +19,81 @@ class Order:
         return Order(*(rows[0])) if rows else None
 
     @staticmethod
-    def submit(uid, total_price):
+    def submit(uid):
+        # checking if the order can go through
+        b = app.db.execute('''
+        SELECT balance
+        FROM users
+        WHERE id = :uid
+        ''', uid=uid)
+        user_balance = int(b[0][0])
+
+        # loop through to check item quantity, available quantity, and price
+        cart_items = CartItem.get_all_by_uid(uid)
+        total = 0
+        for item in cart_items:
+            total += item['product_price']
+            quant = app.db.execute('''
+            SELECT quantity_in_stock
+            FROM Inventory
+            WHERE id = :inv_id
+            ''', inv_id=item['inv_id'])
+            avail = quant[0][0]
+            if item['quantity'] > avail:
+                return True
+        if total > user_balance:
+            return False
+
+        # making new order
         rows = app.db.execute("""
-        INSERT INTO Orders(uid, total_price)
-        VALUES(:uid, :total_price)
+        INSERT INTO Orders(uid)
+        VALUES(:uid)
         RETURNING id
-        """,
-                              uid=uid,
-                              total_price=total_price)
-        id = rows[0][0]
-        return Order.get(id)
+        """, uid=uid)
+        order_id = rows[0][0]
+
+        # loop through each cart item - assign it to the new order, decrement user balance, increment seller balance, decrement qty in stock
+        total_price = 0
+        for item in cart_items:
+            # assign to the new order
+            app.db.execute('''
+            UPDATE CartItems
+            SET order_id = :order_id
+            WHERE id = :id
+            ''', id=item['cartitem_id'], order_id=order_id)
+            
+            # calculate total price
+            total_price += item['quantity'] * item['product_price']
+
+            # decrement user balance
+            app.db.execute('''
+            UPDATE Users
+            SET balance = balance - :cur_price
+            WHERE id = :uid
+            ''', cur_price=item['quantity'] * item['product_price'], uid=uid)
+
+            # increment seller balance
+            app.db.execute('''
+            UPDATE Users
+            SET balance = balance + :cur_price
+            WHERE id = :uid
+            ''', cur_price=item['quantity'] * item['product_price'], uid=item['seller_id'])
+
+            # decrement inv quantity in stock
+            app.db.execute('''
+            UPDATE Inventory
+            SET quantity_in_stock = quantity_in_stock - :quantity
+            WHERE id = :id
+            ''', id=item['inv_id'], quantity=item['quantity'])
+
+        # update new order with total price
+        app.db.execute('''
+        UPDATE Orders
+        SET total_price = :total_price
+        WHERE id = :id
+        ''', id=order_id, total_price=total_price)
+
+        return order_id
     
     @staticmethod
     def get_seller_orders_with_items(seller_id, search=None, status_filter="all"):

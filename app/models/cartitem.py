@@ -23,13 +23,13 @@ class CartItem:
         ''',id=id)
         return CartItem(*(rows[0])) if rows else None
 
-
+    # this method only gets cart items that have NOT been submitted as orders yet (still in cart)
     @staticmethod
     def get_all_by_uid(uid):
         rows = app.db.execute('''
-        SELECT c.id, c.uid, c.inv_id, c.quantity, c.time_created, c.time_modified, p.name, p.price
-        FROM CartItems c, Inventory i, Products p
-        WHERE c.uid = :uid AND c.inv_id = i.id AND i.pid = p.id
+        SELECT c.id, c.uid, c.inv_id, c.quantity, c.time_created, c.time_modified, p.name, p.price, u.id
+        FROM CartItems c, Inventory i, Products p, Users u
+        WHERE c.uid = :uid AND c.inv_id = i.id AND i.pid = p.id AND order_id IS NULL AND i.user_id = u.id
         ORDER BY time_created DESC
         ''',
                               uid=uid)
@@ -41,7 +41,8 @@ class CartItem:
             "time_created": row[4],
             "time_modified": row[5],
             "product_name": row[6],
-            "product_price": row[7]
+            "product_price": row[7],
+            "seller_id": row[8]
         } for row in rows] if rows else []
 
     
@@ -157,3 +158,39 @@ class CartItem:
                                 quantity=quantity)
             id = rows[0][0]
             return True
+        
+    @staticmethod
+    def get_items_by_order_id(order_id):
+        rows = app.db.execute('''
+        SELECT c.id, c.uid, c.inv_id, c.quantity, c.time_created, c.time_modified, p.name, p.price, c.is_fulfilled
+        FROM CartItems c, Inventory i, Products p
+        WHERE c.order_id = :order_id AND c.inv_id = i.id AND i.pid = p.id
+        ORDER BY time_created DESC
+        ''',
+                              order_id=order_id)
+        return [{
+            "cartitem_id": row[0],
+            "uid": row[1],
+            "inv_id": row[2],
+            "quantity": row[3],
+            "time_created": row[4],
+            "time_modified": row[5],
+            "product_name": row[6],
+            "product_price": row[7],
+            "is_fulfilled": row[8]
+        } for row in rows] if rows else []
+
+    @staticmethod
+    def delete(item_id):
+        app.db.execute('''
+        DELETE FROM CartItems
+        WHERE id = :id
+        ''', id=item_id)
+    
+    @staticmethod
+    def change(item_id, new_quantity):
+        app.db.execute('''
+        UPDATE CartItems
+        SET quantity = :quantity
+        WHERE id = :id
+        ''', id=item_id, quantity=new_quantity)
