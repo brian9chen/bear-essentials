@@ -185,9 +185,58 @@ def profile():
         form.email.data = current_user.email
         form.address.data = current_user.address
 
+
+    # For reviews table:
+
+    page = request.args.get('page', 1, type=int)
+    
+    product_reviews = Review.get_all_prodName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    total_product_reviews = Review.count_product_reviews_by_uid(current_user.id)
+    
+    seller_reviews = Review.get_all_sellerName_by_uid(user_id=current_user.id, page=page, per_page=5)
+    total_seller_reviews = Review.count_seller_reviews_by_uid(current_user.id)
+    
+    # Create a simple pagination-like object
+    class Pagination:
+        def __init__(self, items, page, per_page, total):
+            self.items = items
+            self.page = page
+            self.per_page = per_page
+            self.total = total
+            
+        @property
+        def pages(self):
+            return max(1, (self.total + self.per_page - 1) // self.per_page)
+            
+        @property
+        def has_prev(self):
+            return self.page > 1
+            
+        @property
+        def has_next(self):
+            return self.page < self.pages
+            
+        @property
+        def prev_num(self):
+            return self.page - 1
+            
+        @property
+        def next_num(self):
+            return self.page + 1
+            
+        def iter_pages(self):
+            for i in range(1, self.pages + 1):
+                yield i
+    
+    # Create pagination object
+    my_product_reviews = Pagination(product_reviews, page, per_page=5, total=total_product_reviews)
+    my_seller_reviews = Pagination(seller_reviews, page, per_page=5, total=total_seller_reviews)
+    
     return render_template('profile.html',
                            title='Profile',
                            form=form,
                            add_balance_form=add_balance_form,
                            withdraw_balance_form=withdraw_balance_form,
-                           balance=current_user.balance)
+                           balance=current_user.balance,
+                           my_product_reviews=my_product_reviews,
+                           my_seller_reviews=my_seller_reviews)

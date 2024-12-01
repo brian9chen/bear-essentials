@@ -5,16 +5,60 @@
 <br><br>
 
 <h1>{{ product.name }}</h1>
-    <p>Price: ${{ product.price }}</p>
-    <p>Description: {{ product.description }}</p>
-    <p>Category: {{ product.category }}</p>
-    <p>Average Rating: {{ product.prod_avg_rating }}</p>
-    <img src="{{ product.image_path }}" alt="{{ product.name }} image"> 
-    <br><br>
-    <!-- Link back to home page or previous page -->
-    <a href="{{ url_for('index.index') }}">Back to all products</a>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Price:</strong> <span class="text-primary">${{ product.price }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Category:</strong> <span class="badge bg-secondary">{{ product.category }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Number of Reviews:</strong> {{ num_reviews }}
+                        <div class="d-inline-block ms-3">
+                            <strong>Rating:</strong> 
+                            {% for i in range(5) %}
+                                {% if i < avg_rating|int %}
+                                    <span class="text-warning">★</span>
+                                {% else %}
+                                    <span class="text-secondary">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ "%.1f"|format(avg_rating) }})
+                        </div>
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <strong>Description:</strong>
+                    <p class="card-text">{{ product.description }}</p>
+                </div>
+                <div class="mt-3">
+                    {% if current_user.is_authenticated %}
+                        {% if product.has_review %}
+                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+                        {% else %}
+                            <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
+                        {% endif %}
+                    {% else %}
+                        <span>Login to review</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                <img src="{{ url_for('static', filename=product.image_path) }}" 
+                     alt="{{ product.name }} image" 
+                     class="img-fluid rounded" 
+                     style="max-width: 100%; height: auto;">
+            </div>
+        </div>
+    </div>
+</div>
 
-    <br><br>
+<br><br>
+<br><br>
 
     {% if current_user.is_authenticated %}
     <br><br>
@@ -62,10 +106,13 @@
     {% endif %}
 
 
+<br><br>
+<br><br>
+
 <!-- Reviews Table -->
 <h2>Reviews</h2>
-<table>
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
             <th>User</th>
             <th>Rating</th>
@@ -86,16 +133,24 @@
 </table>
 
 <!-- Pagination Controls -->
-<div class="pagination">
-    {% if page > 1 %}
-        <a href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}">Previous</a>
-    {% endif %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if page > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('index.product_detail', id=product.id, page=page - 1) }}">Previous</a>
+        </li>
+        {% endif %}
 
-    <span>Page {{ page }} of {{ total_pages }}</span>
+        <li class="page-item disabled">
+            <span class="page-link">Page {{ page }} of {{ total_pages }}</span>
+        </li>
 
-    {% if page < total_pages %}
-        <a href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}">Next</a>
-    {% endif %}
-</div>
+        {% if page < total_pages %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('index.product_detail', id=product.id, page=page + 1) }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
 
 {% endblock %}

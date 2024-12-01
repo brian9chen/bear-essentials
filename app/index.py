@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for
+from flask import current_app as app
 from flask_login import current_user
 import datetime
 import pandas as pd
@@ -62,6 +63,16 @@ def index():
     start_index = (page - 1) * PRODUCTS_PER_PAGE
     end_index = start_index + PRODUCTS_PER_PAGE
     products_in_page = products[start_index:end_index]
+    
+    if current_user.is_authenticated:
+        for product in products_in_page:
+            review = Review.has_user_reviewed(current_user.id, product.id)
+            setattr(product, 'has_review', bool(review))
+            setattr(product, 'review_id', review[0] if review else None)
+    else:
+        for product in products_in_page:
+            setattr(product, 'has_review', False)
+            setattr(product, 'review_id', None)
 
     # Render the page with relevant information
     return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
@@ -129,13 +140,20 @@ def product_detail(id):
     # Calculate total pages based on the number of reviews
     total_reviews = len(all_reviews)
     total_pages = (total_reviews + REVIEWS_PER_PAGE - 1) // REVIEWS_PER_PAGE  # Round up for any remainder
+    
+    # get num reviews and avg rating
+    num_reviews = len(all_reviews)
+    avg_rating = round(Review.get_avg_rating_by_pid(id), 2)
+    
+    if current_user.is_authenticated:
+        review = Review.has_user_reviewed(current_user.id, product.id)
+        setattr(product, 'has_review', bool(review))
+        setattr(product, 'review_id', review[0] if review else None)
+    else:
+        setattr(product, 'has_review', False)
+        setattr(product, 'review_id', None)
 
-    return render_template('product.html', 
-                           product=product, 
-                           sellers=sellers_list,
-                           reviews=reviews, 
-                           page=page, 
-                           total_pages=total_pages)
+    return render_template('product.html', product=product, sellers=sellers_list, reviews=reviews, page=page, total_pages=total_pages, num_reviews=num_reviews, avg_rating=avg_rating)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():
