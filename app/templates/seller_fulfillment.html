@@ -49,7 +49,7 @@
         {% endif %}
     </p>
       <p><strong>Order Date:</strong> {{ order['time_created'] }}</p>
-      <p><strong>Order Status:</strong> {{ 'Fulfilled' if order['overall_fulfilled'] else 'Pending' }}</p>
+      <p><strong>Order Status:</strong> {{ 'Fulfilled' if order['seller_order_fulfilled'] else 'Pending' }}</p>
       <p><strong>Total Price:</strong> ${{ order['seller_total_price'] }}</p>
       <p><strong>Number of Items:</strong> {{ order['total_items'] }}</p>
 
