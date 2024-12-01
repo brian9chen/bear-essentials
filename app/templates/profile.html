@@ -266,6 +266,44 @@
     {% else %}
         <p>You haven't written any reviews yet.</p>
     {% endif %}
+
+    <!-- Add Order History Table for Sellers -->
+    {% if current_user.is_seller and order_history %}
+        <hr>
+        <h2>Your Order History</h2>
+        <table class='table table-hover table-bordered'>
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Total Price ($)</th>
+                    <th scope="col">Time Created</th>
+                    <th scope="col">Time Fulfilled</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in order_history %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ "%.2f"|format(order.total_price) }}</td>
+                        <td>{{ order.time_created }}</td>
+                        <td>
+                            {% if order.time_fulfilled %}
+                                {{ order.time_fulfilled }}
+                            {% else %}
+                                Not Fulfilled
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination for Order History (if needed) -->
+        <!-- You can implement pagination similarly to reviews if the order history is large -->
+    {% elif current_user.is_seller %}
+        <p>You have no orders yet.</p>
+    {% endif %}
+
 </div>
 
 

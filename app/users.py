@@ -7,7 +7,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Nu
 
 from .models.user import User
 from .models.review import Review
-
+from .models.order import Order
 
 from flask import Blueprint, render_template, abort
 bp = Blueprint('users', __name__)
@@ -232,11 +232,19 @@ def profile():
     my_product_reviews = Pagination(product_reviews, page, per_page=5, total=total_product_reviews)
     my_seller_reviews = Pagination(seller_reviews, page, per_page=5, total=total_seller_reviews)
     
-    return render_template('profile.html',
-                           title='Profile',
-                           form=form,
-                           add_balance_form=add_balance_form,
-                           withdraw_balance_form=withdraw_balance_form,
-                           balance=current_user.balance,
-                           my_product_reviews=my_product_reviews,
-                           my_seller_reviews=my_seller_reviews)
+    # get order history if user is a seller
+    order_history = []
+    if current_user.is_seller:
+        order_history = Order.get_all_by_seller(current_user.id)
+    
+    return render_template(
+        'profile.html',
+        title='Profile',
+        form=form,
+        add_balance_form=add_balance_form,
+        withdraw_balance_form=withdraw_balance_form,
+        balance=current_user.balance,
+        my_product_reviews=my_product_reviews,
+        my_seller_reviews=my_seller_reviews,
+        order_history=order_history
+    )
