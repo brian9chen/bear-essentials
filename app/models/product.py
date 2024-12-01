@@ -143,6 +143,27 @@ ORDER BY p.time_purchased DESC
             FROM Products
         ''')
         return [row[0] for row in rows]
+    
+    @staticmethod
+    def search(query):
+        rows = app.db.execute('''
+            SELECT id, name, category, price, description, image_path
+            FROM Products
+            WHERE name ILIKE :query OR category ILIKE :query
+        ''', query=f'%{query}%')
+
+        return [
+            {
+                'id': row[0],
+                'name': row[1],
+                'category': row[2],
+                'price': row[3],
+                'description': row[4],
+                'image_path': row[5],
+            }
+            for row in rows
+        ]
+
 
     @staticmethod
     def get_sellers(product_id):

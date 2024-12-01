@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
+import os
 from .config import Config
 from .db import DB
 
@@ -11,6 +12,16 @@ def create_app():
     app.config.from_object(Config)
 
     app.db = DB(app)
+    
+    app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'app', 'static', 'uploads')
+    app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+    # Ensure the upload folder exists
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    def allowed_file(filename):
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
     
     # Initialize login_manager with the app
     login_manager.init_app(app)
@@ -42,5 +53,8 @@ def create_app():
 
     from .order import bp as order_bp
     app.register_blueprint(order_bp)
+
+    from .seller_fulfillment import bp as fulfillment_bp
+    app.register_blueprint(fulfillment_bp)
 
     return app

@@ -24,44 +24,57 @@ class Inventory:
     def get_all_by_user(user_id):
         rows = app.db.execute('''
             SELECT i.id, i.user_id, i.pid, i.quantity_in_stock, i.quantity_to_fulfill, i.quantity_back_to_stock,
-                   p.name, p.price, p.description, p.category
+                p.name, p.price, p.description, p.category, i.image_path
             FROM Inventory i
             JOIN Products p ON i.pid = p.id
             WHERE i.user_id = :user_id
         ''', user_id=user_id)
 
         return [{
-            "inventory_id": row[0],
-            "user_id": row[1],
-            "product_id": row[2],
-            "quantity_in_stock": row[3],
-            "quantity_to_fulfill": row[4],
-            "quantity_back_to_stock": row[5],
-            "product_name": row[6],
-            "product_price": row[7],
-            "product_description": row[8],
-            "product_category": row[9]
-        } for row in rows] if rows else []
+        "inventory_id": row[0],
+        "user_id": row[1],
+        "product_id": row[2],
+        "quantity_in_stock": row[3],
+        "quantity_to_fulfill": row[4],
+        "quantity_back_to_stock": row[5],
+        "product_name": row[6],
+        "product_price": row[7],
+        "product_description": row[8],
+        "product_category": row[9],
+        "image_path": row[10]  # Add this line
+    } for row in rows] if rows else []
+
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
-        # Insert a new product into the Products table
-        product_id = app.db.execute('''
-            INSERT INTO Products (creator_id, name, price, category, description)
-            VALUES (:user_id, :product_name, :price, :category, :description)
-            RETURNING id
-        ''', user_id=user_id, product_name=product_name, price=price, category=category, description = description)
-        
-        # Insert the new product into the Inventory table with initial quantity
-        if product_id:
-            app.db.execute('''
-                INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
-                VALUES (:user_id, :product_id, :quantity, 0, 0, :name, 0)
-            ''', user_id=user_id, product_id=product_id[0][0], quantity=quantity, name="sample name")
+        existing_product = app.db.execute('''
+            SELECT id FROM Products
+            WHERE name = :product_name AND category = :category
+        ''', product_name=product_name, category=category)
+
+        if existing_product:
+            # if product exists, get the product ID
+            product_id = existing_product[0][0]
+        else:
+            # create
+            new_product = app.db.execute('''
+                INSERT INTO Products (creator_id, name, price, category, description, available)
+                VALUES (:user_id, :product_name, :price, :category, :description, TRUE)
+                RETURNING id
+            ''', user_id=user_id, product_name=product_name, price=price, category=category, description=description)
+            product_id = new_product[0][0]
+
+        # add or update the product in the users inventory
+        app.db.execute('''
+            INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
+            VALUES (:user_id, :product_id, :quantity, 0, 0, :shop_name, 0)
+            ON CONFLICT (user_id, pid) DO UPDATE
+            SET quantity_in_stock = Inventory.quantity_in_stock + :quantity
+        ''', user_id=user_id, product_id=product_id, quantity=quantity, shop_name="sample shop")
+
 
     @staticmethod
     def update_quantity(inventory_id, new_quantity):
-        # Update the quantity_in_stock for a given inventory item
         app.db.execute('''
             UPDATE Inventory
             SET quantity_in_stock = :new_quantity
@@ -70,7 +83,6 @@ class Inventory:
 
     @staticmethod
     def update_price(inventory_id, new_price):
-    # Update the price in Products for the product associated with the inventory_id
         app.db.execute('''
             UPDATE Products
             SET price = :new_price
@@ -132,6 +144,17 @@ class Inventory:
     # ''', product_id=product_id)
     #     return rows
 
-            
+
+
+    @staticmethod
+    def update_image_path(inventory_id, image_path):
+        """
+        Update the image path for a specific inventory item.
+        """
+        app.db.execute('''
+        UPDATE Inventory
+        SET image_path = :image_path
+        WHERE id = :inventory_id
+        ''', inventory_id=inventory_id, image_path=image_path)
 
 
