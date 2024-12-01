@@ -1,4 +1,6 @@
 from flask import current_app as app
+from flask import render_template, redirect, url_for, flash, request
+
 
 class CartItem:
     def __init__(self, id, uid, inv_id, quantity, time_created, time_modified):
@@ -113,25 +115,45 @@ class CartItem:
         } for row in rows]
     
     @staticmethod
-    def add(pid, inv_uid, uid, quantity):
+    def add(pid, inv_uid, uid, quantity, seller_name):
+        # get first and last name from seller name
+        seller_names = seller_name.split()
+        first_name = seller_names[0]
+        last_name = seller_names[1]
+        # gets user id from seller first and last name
+        get_seller_id = app.db.execute(
+            """
+            SELECT u.id
+            FROM Users u
+            WHERE u.firstname = :first_name AND u.lastname = :last_name
+            """,
+            first_name=first_name,
+            last_name=last_name
+        )
+        seller_id = get_seller_id[0][0]
         # gets inventory id from product id and inventory user id
         inv = app.db.execute(
             """
-            SELECT i.id
+            SELECT i.id, i.quantity_in_stock
             FROM Inventory i
-            WHERE i.pid = :pid
+            WHERE i.pid = :pid AND i.user_id = :seller_id
             """,
-            pid=pid
+            pid=pid,
+            seller_id=seller_id
         )
         inv_id = inv[0][0]
-        # uses attributes to make new cartitem
-        rows = app.db.execute("""
-        INSERT INTO CartItems(uid, inv_id, quantity)
-        VALUES(:uid, :inv_id, :quantity)
-        RETURNING id
-        """,
-                              uid=uid,
-                              inv_id=inv_id,
-                              quantity=quantity)
-        id = rows[0][0]
-        return CartItem.get(id)
+        inv_quant = inv[0][1]
+        if int(quantity) >= inv_quant:
+            return False
+        else:
+            # uses attributes to make new cartitem
+            rows = app.db.execute("""
+            INSERT INTO CartItems(uid, inv_id, quantity)
+            VALUES(:uid, :inv_id, :quantity)
+            RETURNING id
+            """,
+                                uid=uid,
+                                inv_id=inv_id,
+                                quantity=quantity)
+            id = rows[0][0]
+            return True

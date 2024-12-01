@@ -22,8 +22,21 @@
     <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
         <label>Quantity:</label>
         <input type="string" name="quantity" id="quantity" placeholder=" " required>
+        <label>Seller Name:</label>
+        <input type="string" name="seller_name" id="seller_name" placeholder=" " required>
         <input type="submit" value="Add to Cart"/>
       </form>
+      <p>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <div class="alert alert-info">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </p>
     <a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
 
     {% endif %}

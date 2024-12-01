@@ -1,7 +1,9 @@
-from flask import Blueprint, jsonify, render_template
+from flask import Blueprint, jsonify, render_template, flash, redirect, url_for
 from flask_login import current_user
 from .models.cartitem import CartItem
 from .models.product import Product
+from .models.review import Review
+
 from flask import request, redirect, url_for
 
 bp = Blueprint('cartitem', __name__)
@@ -21,8 +23,13 @@ def add(id):
     product = Product.get(id)
     creator_id = product.creator_id
     quantity = request.form.get('quantity')
+    seller_name = request.form.get('seller_name')
     # ADD CORRECT VARIABLE INPUTS TO ADD
-    CartItem.add(id, creator_id, current_user.id, quantity)
-    cart_items = CartItem.get_all_by_uid(current_user.id)
-    total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
-    return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
+    added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
+    if added == False:
+        flash('Quantity exceeded quantity in stock for this product.')
+        return redirect(url_for('index.product_detail', id=id, page=1))
+    else:
+        cart_items = CartItem.get_all_by_uid(current_user.id)
+        total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
+        return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
