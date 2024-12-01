@@ -169,3 +169,17 @@ class Order:
                 "buyer_address": row[11],
             })
         return list(orders.values())
+    
+    @staticmethod
+    def get_orders_by_user(uid):
+        rows = app.db.execute('''
+        SELECT id, total_price, time_created, time_fulfilled
+        FROM Orders
+        WHERE uid = :uid
+        ''', uid=uid)
+        return [{
+            "id": row[0],
+            "total_price": row[1],
+            "time_created": row[2],
+            "time_fulfilled": row[3]
+        } for row in rows] if rows else []

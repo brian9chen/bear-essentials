@@ -17,3 +17,14 @@ def submit():
     cart_items = CartItem.get_items_by_order_id(order_id)
     total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
     return render_template('order.html', cart_items=cart_items, total_price=total_price)
+
+@bp.route('/orders', methods=['GET', 'POST'])
+def orders():
+    orders = Order.get_orders_by_user(current_user.id)
+    return render_template('orders.html', orders=orders)
+
+@bp.route('/pastorder/<int:id>', methods=['GET'])
+def pastorder(id):
+    cart_items = CartItem.get_items_by_order_id(id)
+    total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
+    return render_template('order.html', cart_items=cart_items, total_price=total_price)
