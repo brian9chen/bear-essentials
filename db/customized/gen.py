@@ -123,10 +123,10 @@ def gen_reviews(num_reviews):
 
         userProductPairs = set()
 
-        with open("db/customized/goodReviews.txt", "r") as f:
+        with open("goodReviews.txt", "r") as f:
             positiveReview = f.read()
 
-        with open("db/customized/badReviews.txt", "r") as f:
+        with open("badReviews.txt", "r") as f:
             negativeReview = f.read()
 
         reviewModel = [positiveReview, negativeReview]
