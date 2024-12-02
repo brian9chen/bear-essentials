@@ -145,6 +145,7 @@
             <th>Rating</th>
             <th>Review</th>
             <th>Upvotes</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -154,6 +155,27 @@
             <td>{{ review.rating }}</td> 
             <td>{{ review.description }}</td>
             <td>{{ review.num_upvotes }}</td>
+            {% if current_user.is_authenticated %}
+                <td>
+                    {% set user_vote = review.user_vote %}
+                    <form action="{{ url_for('reviews.upvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm {% if user_vote == 1 %}btn-success{% else %}btn-outline-success{% endif %}" 
+                                {% if user_vote == 1 %}disabled{% endif %}>
+                            Upvote
+                        </button>
+                    </form>
+                    <form action="{{ url_for('reviews.downvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm {% if user_vote == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                                {% if user_vote == -1 %}disabled{% endif %}>
+                            Downvote
+                        </button>
+                    </form>
+                </td>
+            {% else %}
+                <td>
+                    <a href="{{ url_for('users.login') }}" class="btn btn-sm btn-outline-secondary">Login to vote</a>
+                </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

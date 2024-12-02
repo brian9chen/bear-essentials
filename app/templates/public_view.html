@@ -35,14 +35,18 @@
             <p class="mb-2"><strong>Number of Reviews:</strong> {{ num_reviews }}</p>
             <p class="mb-0"><strong>Rating:</strong> 
                 {% for i in range(5) %}
-                    {% if i < avg_rating|int %}
+                    {% if avg_rating and i < avg_rating|int %}
                         <span class="text-warning">★</span>
                     {% else %}
                         <span class="text-secondary">☆</span>
                     {% endif %}
                 {% endfor %}
-                ({{ "%.1f"|format(avg_rating) }})
-            <p>
+                {% if avg_rating %}
+                    ({{ "%.1f"|format(avg_rating) }})
+                {% else %}
+                    (No ratings yet)
+                {% endif %}
+            </p>
         </div>
     </div>
 
@@ -75,6 +79,7 @@
                         <th>Rating</th>
                         <th>Review</th>
                         <th>Upvotes</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,6 +89,27 @@
                             <td>{{ review.rating }}</td>
                             <td>{{ review.description }}</td>
                             <td>{{ review.num_upvotes }}</td>
+                            {% if current_user.is_authenticated %}
+                                <td>
+                                    {% set user_vote = review.user_vote %}
+                                    <form action="{{ url_for('reviews.upvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm {% if user_vote == 1 %}btn-success{% else %}btn-outline-success{% endif %}" 
+                                                {% if user_vote == 1 %}disabled{% endif %}>
+                                            Upvote
+                                        </button>
+                                    </form>
+                                    <form action="{{ url_for('reviews.downvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm {% if user_vote == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                                                {% if user_vote == -1 %}disabled{% endif %}>
+                                            Downvote
+                                        </button>
+                                    </form>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ url_for('users.login') }}" class="btn btn-sm btn-outline-secondary">Login to vote</a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -91,33 +117,23 @@
 
             <!-- Pagination -->
             {% if pagination.pages > 1 %}
-            <nav aria-label="Review pagination">
-                <ul class="pagination justify-content-center my-4">
-                    <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
-                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page-1) }}" aria-label="Previous">
-                            <span>&laquo;</span>
-                        </a>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page - 1) }}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}</span>
                     </li>
 
-                    {% for page_num in range(1, pagination.pages + 1) %}
-                        {% if page_num == 1 or 
-                            page_num == pagination.pages or 
-                            (page_num >= pagination.page - 2 and page_num <= pagination.page + 2) %}
-                            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=page_num) }}">{{ page_num }}</a>
-                            </li>
-                        {% elif page_num == pagination.page - 3 or page_num == pagination.page + 3 %}
-                            <li class="page-item disabled">
-                                <span class="page-link">...</span>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    <li class="page-item {% if pagination.page == pagination.pages %}disabled{% endif %}">
-                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page+1) }}" aria-label="Next">
-                            <span>&raquo;</span>
-                        </a>
+                    {% if pagination.page < pagination.pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page + 1) }}">Next</a>
                     </li>
+                    {% endif %}
                 </ul>
             </nav>
             {% endif %}

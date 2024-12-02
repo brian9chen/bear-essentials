@@ -188,6 +188,13 @@ def product_detail(id):
             seller['has_review'] = False
             seller['review_id'] = None
             seller['has_purchased'] = False
+    
+    if current_user.is_authenticated:
+        for review in reviews:
+            review.user_vote = Review.get_user_vote(current_user.id, review.id)
+    else:
+        for review in reviews:
+            review.user_vote = 0
 
     return render_template('product.html',
                          product=product,

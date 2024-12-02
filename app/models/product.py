@@ -143,9 +143,10 @@ ORDER BY p.time_purchased DESC
             FROM Products
         ''')
         return [row[0] for row in rows]
-
+    
     @staticmethod
     def get_sellers(product_id):
+        # Add DISTINCT to the SQL query to eliminate duplicates at the database level
         rows = app.db.execute('''
         SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
         FROM Inventory i
@@ -154,23 +155,17 @@ ORDER BY p.time_purchased DESC
         AND u.is_seller = TRUE
     ''', product_id=product_id)
         
+        # Simplify by using seller_id as the only key since it should be unique
         unique_sellers = {}
         for seller in rows:
-            # Access tuple elements by index
             seller_id = seller[0]
-            firstname = seller[1]
-            lastname = seller[2]
-            shop_name = seller[3]
-            seller_avg_rating = seller[4]
-            
-            key = (seller_id, firstname, lastname, shop_name)
-            if key not in unique_sellers:
-                unique_sellers[key] = {
-                    'id': seller_id,
-                    'firstname': firstname,
-                    'lastname': lastname,
-                    'shop_name': shop_name,
-                    'seller_avg_rating': seller_avg_rating
+            if seller_id not in unique_sellers:
+                unique_sellers[seller_id] = {
+                    'id': seller[0],
+                    'firstname': seller[1],
+                    'lastname': seller[2],
+                    'shop_name': seller[3],
+                    'seller_avg_rating': seller[4]
                 }
         
         return list(unique_sellers.values())

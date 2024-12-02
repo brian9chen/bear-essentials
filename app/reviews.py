@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import render_template, request, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from flask import jsonify
 import datetime
 import csv
@@ -182,6 +182,30 @@ def delete_review(review_id):
     user_id=current_user.id)
     
     return redirect(url_for('users.profile'))
+
+@bp.route('/upvote_review/<int:review_id>', methods=['POST'])
+@login_required
+def upvote_review(review_id):
+    success = Review.change_upvote_count(review_id, current_user.id, True)
+    if not success:
+        flash('You have already upvoted this review!')
+    return redirect(request.referrer)
+
+@bp.route('/downvote_review/<int:review_id>', methods=['POST'])
+@login_required
+def downvote_review(review_id):
+    success = Review.change_upvote_count(review_id, current_user.id, False)
+    if not success:
+        flash('You have already downvoted this review!')
+    return redirect(request.referrer)
+
+
+
+
+
+
+
+
 
 
 # functions below here are no longer needed i think:

@@ -116,6 +116,13 @@ def public_view(user_id):
     if user:
         reviews = Review.get_sortedByUpvote_by_sellerid(seller_id=user_id)
         
+        if current_user.is_authenticated:
+            for review in reviews:
+                review.user_vote = Review.get_user_vote(current_user.id, review.id)
+        else:
+            for review in reviews:
+                review.user_vote = 0
+        
         num_reviews = len(reviews)
         avg_rating = Review.get_avg_rating_by_sellerid(seller_id=user_id)
         
