@@ -120,6 +120,7 @@ class User(UserMixin):
             SET balance = balance + :amount
             WHERE id = :user_id
         ''', amount=amount, user_id=self.id)
+        app.db.commit()
         self.balance += amount
     
     def withdraw_balance(self, amount):
@@ -133,4 +134,5 @@ class User(UserMixin):
             SET balance = balance - :amount
             WHERE id = :user_id
         ''', amount=amount, user_id=self.id)
+        app.db.commit()
         self.balance -= amount

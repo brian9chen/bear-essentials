@@ -57,7 +57,7 @@
             {% endfor %}
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <button type="submit" name="submit_update" class="btn btn-primary">Update Profile</button>
     </form>
 
     <hr>
@@ -270,7 +270,7 @@
     <!-- Add Order History Table for Sellers -->
     {% if current_user.is_seller and order_history %}
         <hr>
-        <h2>Your Order History</h2>
+        <h2>Your Seller Order History</h2>
         <table class='table table-hover table-bordered'>
             <thead class="thead-dark">
                 <tr>

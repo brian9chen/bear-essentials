@@ -33,10 +33,9 @@ class Order:
     def get_all_by_seller(seller_id):
             rows = app.db.execute('''
                 SELECT DISTINCT o.id, o.uid, o.total_price, o.time_created, o.time_fulfilled
-                FROM Orders o
-                JOIN CartItems c ON o.id = c.order_id
-                JOIN Inventory i ON c.inv_id = i.id
-                WHERE i.user_id = :seller_id
-                ORDER BY o.time_created DESC
-            ''', seller_id=seller_id)
+            FROM Orders o
+            JOIN CartItems c ON o.id = c.order_id
+            JOIN Inventory i ON c.inv_id = i.id
+            WHERE i.user_id = :seller_id
+        ''', seller_id=seller_id)
             return [Order(*row) for row in rows] if rows else []

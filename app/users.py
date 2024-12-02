@@ -141,7 +141,8 @@ def profile():
     form = UpdateProfileForm()
     add_balance_form = AddBalanceForm()
     withdraw_balance_form = WithdrawBalanceForm()
-    if 'submit_update' in request.form and form.validate_on_submit():
+
+    if form.validate_on_submit() and form.submit.data:
         try:
             current_user.update_profile(
                 firstname=form.firstname.data,
@@ -156,7 +157,7 @@ def profile():
             flash('Failed to update profile. Please try again.', 'danger')
 
 
-    elif 'submit_add' in request.form and add_balance_form.validate_on_submit():
+    elif add_balance_form.validate_on_submit() and add_balance_form.submit_add.data:
         try:
             amount = float(add_balance_form.amount.data)
             current_user.add_balance(amount)
@@ -167,7 +168,7 @@ def profile():
         except Exception as e:
             flash('Failed to add balance. Please try again.', 'danger')
 
-    elif 'submit_withdraw' in request.form and withdraw_balance_form.validate_on_submit():
+    elif withdraw_balance_form.validate_on_submit() and withdraw_balance_form.submit_withdraw.data:
         try:
             amount = float(withdraw_balance_form.amount.data)
             current_user.withdraw_balance(amount)
