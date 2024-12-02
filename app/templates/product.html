@@ -38,7 +38,7 @@
                 <div class="mt-3">
                     {% if current_user.is_authenticated %}
                         {% if product.has_review %}
-                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-success">Edit Review</a>
                         {% else %}
                             <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
                         {% endif %}
@@ -95,7 +95,7 @@
                 <div>
                     {% if current_user.is_authenticated %}
                         {% if seller.has_review %}
-                            <a href="{{ url_for('reviews.edit_review', review_id=seller.review_id) }}" class="btn btn-primary btn-sm">
+                            <a href="{{ url_for('reviews.edit_review', review_id=seller.review_id) }}" class="btn btn-success btn-sm">
                                 Edit My Review
                             </a>
                         {% elif seller.has_purchased %}
