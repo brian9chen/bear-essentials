@@ -134,3 +134,15 @@ class User(UserMixin):
             WHERE id = :user_id
         ''', amount=amount, user_id=self.id)
         self.balance -= amount
+        
+    @staticmethod
+    def has_purchased_from_seller(buyer_id, seller_id):
+        rows = app.db.execute('''
+            SELECT 1
+            FROM Purchases p
+            JOIN Inventory i ON p.pid = i.id
+            WHERE p.uid = :buyer_id AND i.user_id = :seller_id
+            LIMIT 1
+        ''', buyer_id=buyer_id, seller_id=seller_id)
+        return len(rows) > 0
+

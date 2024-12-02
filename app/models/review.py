@@ -129,12 +129,21 @@ WHERE id = :id
         return Review(*rows[0]) if rows else None
     
     @staticmethod
-    def has_user_reviewed(user_id, product_id):
+    def has_user_reviewed_product(user_id, product_id):
         rows = app.db.execute('''
 SELECT id FROM Reviews 
 WHERE user_id = :user_id AND product_id = :product_id
         ''', 
                                 user_id=user_id, product_id=product_id)
+        return rows[0] if rows else None
+    
+    @staticmethod
+    def has_user_reviewed_seller(user_id, seller_id):
+        rows = app.db.execute('''
+SELECT id FROM Reviews 
+WHERE user_id = :user_id AND seller_id = :seller_id
+        ''', 
+                                user_id=user_id, seller_id=seller_id)
         return rows[0] if rows else None
     
 #     @staticmethod
