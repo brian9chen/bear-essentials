@@ -96,7 +96,7 @@
                     {% if current_user.is_authenticated %}
                         {% if seller.has_review %}
                             <a href="{{ url_for('reviews.edit_review', review_id=seller.review_id) }}" class="btn btn-primary btn-sm">
-                                Edit Review
+                                Edit My Review
                             </a>
                         {% elif seller.has_purchased %}
                             <a href="{{ url_for('reviews.write_seller_review', user_id=seller.id) }}" class="btn btn-primary btn-sm">
@@ -150,7 +150,7 @@
     <tbody>
         {% for review in reviews %}
         <tr>
-            <td>{{ review.user_id }}</td> 
+            <td>{{ review.user_firstname }} {{ review.user_lastname }}</td>
             <td>{{ review.rating }}</td> 
             <td>{{ review.description }}</td>
             <td>{{ review.num_upvotes }}</td>

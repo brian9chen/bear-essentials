@@ -109,6 +109,17 @@ ORDER BY num_upvotes DESC
         return [Review(*row) for row in rows]
     
     @staticmethod
+    def get_sortedByUpvote_by_sellerid(seller_id):
+        rows = app.db.execute('''
+SELECT *
+FROM Reviews
+WHERE seller_id = :seller_id
+ORDER BY num_upvotes DESC
+''',
+                              seller_id=int(seller_id))
+        return [Review(*row) for row in rows]
+    
+    @staticmethod
     def get_avg_rating_by_pid(product_id):
         result = app.db.execute('''
 SELECT AVG(rating) AS avg_rating
@@ -116,6 +127,16 @@ FROM Reviews
 WHERE product_id = :product_id
 ''',
                               product_id=int(product_id))
+        return float(result[0][0]) if result and result[0][0] is not None else None
+    
+    @staticmethod
+    def get_avg_rating_by_sellerid(seller_id):
+        result = app.db.execute('''
+SELECT AVG(rating) AS avg_rating
+FROM Reviews
+WHERE seller_id = :seller_id
+''',
+                              seller_id=int(seller_id))
         return float(result[0][0]) if result and result[0][0] is not None else None
     
     @staticmethod

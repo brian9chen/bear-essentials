@@ -139,6 +139,11 @@ def product_detail(id):
 
     # Fetch all reviews for the given product ID, sorted by upvotes
     all_reviews = Review.get_sortedByUpvote_by_pid(id)
+    
+    for review in all_reviews:
+        user = User.get(review.user_id)
+        review.user_firstname = user.firstname
+        review.user_lastname = user.lastname
 
     # Define the number of reviews per page
     REVIEWS_PER_PAGE = 10

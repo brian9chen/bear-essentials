@@ -85,7 +85,7 @@
       <div class="product-actions">
         {% if current_user.is_authenticated %}
           {% if product.has_review %}
-            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit My Review</a>
           {% else %}
             <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
           {% endif %}
@@ -135,7 +135,7 @@
         <td>
           {% if current_user.is_authenticated %}
             {% if product.has_review %}
-              <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+              <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit My Review</a>
             {% else %}
               <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
             {% endif %}
