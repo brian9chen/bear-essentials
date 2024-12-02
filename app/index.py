@@ -51,10 +51,12 @@ def index():
     end_index = start_index + PRODUCTS_PER_PAGE
     products_in_page = products[start_index:end_index]
 
+    product_ratings = {product.id: Review.get_avg_rating_by_pid(product.id) for product in products_in_page}
+
     # Render the page with relevant information
     return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
                            categories=categories, sort_order=sort_order, selected_category=selected_category,
-                           keyword=keyword, page=page, total_pages=total_pages)
+                           keyword=keyword, page=page, total_pages=total_pages, product_ratings=product_ratings)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():
@@ -72,6 +74,7 @@ def product_detail(id):
         # Handle case if product is not found
         abort(404)
 
+    product_rating = Review.get_avg_rating_by_pid(product.id)
 
     sellers_list = Product.get_sellers(id)
 
@@ -98,10 +101,11 @@ def product_detail(id):
 
     return render_template('product.html', 
                            product=product, 
+                           product_rating=product_rating,
                            sellers=sellers_list,
                            reviews=reviews, 
                            page=page, 
-                           total_pages=total_pages)
+                           total_pages=total_pages,)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

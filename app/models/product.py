@@ -2,7 +2,7 @@ from flask import current_app as app
 # need to fix SQL injection attacks 
 
 class Product:
-    def __init__(self, id, creator_id, name, price, description, category, discount_code, prod_avg_rating, image_path, available):
+    def __init__(self, id, creator_id, name, price, description, category, discount_code, image_path, available):
         self.id = id
         self.creator_id = creator_id
         self.name = name
@@ -10,7 +10,7 @@ class Product:
         self.description = description 
         self.category = category
         self.discount_code = discount_code
-        self.prod_avg_rating = prod_avg_rating
+        # self.prod_avg_rating = prod_avg_rating
         self.image_path = image_path
         self.available = available
 

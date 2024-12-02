@@ -38,14 +38,18 @@
       <p class="product-description">{{ product.description }}</p>
       <p class="product-rating">
         Rating:
-        {% for _ in range(product.prod_avg_rating | round(0, 'floor') | int) %}
-        <span class="star">&#9733;</span> <!-- Filled star -->
+        {% set rating = product_ratings[product.id] if product_ratings[product.id] is not none else 0 %}
+        
+        {% for _ in range(rating | round(0, 'floor') | int) %}
+            <span class="star">&#9733;</span> <!-- Filled star -->
         {% endfor %}
-        {% for _ in range(5 - (product.prod_avg_rating | round(0, 'floor') | int)) %}
-        <span class="star empty">&#9734;</span> <!-- Empty star -->
+        
+        {% for _ in range(5 - (rating | round(0, 'floor') | int)) %}
+            <span class="star empty">&#9734;</span> <!-- Empty star -->
         {% endfor %}
-        <span class="rating-value">({{ product.prod_avg_rating | round(1) }})</span>
-      </p>      
+        
+        <span class="rating-value">({{ rating | round(1) }})</span>
+      </p>
       <!-- <p class="product-category">Category: {{ product.category }}</p> -->
       <div class="product-actions">
         {% if current_user.is_authenticated %}
