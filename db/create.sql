@@ -74,3 +74,13 @@ CREATE TABLE Reviews (
     time_modified TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     num_upvotes INTEGER DEFAULT 0
 );
+
+
+CREATE TABLE ReviewVotes (
+    user_id INT NOT NULL,
+    review_id INT NOT NULL,
+    vote_type INT NOT NULL, -- 1 for upvote, -1 for downvote
+    PRIMARY KEY (user_id, review_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (review_id) REFERENCES Reviews(id)
+);

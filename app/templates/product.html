@@ -18,7 +18,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>Number of Reviews:</strong> {{ num_reviews }}
-                        <div class="d-inline-block ms-3">
+                        <div class="d-inline-block ms-5 ps-5" style="margin-left: 2rem;">
                             <strong>Rating:</strong> 
                             {% for i in range(5) %}
                                 {% if i < avg_rating|int %}
@@ -38,7 +38,7 @@
                 <div class="mt-3">
                     {% if current_user.is_authenticated %}
                         {% if product.has_review %}
-                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-primary">Edit Review</a>
+                            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-success">Edit Review</a>
                         {% else %}
                             <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
                         {% endif %}
@@ -57,56 +57,83 @@
     </div>
 </div>
 
-<br><br>
-<br><br>
-
-    {% if current_user.is_authenticated %}
-    <br><br>
-    <!-- ADD CORRECT FORM ACTION URL -->
-    <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
-        <label>Quantity:</label>
-        <input type="string" name="quantity" id="quantity" placeholder=" " required>
-        <input type="submit" value="Add to Cart"/>
-      </form>
-    <a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
-
+{% if current_user.is_authenticated %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST" class="mb-3">
+                <div class="form-group row align-items-center">
+                    <label for="quantity" class="col-sm-2 col-form-label">Quantity:</label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" name="quantity" id="quantity" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <a class="btn btn-secondary ms-2" href="{{url_for('cartitem.cartitem')}}" role="button">See Cart</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     {% endif %}
-    <br><br>
+    
+<br><br>
 
-      <!-- Sellers Information -->
-    <h2>Available from these sellers:</h2>
-    <ul>
-        {% for seller in sellers %}
-        <li>
-            <strong>
-                <a href="{{ url_for('users.public_view', user_id=seller.id) }}">
-                    {{ seller.firstname }} {{ seller.lastname }}
-                </a>
-            </strong><br>
-            <!-- Shop Name: {{ seller.shop_name }}<br>
-            Average Rating: {{ seller.seller_avg_rating }} -->
+<!-- Sellers Information -->
+<h2>Available From:</h2>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="list-group">
+            {% for seller in sellers %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>
+                        <a href="{{ url_for('users.public_view', user_id=seller.id) }}" class="text-decoration-none">
+                            {{ seller.firstname }} {{ seller.lastname }}
+                        </a>
+                    </strong>
+                </div>
+                <div>
+                    {% if current_user.is_authenticated %}
+                        {% if seller.has_review %}
+                            <a href="{{ url_for('reviews.edit_review', review_id=seller.review_id) }}" class="btn btn-success btn-sm">
+                                Edit My Review
+                            </a>
+                        {% elif seller.has_purchased %}
+                            <a href="{{ url_for('reviews.write_seller_review', user_id=seller.id) }}" class="btn btn-primary btn-sm">
+                                Submit Review
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Purchase required to review</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Sellers Pagination -->
+<nav aria-label="Sellers pagination">
+    <ul class="pagination justify-content-center">
+        {% if seller_page > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('index.product_detail', id=product.id, seller_page=seller_page - 1, page=page) }}">Previous</a>
         </li>
-        {% endfor %}
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Page {{ seller_page }} of {{ seller_total_pages }}</span>
+        </li>
+
+        {% if seller_page < seller_total_pages %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('index.product_detail', id=product.id, seller_page=seller_page + 1, page=page) }}">Next</a>
+        </li>
+        {% endif %}
     </ul>
+</nav>
 
-    <br><br>
-    <!-- Link back to home page or previous page -->
-    <a href="{{ url_for('index.index') }}">Back to all products</a>
-
-    <br><br>
-
-    {% if current_user.is_authenticated %}
-    <br><br>
-    <form action="{{ url_for('cartitem.add', id=product.id)}}" method="POST">
-        <label for="quantity">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" placeholder="Enter quantity" required min="1">
-        <input type="submit" value="Add to Cart"/>
-    </form>
-    <a class="btn btn-secondary" href="{{ url_for('cartitem.cartitem') }}" role="button">See Cart</a>
-    {% endif %}
-
-
-<br><br>
 <br><br>
 
 <!-- Reviews Table -->
@@ -118,15 +145,37 @@
             <th>Rating</th>
             <th>Review</th>
             <th>Upvotes</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for review in reviews %}
         <tr>
-            <td>{{ review.user_id }}</td> 
+            <td>{{ review.user_firstname }} {{ review.user_lastname }}</td>
             <td>{{ review.rating }}</td> 
             <td>{{ review.description }}</td>
             <td>{{ review.num_upvotes }}</td>
+            {% if current_user.is_authenticated %}
+                <td>
+                    {% set user_vote = review.user_vote %}
+                    <form action="{{ url_for('reviews.upvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm {% if user_vote == 1 %}btn-success{% else %}btn-outline-success{% endif %}" 
+                                {% if user_vote == 1 %}disabled{% endif %}>
+                            Upvote
+                        </button>
+                    </form>
+                    <form action="{{ url_for('reviews.downvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-sm {% if user_vote == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                                {% if user_vote == -1 %}disabled{% endif %}>
+                            Downvote
+                        </button>
+                    </form>
+                </td>
+            {% else %}
+                <td>
+                    <a href="{{ url_for('users.login') }}" class="btn btn-sm btn-outline-secondary">Login to vote</a>
+                </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

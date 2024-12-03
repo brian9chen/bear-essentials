@@ -29,25 +29,6 @@ class UpdateProfileForm(FlaskForm):
             raise ValidationError('This email is already in use. Please choose a different one.')
 
 
-
-@bp.route('/user/<int:user_id>', methods=['GET'])
-
-def public_view(user_id):
-    #user_id = request.args.get('user_id', type=int)
-    
-    user = User.get(user_id)
-    if not user:
-        abort(404)  # User not found
-
-    is_seller = user.is_seller if hasattr(user, 'is_seller') else False
-    #commented out reviews for now bc it was causing errors
-    #reviews = Review.get_reviews_by_seller_id(user_id) if is_seller else []
-    return render_template('public_view.html', user=user, is_seller=is_seller)
-
-    #return render_template('public_view.html', user=user, is_seller=is_seller, reviews=reviews)
-
-
-
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -126,11 +107,63 @@ def logout():
     logout_user()
     return redirect(url_for('index.index'))
 
-@bp.route('/user/<int:id>')
-def product(id):
-    user = User.get(id)
+@bp.route('/user/<int:user_id>')
+def public_view(user_id):
+    user = User.get(user_id)
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Number of reviews per page
+    
     if user:
-        return render_template('public_view.html', user=user)
+        reviews = Review.get_sortedByUpvote_by_sellerid(seller_id=user_id)
+        
+        if current_user.is_authenticated:
+            for review in reviews:
+                review.user_vote = Review.get_user_vote(current_user.id, review.id)
+        else:
+            for review in reviews:
+                review.user_vote = 0
+        
+        num_reviews = len(reviews)
+        avg_rating = Review.get_avg_rating_by_sellerid(seller_id=user_id)
+        
+        for review in reviews:
+            reviewer = User.get(review.user_id)
+            review.user_firstname = reviewer.firstname
+            review.user_lastname = reviewer.lastname
+        
+        # Create pagination
+        total_reviews = len(reviews)
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        paginated_reviews = reviews[start_idx:end_idx]
+        
+        pagination = {
+            'page': page,
+            'per_page': per_page,
+            'total': total_reviews,
+            'pages': (total_reviews + per_page - 1) // per_page,
+            'items': paginated_reviews
+        }
+        
+        if current_user.is_authenticated:
+            review = Review.has_user_reviewed_seller(current_user.id, user.id)
+            has_purchased = User.has_purchased_from_seller(current_user.id, user.id)
+            setattr(user, 'has_review', bool(review))
+            setattr(user, 'review_id', review[0] if review else None)
+            setattr(user, 'has_purchased', has_purchased)
+            
+        else:
+            setattr(user, 'has_review', False)
+            setattr(user, 'review_id', None)
+            setattr(user, 'has_purchased', False)
+        
+        return render_template('public_view.html', 
+                             user=user, 
+                             reviews=paginated_reviews,
+                             num_reviews=num_reviews,
+                             avg_rating=avg_rating,
+                             pagination=pagination,
+                             is_seller=user.is_seller)
     else:
         return render_template('public_view.html', user=None)
 

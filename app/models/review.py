@@ -109,6 +109,17 @@ ORDER BY num_upvotes DESC
         return [Review(*row) for row in rows]
     
     @staticmethod
+    def get_sortedByUpvote_by_sellerid(seller_id):
+        rows = app.db.execute('''
+SELECT *
+FROM Reviews
+WHERE seller_id = :seller_id
+ORDER BY num_upvotes DESC
+''',
+                              seller_id=int(seller_id))
+        return [Review(*row) for row in rows]
+    
+    @staticmethod
     def get_avg_rating_by_pid(product_id):
         result = app.db.execute('''
 SELECT AVG(rating) AS avg_rating
@@ -116,6 +127,16 @@ FROM Reviews
 WHERE product_id = :product_id
 ''',
                               product_id=int(product_id))
+        return float(result[0][0]) if result and result[0][0] is not None else None
+    
+    @staticmethod
+    def get_avg_rating_by_sellerid(seller_id):
+        result = app.db.execute('''
+SELECT AVG(rating) AS avg_rating
+FROM Reviews
+WHERE seller_id = :seller_id
+''',
+                              seller_id=int(seller_id))
         return float(result[0][0]) if result and result[0][0] is not None else None
     
     @staticmethod
@@ -129,13 +150,95 @@ WHERE id = :id
         return Review(*rows[0]) if rows else None
     
     @staticmethod
-    def has_user_reviewed(user_id, product_id):
+    def has_user_reviewed_product(user_id, product_id):
         rows = app.db.execute('''
 SELECT id FROM Reviews 
 WHERE user_id = :user_id AND product_id = :product_id
         ''', 
                                 user_id=user_id, product_id=product_id)
         return rows[0] if rows else None
+    
+    @staticmethod
+    def has_user_reviewed_seller(user_id, seller_id):
+        rows = app.db.execute('''
+SELECT id FROM Reviews 
+WHERE user_id = :user_id AND seller_id = :seller_id
+        ''', 
+                                user_id=user_id, seller_id=seller_id)
+        return rows[0] if rows else None
+    
+    @staticmethod
+    def change_upvote_count(review_id, change):
+        app.db.execute('''
+UPDATE Reviews
+SET num_upvotes = num_upvotes + :change
+WHERE id = :review_id
+        ''',
+                                change=change, review_id=review_id)
+        
+        
+    @staticmethod
+    def get_user_vote(user_id, review_id):
+        rows = app.db.execute('''
+        SELECT vote_type
+        FROM ReviewVotes
+        WHERE user_id = :user_id AND review_id = :review_id
+        ''',
+        user_id=user_id,
+        review_id=review_id)
+        return rows[0][0] if rows else None
+
+    @staticmethod
+    def change_upvote_count(review_id, user_id, is_upvote):
+        # Check if user has already voted
+        current_vote = Review.get_user_vote(user_id, review_id)
+        
+        if current_vote is None:
+            # First time voting
+            vote_type = 1 if is_upvote else -1
+            app.db.execute('''
+            INSERT INTO ReviewVotes (user_id, review_id, vote_type)
+            VALUES (:user_id, :review_id, :vote_type)
+            ''',
+            user_id=user_id,
+            review_id=review_id,
+            vote_type=vote_type)
+            
+            # Update review count
+            app.db.execute('''
+            UPDATE Reviews
+            SET num_upvotes = num_upvotes + :change
+            WHERE id = :review_id
+            ''',
+            change=vote_type,
+            review_id=review_id)
+            
+            return True
+            
+        elif (is_upvote and current_vote == -1) or (not is_upvote and current_vote == 1):
+            # Changing vote from down to up or up to down
+            new_vote_type = 1 if is_upvote else -1
+            app.db.execute('''
+            UPDATE ReviewVotes
+            SET vote_type = :new_vote_type
+            WHERE user_id = :user_id AND review_id = :review_id
+            ''',
+            new_vote_type=new_vote_type,
+            user_id=user_id,
+            review_id=review_id)
+            
+            # Update review count (multiply by 2 because we're changing from -1 to 1 or vice versa)
+            app.db.execute('''
+            UPDATE Reviews
+            SET num_upvotes = num_upvotes + :change
+            WHERE id = :review_id
+            ''',
+            change=new_vote_type * 2,
+            review_id=review_id)
+            
+            return True
+            
+        return False  # User has already voted this way
     
 #     @staticmethod
 #     def get_reviews_by_seller_id(seller_id):

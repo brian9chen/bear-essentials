@@ -7,6 +7,7 @@ import pandas as pd
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.review import Review
+from .models.user import User
 from .models.inventory import Inventory
 
 from flask import Blueprint
@@ -66,7 +67,7 @@ def index():
     
     if current_user.is_authenticated:
         for product in products_in_page:
-            review = Review.has_user_reviewed(current_user.id, product.id)
+            review = Review.has_user_reviewed_product(current_user.id, product.id)
             setattr(product, 'has_review', bool(review))
             setattr(product, 'review_id', review[0] if review else None)
     else:
@@ -120,9 +121,29 @@ def product_detail(id):
 
     sellers_list = Product.get_sellers(id)
 
+    # Define pagination constants for sellers
+    SELLERS_PER_PAGE = 5
+    REVIEWS_PER_PAGE = 10
+
+    # Get both page numbers from request
+    page = request.args.get('page', 1, type=int)
+    seller_page = request.args.get('seller_page', 1, type=int)
+
+    # Get all sellers and paginate
+    sellers_list = Product.get_sellers(id)
+    total_sellers = len(sellers_list)
+    seller_total_pages = (total_sellers + SELLERS_PER_PAGE - 1) // SELLERS_PER_PAGE
+    seller_start = (seller_page - 1) * SELLERS_PER_PAGE
+    seller_end = seller_start + SELLERS_PER_PAGE
+    sellers_in_page = sellers_list[seller_start:seller_end]
 
     # Fetch all reviews for the given product ID, sorted by upvotes
     all_reviews = Review.get_sortedByUpvote_by_pid(id)
+    
+    for review in all_reviews:
+        user = User.get(review.user_id)
+        review.user_firstname = user.firstname
+        review.user_lastname = user.lastname
 
     # Define the number of reviews per page
     REVIEWS_PER_PAGE = 10
@@ -145,15 +166,46 @@ def product_detail(id):
     num_reviews = len(all_reviews)
     avg_rating = round(Review.get_avg_rating_by_pid(id), 2)
     
+    # check if user has reviewed product
     if current_user.is_authenticated:
-        review = Review.has_user_reviewed(current_user.id, product.id)
+        review = Review.has_user_reviewed_product(current_user.id, product.id)
         setattr(product, 'has_review', bool(review))
         setattr(product, 'review_id', review[0] if review else None)
     else:
         setattr(product, 'has_review', False)
         setattr(product, 'review_id', None)
+    
+    # check if user has reviewed sellers and/or purchased from sellers
+    if current_user.is_authenticated:
+        for seller in sellers_list:
+            review = Review.has_user_reviewed_seller(current_user.id, seller['id'])
+            has_purchased = User.has_purchased_from_seller(current_user.id, seller['id'])
+            seller['has_review'] = bool(review)
+            seller['review_id'] = review[0] if review else None
+            seller['has_purchased'] = has_purchased
+    else:
+        for seller in sellers_list:
+            seller['has_review'] = False
+            seller['review_id'] = None
+            seller['has_purchased'] = False
+    
+    if current_user.is_authenticated:
+        for review in reviews:
+            review.user_vote = Review.get_user_vote(current_user.id, review.id)
+    else:
+        for review in reviews:
+            review.user_vote = 0
 
-    return render_template('product.html', product=product, sellers=sellers_list, reviews=reviews, page=page, total_pages=total_pages, num_reviews=num_reviews, avg_rating=avg_rating)
+    return render_template('product.html',
+                         product=product,
+                         sellers=sellers_in_page,
+                         seller_page=seller_page,
+                         seller_total_pages=seller_total_pages,
+                         reviews=reviews,
+                         page=page,
+                         total_pages=total_pages,
+                         num_reviews=num_reviews,
+                         avg_rating=avg_rating)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

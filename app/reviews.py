@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import render_template, request, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from flask import jsonify
 import datetime
 import csv
@@ -26,7 +26,29 @@ bp = Blueprint('reviews', __name__)
 def write_product_review(product_id):
     # Logic to handle the review submission
     # Render the review form template, passing in product_id if needed
-    return render_template('writeProductReview.html', product_id=product_id)
+    
+    product = app.db.execute('''
+        SELECT name FROM Products
+        WHERE id = :product_id
+    ''', product_id=product_id)
+    
+    product_name = product[0][0] if product else "Unknown Product"
+    
+    return render_template('writeProductReview.html', product_id=product_id, product_name=product_name)
+
+@bp.route('/write_seller_review/<int:user_id>', methods=['GET', 'POST'])
+def write_seller_review(user_id):
+    # Logic to handle the review submission
+    # Render the review form template, passing in user_id if needed
+    
+    user = app.db.execute('''
+        SELECT firstname, lastname FROM Users
+        WHERE id = :user_id
+    ''', user_id=user_id)
+    
+    seller_name = f"{user[0][0]} {user[0][1]}" if user else "Unknown Seller"
+    
+    return render_template('writeSellerReview.html', user_id=user_id, seller_name=seller_name)
 
 @bp.route('/submit_product_review/<int:product_id>', methods=['POST'])
 def submit_product_review(product_id):
@@ -64,6 +86,50 @@ def submit_product_review(product_id):
     user_id=user_id,
     product_id=product_id,
     seller_id=None,
+    rating=rating,
+    review_text=review_text,
+    time_created=time_created,
+    time_modified=time_modified,
+    num_upvotes=0)
+
+    # Logic to save the review, e.g., store it in the database
+    return redirect(url_for('index.index'))  # Redirect back to the landing page or a success page
+
+@bp.route('/submit_seller_review/<int:seller_id>', methods=['POST'])
+def submit_seller_review(seller_id):
+    
+    # Extract data from the form
+    rating = request.form.get('rating')
+    review_text = request.form.get('review_text')
+    
+    rows = app.db.execute('''
+        SELECT MAX(id) FROM Reviews
+    ''')
+    max_id = rows[0][0] if rows else 0
+    review_id = max_id + 1
+    
+    user_id = current_user.id
+    print("ID: " + str(current_user.id) + " Name: " + str(current_user.firstname))
+    # csv_file_path = '../db/data/Reviews.csv'
+    # csv_file_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'data', 'Reviews.csv')
+    time_created = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    time_modified = time_created
+    num_upvotes = 0
+
+    # with open(csv_file_path, mode='a', newline='') as csv_file:
+    #     # csv_file.write("\n")
+    #     writer = csv.writer(csv_file)
+    #     writer.writerow([review_id, user_id, product_id, rating, review_text, time_created, time_modified, num_upvotes])
+
+    # Write to the database
+    app.db.execute('''
+    INSERT INTO Reviews (id, user_id, product_id, seller_id, rating, description, time_created, time_modified, num_upvotes)
+    VALUES (:review_id, :user_id, :product_id, :seller_id, :rating, :review_text, :time_created, :time_modified, :num_upvotes)
+    ''',
+    review_id=review_id,
+    user_id=user_id,
+    product_id=None,
+    seller_id=seller_id,
     rating=rating,
     review_text=review_text,
     time_created=time_created,
@@ -116,6 +182,30 @@ def delete_review(review_id):
     user_id=current_user.id)
     
     return redirect(url_for('users.profile'))
+
+@bp.route('/upvote_review/<int:review_id>', methods=['POST'])
+@login_required
+def upvote_review(review_id):
+    success = Review.change_upvote_count(review_id, current_user.id, True)
+    if not success:
+        flash('You have already upvoted this review!')
+    return redirect(request.referrer)
+
+@bp.route('/downvote_review/<int:review_id>', methods=['POST'])
+@login_required
+def downvote_review(review_id):
+    success = Review.change_upvote_count(review_id, current_user.id, False)
+    if not success:
+        flash('You have already downvoted this review!')
+    return redirect(request.referrer)
+
+
+
+
+
+
+
+
 
 
 # functions below here are no longer needed i think:
