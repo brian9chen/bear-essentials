@@ -2,13 +2,12 @@
 
 {% block content %}
 
-<br><br>
 <form method="POST" action="{{ url_for('index.index') }}">
   <input type="hidden" name="category" value="{{ selected_category }}">
   {% if selected_category %}
-    <p>Category: <strong>{{ selected_category }}</strong></p>
+    <p style="margin-top: 20px;">Category: <strong>{{ selected_category }}</strong></p>
   {% else %}
-    <p>Category: All</p>
+    <p style="margin-top: 20px;">Category: All</p>
   {% endif %}
   <label for="sort_order">Sort by:</label>
   <select name="sort_order" id="sort_order">
