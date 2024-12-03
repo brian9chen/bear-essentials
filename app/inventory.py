@@ -10,11 +10,28 @@ bp = Blueprint('inventory', __name__)
 @bp.route('/inventory', methods=['GET'])
 def inventory():
     if current_user.is_authenticated:
+        selected_year = request.args.get('year')
+        if selected_year:
+            try:
+                selected_year = int(selected_year)
+            except ValueError:
+                selected_year = None
+        else:
+            selected_year = None
+
         inventory_items = Inventory.get_all_by_user(current_user.id)
-        categories = Product.get_unique_categories()  # Fetch unique categories
-        return render_template('inventory.html', inventory_items=inventory_items, categories=categories)
-    
+        categories = Product.get_unique_categories()
+        sales_data = Inventory.get_sales_data(current_user.id, year=selected_year)
+        available_years = Inventory.get_sales_years(current_user.id)
+        return render_template('inventory.html',
+                               inventory_items=inventory_items,
+                               categories=categories,
+                               sales_data=sales_data,
+                               available_years=available_years,
+                               selected_year=selected_year)
     return jsonify({}), 404
+
+
 
 @bp.route('/inventory/add', methods=['POST'])
 def add_product():
@@ -118,6 +135,5 @@ def search_products():
 
     results = Product.search(query)  
     return render_template('inventory.html', inventory_items=Inventory.get_all_by_user(current_user.id), categories=Product.get_unique_categories(), search_results=results)
-
 
 
