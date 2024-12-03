@@ -119,6 +119,8 @@ class CartItem:
     def add(pid, inv_uid, uid, quantity, seller_name):
         # get first and last name from seller name
         seller_names = seller_name.split()
+        if len(seller_names) <= 1:
+            return True
         first_name = seller_names[0]
         last_name = seller_names[1]
         # gets user id from seller first and last name
@@ -131,6 +133,8 @@ class CartItem:
             first_name=first_name,
             last_name=last_name
         )
+        if not get_seller_id:
+            return True
         seller_id = get_seller_id[0][0]
         # gets inventory id from product id and inventory user id
         inv = app.db.execute(
@@ -157,7 +161,6 @@ class CartItem:
                                 inv_id=inv_id,
                                 quantity=quantity)
             id = rows[0][0]
-            return True
         
     @staticmethod
     def get_items_by_order_id(order_id):

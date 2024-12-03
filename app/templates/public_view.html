@@ -2,39 +2,145 @@
 
 {% block content %}
 
-<h1>Public Profile</h1>
+<h1>Public Profile for {{ user.firstname }} {{ user.lastname }}</h1>
 
 <!-- User account information -->
-<div>
-    <p><strong>Account Number:</strong> {{ user.id }}</p>
-    <p><strong>Name:</strong> {{ user.firstname }} {{ user.lastname }}</p>
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h2 class="h5 mb-0">Public Profile</h2>
+    </div>
+    <div class="card-body">
+        <p class="mb-2"><strong>Account Number:</strong> <span class="text-secondary">{{ user.id }}</span></p>
+        <p class="mb-0"><strong>Name:</strong> <span class="text-secondary">{{ user.firstname }} {{ user.lastname }}</span></p>
+    </div>
 </div>
 
 {% if is_seller %}
     <!-- Seller additional information -->
-    <div>
-        <h2>Seller Information</h2>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Address:</strong> {{ user.address }}</p>
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h2 class="h5 mb-0">Seller Information</h2>
+        </div>
+        <div class="card-body">
+            <p class="mb-2"><strong>Email:</strong> <span class="text-secondary">{{ user.email }}</span></p>
+            <p class="mb-0"><strong>Address:</strong> <span class="text-secondary">{{ user.address }}</span></p>
+        </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h2 class="h5 mb-0">Rating and Reviews</h2>
+        </div>
+        <div class="card-body">
+            <p class="mb-2"><strong>Number of Reviews:</strong> {{ num_reviews }}</p>
+            <p class="mb-0"><strong>Rating:</strong> 
+                {% for i in range(5) %}
+                    {% if avg_rating and i < avg_rating|int %}
+                        <span class="text-warning">★</span>
+                    {% else %}
+                        <span class="text-secondary">☆</span>
+                    {% endif %}
+                {% endfor %}
+                {% if avg_rating %}
+                    ({{ "%.1f"|format(avg_rating) }})
+                {% else %}
+                    (No ratings yet)
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {% if current_user.is_authenticated %}
+            {% if user.has_review %}
+                <a href="{{ url_for('reviews.edit_review', review_id=user.review_id) }}" class="btn btn-success btn-sm">
+                    Edit My Review
+                </a>
+            {% elif user.has_purchased %}
+                <a href="{{ url_for('reviews.write_seller_review', user_id=user.id) }}" class="btn btn-primary btn-sm">
+                    Submit Review
+                </a>
+            {% else %}
+                <span class="text-muted">Purchase required to review</span>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <br>
+
     <!-- Reviews Section -->
-    <!-- <div>
+    <div>
         <h2>Reviews</h2>
         {% if reviews %}
-            <ul>
-            {% for review in reviews %}
-                <li>
-                    <strong>Rating:</strong> {{ review.rating }}<br>
-                    <strong>Comment:</strong> {{ review.description }}<br>
-                    <strong>Date:</strong> {{ review.time_created.strftime('%Y-%m-%d') }}
-                </li>
-            {% endfor %}
-            </ul>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>User</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Upvotes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                        <tr>
+                            <td>{{ review.user_firstname }} {{ review.user_lastname }}</td>
+                            <td>{{ review.rating }}</td>
+                            <td>{{ review.description }}</td>
+                            <td>{{ review.num_upvotes }}</td>
+                            {% if current_user.is_authenticated %}
+                                <td>
+                                    {% set user_vote = review.user_vote %}
+                                    <form action="{{ url_for('reviews.upvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm {% if user_vote == 1 %}btn-success{% else %}btn-outline-success{% endif %}" 
+                                                {% if user_vote == 1 %}disabled{% endif %}>
+                                            Upvote
+                                        </button>
+                                    </form>
+                                    <form action="{{ url_for('reviews.downvote_review', review_id=review.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm {% if user_vote == -1 %}btn-danger{% else %}btn-outline-danger{% endif %}"
+                                                {% if user_vote == -1 %}disabled{% endif %}>
+                                            Downvote
+                                        </button>
+                                    </form>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ url_for('users.login') }}" class="btn btn-sm btn-outline-secondary">Login to vote</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if pagination.page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page - 1) }}">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+                    </li>
+
+                    {% if pagination.page < pagination.pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('users.public_view', id=user.id, page=pagination.page + 1) }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
         {% else %}
             <p>No reviews available for this seller.</p>
         {% endif %}
-    </div> -->
+    </div>
 {% else %}
     <p>This user is not a seller.</p>
 {% endif %}

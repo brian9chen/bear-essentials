@@ -21,7 +21,20 @@ class User(UserMixin):
         WHERE id = :user_id
         ''', user_id=user_id)
         
-        return User(*rows[0]) if rows else None
+        if not rows:
+            return None
+
+        row = rows[0]
+        return User(
+            id=row[0],  # id
+            email=row[1],  # email
+            password=row[2],  # password
+            firstname=row[3],  # firstname
+            lastname=row[4],  # lastname
+            address=row[5],  # address
+            balance=float(row[6]),  # balance
+            is_seller=bool(row[7])  # is_seller
+        )
 
     @staticmethod
     def get_by_auth(email, password):
@@ -120,7 +133,13 @@ class User(UserMixin):
             SET balance = balance + :amount
             WHERE id = :user_id
         ''', amount=amount, user_id=self.id)
-        self.balance += amount
+
+        # Re-fetch the updated balance from the database
+        row = app.db.execute('SELECT balance FROM Users WHERE id = :user_id', user_id=self.id)
+        if row:
+            self.balance = float(row[0][0])
+        else:
+            raise ValueError("User not found.")
     
     def withdraw_balance(self, amount):
         if amount <= 0:
@@ -133,4 +152,21 @@ class User(UserMixin):
             SET balance = balance - :amount
             WHERE id = :user_id
         ''', amount=amount, user_id=self.id)
-        self.balance -= amount
+
+        # Re-fetch the updated balance from the database
+        row = app.db.execute('SELECT balance FROM Users WHERE id = :user_id', user_id=self.id)
+        if row:
+            self.balance = float(row[0][0])
+        else:
+            raise ValueError("User not found.")
+        
+    @staticmethod
+    def has_purchased_from_seller(buyer_id, seller_id):
+        rows = app.db.execute('''
+        SELECT 1
+        FROM Purchases p
+        JOIN Inventory i ON p.pid = i.id
+        WHERE p.uid = :buyer_id AND i.user_id = :seller_id
+        LIMIT 1
+        ''', buyer_id=buyer_id, seller_id=seller_id)
+        return len(rows) > 0

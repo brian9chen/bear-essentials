@@ -20,8 +20,9 @@ Faker.seed(0)
 fake = Faker()
 random.seed(0)
 
-EXCLUDED_SELLER_IDS = [0, 1]  # Predefined non-seller users
-seller_ids = random.sample(range(2, num_users), num_sellers)
+temp_user_ids = [uid for uid in range(num_users) if uid != 1]
+seller_ids = random.sample(temp_user_ids, num_sellers)
+#seller_ids = random.sample(range(2, num_users), num_sellers)
 
 
 
@@ -33,10 +34,11 @@ def gen_users(num_users, seller_ids):
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
         
-        writer.writerow([0, 'icecream@tastes.good', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Joey', 'Shmoey', '123 Ice Cream Lane', 0, False])
+        writer.writerow([0, 'icecream@tastes.good', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Joey', 'Shmoey', '123 Ice Cream Lane', 0, True])
         writer.writerow([1, 'coolbeans@coffee.strong', 'pbkdf2:sha256:260000$1GvmeoAkcWb89TyU$5f711eafb243c1c1a884715dd9bd6d185f29ccd3dab59ad19cc201a7260091cb', 'Mary', 'Jane', '127 Ice Cream Lane', 0, False])
         
         for uid in range(2, num_users):
+
             if uid % 10 == 0:
                 print(f'{uid}', end=' ', flush=True)
             profile = fake.profile()
@@ -180,6 +182,8 @@ def gen_reviews(num_reviews):
 
 def gen_inventory(num_inventory, seller_ids):
     products_df = pd.read_csv('Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
+    joey_inventory_ids = [] #for demo purposes
+
     with open('Inventory.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end=' ', flush=True)
@@ -195,17 +199,41 @@ def gen_inventory(num_inventory, seller_ids):
             quantity_to_fulfill = fake.random_int(min=0, max=50)
             quantity_back_to_stock = fake.random_int(min=0, max=quantity_in_stock // 2)
 
+            # Collect Joey's inventory IDs
+            if user_id == 0:
+                joey_inventory_ids.append(inventory_id)
+
             writer.writerow([inventory_id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating])
         
         print(f'{num_inventory} generated')
-    return
+    return joey_inventory_ids
 
 def gen_orders(num_orders):
     with open('Orders.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Orders...', end=' ', flush=True)
         order_ids = []
-        for order_id in range(num_orders):
+
+        #ensure that first user has orders in order to demo
+        min_joey_orders = 3;
+        num_orders_to_assign = min(num_orders, min_joey_orders)
+
+        # Assign first min_joey_orders to Joey
+        for order_id in range(num_orders_to_assign):
+            if order_id % 10 == 0:
+                print(f'{order_id}', end=' ', flush=True)
+            uid = 0  # Joey's user_id
+            total_price = f'{fake.random_int(min=20, max=500)}.{fake.random_int(0, 99):02}' 
+            time_created = fake.date_time_this_year()
+            if fake.boolean(chance_of_getting_true=50): 
+                time_fulfilled = fake.date_time_between_dates(datetime_start=time_created)
+            else:
+                time_fulfilled = None 
+            writer.writerow([order_id, uid, total_price, time_created, time_fulfilled])
+            order_ids.append(order_id)
+
+
+        for order_id in range(num_orders_to_assign, num_orders):
             if order_id % 10 == 0:
                 print(f'{order_id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)  
@@ -221,7 +249,7 @@ def gen_orders(num_orders):
         print(f'{num_orders} generated')
     return order_ids
 
-def gen_cart_items(num_cart_items, order_ids):
+def gen_cart_items(num_cart_items, order_ids, joey_inventory_ids):
     with open('CartItems.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('CartItems...', end=' ', flush=True)
@@ -230,7 +258,14 @@ def gen_cart_items(num_cart_items, order_ids):
             if cart_id % 10 == 0:
                 print(f'{cart_id}', end=' ', flush=True)
             uid = fake.random_int(min=0, max=num_users-1)  
-            inv_id = fake.random_int(min=0, max=num_inventory-1)  
+
+            # Assign the first 5 CartItems to include Joey's inventory
+            if cart_id < 5 and joey_inventory_ids:
+                inv_id = random.choice(joey_inventory_ids)
+            else:
+                inv_id = fake.random_int(min=0, max=num_inventory-1)  
+            
+            #inv_id = fake.random_int(min=0, max=num_inventory-1)  
             quantity = fake.random_int(min=1, max=10)  
             time_created = fake.date_time_this_year()
             time_modified = fake.date_time_between_dates(datetime_start=time_created)
@@ -240,7 +275,14 @@ def gen_cart_items(num_cart_items, order_ids):
             # else:
             #     order_id = None
             #     time_fulfilled = None
-            writer.writerow([cart_id, uid, inv_id, quantity, time_created, time_modified])
+
+            # Find corresponding order_id if needed
+            if cart_id < len(order_ids):
+                order_id = order_ids[cart_id]
+            else:
+                order_id = None
+
+            writer.writerow([cart_id, uid, inv_id, quantity, time_created, time_modified, order_id, None])
         
         print(f'{num_cart_items} generated')
     return
@@ -250,6 +292,9 @@ gen_users(num_users, seller_ids)
 available_pids = range(num_products)
 gen_purchases(num_purchases, available_pids)
 gen_reviews(num_reviews)
-gen_inventory(num_inventory, seller_ids)
+joey_inventory_ids = gen_inventory(num_inventory, seller_ids)
 order_ids = gen_orders(num_orders)
-gen_cart_items(num_cart_items, order_ids)
+
+# still Generate CartItems as normal, 
+# just making sure joey's inventory is included for demo purposes
+gen_cart_items(num_cart_items, order_ids, joey_inventory_ids)

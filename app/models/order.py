@@ -215,15 +215,17 @@ class Order:
     @staticmethod
     def get_orders_by_user(uid):
         rows = app.db.execute('''
-        SELECT id, total_price, time_created, time_fulfilled
-        FROM Orders
-        WHERE uid = :uid
+        SELECT o.id, o.total_price, o.time_created, o.time_fulfilled, sum(c.quantity)
+        FROM Orders o, CartItems c
+        WHERE o.uid = 0 and o.id = c.order_id
+        GROUP BY o.id
         ''', uid=uid)
         return [{
             "id": row[0],
             "total_price": row[1],
             "time_created": row[2],
-            "time_fulfilled": row[3]
+            "time_fulfilled": row[3],
+            "quantity": row[4]
         } for row in rows] if rows else []
 
     @staticmethod
@@ -234,6 +236,17 @@ class Order:
         FROM Coupons c, Orders o
         WHERE o.coupon_id = c.id AND o.id = :order_id
         ''', order_id=order_id)
-        if discount != None:
+        if discount:
             disc = float(discount[0][0])
         return disc
+    
+    @staticmethod
+    def get_all_by_seller(seller_id):
+        rows = app.db.execute('''
+            SELECT DISTINCT o.id, o.uid, o.total_price, o.time_created, o.time_fulfilled
+        FROM Orders o
+        JOIN CartItems c ON o.id = c.order_id
+        JOIN Inventory i ON c.inv_id = i.id
+        WHERE i.user_id = :seller_id
+        ''', seller_id=seller_id)
+        return [Order(*row) for row in rows] if rows else []

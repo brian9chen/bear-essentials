@@ -12,6 +12,8 @@
         <th scope="col">Order Number</th>
         <th scope="col">Date/Time of Order</th>
         <th scope="col">Total Price</th>
+        <th scope="col">Quantity of Items</th>
+        <th scope="col">Fulfilled?</th>
         <th scope="col">Order Actions</th>
       </tr>
     </thead>
@@ -21,6 +23,8 @@
           <th scope="row">{{order.id}}</th>
           <td>{{order.time_created}}</td>
           <td>{{order.total_price}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.time_fulfilled}}</td>
           <td><a class="btn btn-secondary" href="{{url_for('order.pastorder', id=order.id)}}" role="button">View Order</a></td>
         </tr>
       {% endfor %}

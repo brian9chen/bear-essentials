@@ -29,6 +29,9 @@ def add(id):
     if added == False:
         flash('Selected quantity exceeded quantity in stock for this product.')
         return redirect(url_for('index.product_detail', id=id, page=1))
+    elif added == True:
+        flash('Invalid Seller.')
+        return redirect(url_for('index.product_detail', id=id, page=1))
     else:
         cart_items = CartItem.get_all_by_uid(current_user.id)
         total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)

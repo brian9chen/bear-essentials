@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Write a Review for Product {{ product_id }}</h2>
-<form action="{{ url_for('reviews.submit_review', product_id=product_id) }}" method="POST">
+<h2>Write a Review for {{ product_name }}</h2>
+<form action="{{ url_for('reviews.submit_product_review', product_id=product_id) }}" method="POST">
   <div class="form-group">
     <label for="rating">Rating:</label>
     <input type="number" name="rating" id="rating" min="1" max="5" required>

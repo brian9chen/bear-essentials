@@ -89,3 +89,13 @@ ALTER TABLE Orders ADD COLUMN coupon_id INT;
 
 -- make sure there are no duplicates in inventory - there are some in customized csv, may have to manually remove them
 ALTER TABLE Inventory ADD CONSTRAINT unique_user_product UNIQUE (user_id, pid);
+
+
+CREATE TABLE ReviewVotes (
+    user_id INT NOT NULL,
+    review_id INT NOT NULL,
+    vote_type INT NOT NULL, -- 1 for upvote, -1 for downvote
+    PRIMARY KEY (user_id, review_id),
+    FOREIGN KEY (user_id) REFERENCES Users(id),
+    FOREIGN KEY (review_id) REFERENCES Reviews(id)
+);

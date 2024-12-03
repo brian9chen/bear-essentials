@@ -60,6 +60,12 @@ class Inventory:
             WHERE name = :product_name AND category = :category
         ''', product_name=product_name, category=category)
 
+        app.db.execute('''
+        UPDATE Users
+        SET is_seller = True
+        WHERE id = :user_id
+        ''', user_id=user_id)
+
         if existing_product:
             # if product exists, get the product ID
             product_id = existing_product[0][0]
