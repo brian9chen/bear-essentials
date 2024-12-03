@@ -85,6 +85,7 @@ ALTER TABLE CartItems ALTER COLUMN order_id DROP NOT NULL;
 ALTER TABLE CartItems ADD COLUMN is_fulfilled BOOLEAN DEFAULT FALSE;
 ALTER TABLE CartItems ADD COLUMN is_submitted;
 ALTER TABLE Inventory ADD COLUMN image_path TEXT;
+ALTER TABLE Inventory DROP COLUMN image_path;
 ALTER TABLE Orders ADD COLUMN coupon_id INT;
 
 -- make sure there are no duplicates in inventory - there are some in customized csv, may have to manually remove them

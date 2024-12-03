@@ -215,7 +215,7 @@ def gen_orders(num_orders):
         order_ids = []
 
         #ensure that first user has orders in order to demo
-        min_joey_orders = 3;
+        min_joey_orders = 3
         num_orders_to_assign = min(num_orders, min_joey_orders)
 
         # Assign first min_joey_orders to Joey
