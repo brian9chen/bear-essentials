@@ -19,7 +19,7 @@ class Order:
         return Order(*(rows[0])) if rows else None
 
     @staticmethod
-    def submit(uid):
+    def submit(uid, code):
         # checking if the order can go through
         b = app.db.execute('''
         SELECT balance
@@ -44,6 +44,17 @@ class Order:
         if total > user_balance:
             return False
 
+        # checking the coupon code
+        discount = 0
+        if code != "":
+            coupon = app.db.execute("""
+            SELECT id, discount
+            FROM Coupons
+            WHERE word = :code
+            """, code=code)
+            coupon_id = coupon[0][0]
+            discount = float(coupon[0][1])
+
         # making new order
         rows = app.db.execute("""
         INSERT INTO Orders(uid)
@@ -51,6 +62,14 @@ class Order:
         RETURNING id
         """, uid=uid)
         order_id = rows[0][0]
+        
+        # adding coupon id to order if a coupon was added
+        if discount > 0:
+            app.db.execute("""
+            UPDATE Orders
+            SET coupon_id = :coupon_id
+            WHERE id = :order_id
+            """, coupon_id=coupon_id, order_id=order_id)
 
         # loop through each cart item - assign it to the new order, decrement user balance, increment seller balance, decrement qty in stock
         total_price = 0
@@ -63,21 +82,21 @@ class Order:
             ''', id=item['cartitem_id'], order_id=order_id)
             
             # calculate total price
-            total_price += item['quantity'] * item['product_price']
+            total_price += (item['quantity'] * float(item['product_price'])) * (1-discount)
 
             # decrement user balance
             app.db.execute('''
             UPDATE Users
             SET balance = balance - :cur_price
             WHERE id = :uid
-            ''', cur_price=item['quantity'] * item['product_price'], uid=uid)
+            ''', cur_price=(item['quantity'] * float(item['product_price'])) * (1-discount), uid=uid)
 
             # increment seller balance
             app.db.execute('''
             UPDATE Users
             SET balance = balance + :cur_price
             WHERE id = :uid
-            ''', cur_price=item['quantity'] * item['product_price'], uid=item['seller_id'])
+            ''', cur_price=(item['quantity'] * float(item['product_price'])) * (1-discount), uid=item['seller_id'])
 
             # decrement inv quantity in stock
             app.db.execute('''
@@ -183,3 +202,15 @@ class Order:
             "time_created": row[2],
             "time_fulfilled": row[3]
         } for row in rows] if rows else []
+
+    @staticmethod
+    def get_discount(order_id):
+        disc = 0
+        discount = app.db.execute('''
+        SELECT c.discount
+        FROM Coupons c, Orders o
+        WHERE o.coupon_id = c.id AND o.id = :order_id
+        ''', order_id=order_id)
+        if discount != None:
+            disc = float(discount[0][0])
+        return disc

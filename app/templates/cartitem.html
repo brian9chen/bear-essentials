@@ -47,7 +47,11 @@
 </p>
 
 <h2>Total Price: ${{total_price}}</h2>
-<a class="btn btn-secondary" href="{{url_for('order.submit')}}" role="button">Submit Order</a>
+<form action="{{ url_for('order.submit')}}" method="POST">
+  <label>Add Coupon Code:</label>
+  <input type="string" name="coupon_code" id="coupon_code" placeholder=" ">
+  <input type="submit" value="Submit Order"/>
+</form>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>

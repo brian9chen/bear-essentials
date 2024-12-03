@@ -57,4 +57,7 @@ def create_app():
     from .seller_fulfillment import bp as fulfillment_bp
     app.register_blueprint(fulfillment_bp)
 
+    from .coupon import bp as coupon_bp
+    app.register_blueprint(coupon_bp)
+
     return app
