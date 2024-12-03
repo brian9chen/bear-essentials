@@ -33,7 +33,7 @@ class Inventory:
 
         inventory_items = []
         for row in rows:
-            creator_id = int(row[11])  # Convert creator_id to integer
+            creator_id = int(row[11])  # convert creator_id to integer
             is_creator = (creator_id == user_id)
 
             inventory_items.append({
