@@ -1,5 +1,4 @@
 from flask import current_app as app
-# need to fix SQL injection attacks 
 
 class Product:
     def __init__(self, id, creator_id, name, price, description, category, discount_code, image_path, available):
@@ -78,18 +77,7 @@ WHERE category IS NOT NULL
         rows = app.db.execute(query, category=category, keyword=f"%{keyword}%" if keyword else None)
         return [Product(*row) for row in rows]
 
-
-# rework this?
-# sort by rating 
-    @staticmethod 
-    def sort_by_prod_rating():
-        rows = app.db.execute('''
-SELECT *
-FROM Products
-ORDER BY prod_avg_rating
-''')
-        return [Product(*row) for row in rows]
-
+# MS2
 # get most expensive k products 
     @staticmethod 
     def most_expensive_products(k):
@@ -159,4 +147,21 @@ ORDER BY p.time_purchased DESC
         
         return list(unique_sellers.values())
 
+    @staticmethod
+    def get_best_seller_ids():
+        query = """
+        SELECT p.id, COUNT(p.id)
+        FROM Inventory i JOIN Products p ON i.pid = p.id LEFT JOIN CartItems c ON c.inv_id = i.id AND c.order_id IS NOT NULL 
+            LEFT JOIN Orders o ON c.order_id = o.id 
+        GROUP BY p.id
+        ORDER BY COUNT(p.id) DESC;
+        """
+        try:
+            rows = app.db.execute(query)
+            # Extract and return only the product ids
+            return [row[0] for row in rows]  
+        except Exception as e:
+            # Log the error for debugging
+            print(f"Database error: {e}")
+            return []
         

@@ -28,8 +28,6 @@ class UpdateProfileForm(FlaskForm):
         if email.data != current_user.email and User.email_exists(email.data):
             raise ValidationError('This email is already in use. Please choose a different one.')
 
-
-
 @bp.route('/user/<int:user_id>', methods=['GET'])
 
 def public_view(user_id):

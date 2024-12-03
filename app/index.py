@@ -42,6 +42,20 @@ def index():
 
     products = Product.sort_and_filter(category=selected_category, sort_order=sort_order, keyword=keyword)
 
+    total_products = len(products)
+    product_ratings = {product.id: Review.get_avg_rating_by_pid(product.id) for product in products}
+    best_seller_ids = Product.get_best_seller_ids()
+
+    if sort_order == 'best_seller':
+        products = sorted(products, key=lambda p: best_seller_ids.index(p.id) if p.id in best_seller_ids else float('inf'))
+    elif sort_order == 'rating_desc':
+        products.sort(key=lambda p: product_ratings.get(p.id) or 0, reverse=True)
+    elif sort_order == 'rating_asc':
+        products.sort(key=lambda p: product_ratings.get(p.id) or 0)
+
+    p10 = max(1, int(len(best_seller_ids) * 0.10))
+    best_seller_ids_p10 = best_seller_ids[:p10]
+
     # Implement pagination
     PRODUCTS_PER_PAGE = 24
     page = request.args.get('page', 1, type=int)
@@ -51,12 +65,11 @@ def index():
     end_index = start_index + PRODUCTS_PER_PAGE
     products_in_page = products[start_index:end_index]
 
-    product_ratings = {product.id: Review.get_avg_rating_by_pid(product.id) for product in products_in_page}
-
     # Render the page with relevant information
     return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
                            categories=categories, sort_order=sort_order, selected_category=selected_category,
-                           keyword=keyword, page=page, total_pages=total_pages, product_ratings=product_ratings)
+                           keyword=keyword, page=page, total_pages=total_pages, product_ratings=product_ratings,
+                           best_seller_ids_p10=best_seller_ids_p10)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():

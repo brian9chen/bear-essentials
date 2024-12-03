@@ -146,6 +146,7 @@
         align-items: center;
         height: 200px;
         margin-top: 15px;
+        position: relative;
     }
 
     .product-image img {
@@ -282,6 +283,18 @@
         padding: 10px 20px;
     }
 
+    .best-seller-sticker {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: gold;
+        color: white;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
     @media (max-width: 768px) {
         .product-card {
         flex: 1 1 calc(50% - 16px); /* 2 items per row on smaller screens */
@@ -308,7 +321,7 @@
 
 <body>
   <div class="topnav">
-    don't let your bears go bare! bundle a basic bear with a kawaii knit for 20% off!
+    use code 'holiday' for 50% off! happy holidays to all our bear lovers!
   </div>
   <div class="sidenav">
     <a href="{{ url_for('index.index') }}">
@@ -348,6 +361,8 @@
                 <span style="margin-top: 10px;">What's up {{ current_user.firstname }}!</span>
                 <!-- added link to profile: -->
                 <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i> Profile</a> 
+                <a href="{{ url_for('cartitem.cartitem') }}" class="btn btn-brown" role="button"><i class="fas fa-shopping-cart"></i> Cart</a>
+                <a href="{{ url_for('inventory.inventory') }}" class="btn btn-brown" role="button"><i class="fas fa-box"></i> Inventory</a>
                 <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
             {% else %}
                 <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>

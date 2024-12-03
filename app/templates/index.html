@@ -3,9 +3,13 @@
 {% block content %}
 
 <br><br>
-
 <form method="POST" action="{{ url_for('index.index') }}">
   <input type="hidden" name="category" value="{{ selected_category }}">
+  {% if selected_category %}
+    <p>Category: <strong>{{ selected_category }}</strong></p>
+  {% else %}
+    <p>Category: All</p>
+  {% endif %}
   <label for="sort_order">Sort by:</label>
   <select name="sort_order" id="sort_order">
       <option value="" {% if not sort_order %}selected{% endif %}>None</option>
@@ -13,6 +17,9 @@
       <option value="price_desc" {% if sort_order == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
       <option value="name_asc" {% if sort_order == 'name_asc' %}selected{% endif %}>Name: A to Z</option>
       <option value="name_desc" {% if sort_order == 'name_desc' %}selected{% endif %}>Name: Z to A</option>
+      <option value="best_seller" {% if sort_order == 'best_seller' %}selected{% endif %}>Best Selling</option>
+      <option value="rating_desc" {% if sort_order == 'rating_desc' %}selected{% endif %}>Best Rated</option>
+      <option value="rating_asc" {% if sort_order == 'rating_asc' %}selected{% endif %}>Worst Rated</option>
   </select>
   <label for="keyword">Keyword(s):</label>
   <input type="text" name="keyword" id="keyword" value="{{ keyword }}">
@@ -24,11 +31,15 @@
   {% for product in avail_products %}
   <div class="product-card">
     <div class="product-image">
+      {% if product.id in best_seller_ids_p10 %}
+        <span class="best-seller-sticker">Best Seller</span>
+      {% endif %}
       {% if product.image_path %}
       <img src="{{ url_for('static', filename=product.image_path) }}" alt="Image of {{ product.name }}">
       {% else %}
       <span>No image</span>
       {% endif %}
+
     </div>
     <div class="product-info">
       <h3 class="product-name">
@@ -78,12 +89,6 @@
 
 <br><br>
 {% if current_user.is_authenticated %}
-
-<a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">My Cart</a>
-<br><br>
-<a class="btn btn-secondary" href="{{url_for('inventory.inventory')}}" role="button">My Inventory</a>
-
-<br><br>
 
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>
