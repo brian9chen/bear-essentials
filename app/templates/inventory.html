@@ -104,7 +104,7 @@
               <button type="submit" class="btn btn-brown btn-sm mt-2">Upload</button>
             </form>
           {% endif %}
-        </td>              
+        </td>
         <!-- Remove Item -->
         <td>
           <form action="{{ url_for('inventory.remove_product', inventory_id=item['inventory_id']) }}" method="POST">
@@ -124,10 +124,10 @@
       <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required>
       <input type="text" name="price" placeholder="Price" class="form-control form-control-sm mr-2" required>
       <textarea name="description" placeholder="Description" class="form-control form-control-sm mr-2" required></textarea>
-      <select name="category" class="form-control form-control-sm mr-2" required>
-        <option value="" disabled selected>Category</option>
-        {% for category in categories %}
-        <option value="{{ category }}">{{ category }}</option>
+      <select name="year" id="year" class="form-control form-control-sm mr-2">
+        <option value="">All Years</option>
+        {% for year in available_years %}
+        <option value="{{ year }}" {% if selected_year == year %} selected {% endif %}>{{ year }}</option>
         {% endfor %}
       </select>
       <button type="submit" class="btn btn-brown">Add Product</button>
@@ -180,6 +180,42 @@
     </table>
     {% endif %}
   </div>
+
+  <!-- sales analytics -->
+  <div class="mt-5">
+    <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Sales Analytics</h3>
+    <div>
+      <form method="get" action="{{ url_for('inventory.inventory') }}" class="form-inline">
+        <label for="year" class="mr-2">Select Year:</label>
+        <select name="year" id="year" class="form-control form-control-sm mr-2">
+          <option value="">All Years</option>
+          {% for year in available_years %}
+          <option value="{{ year }}" {% if selected_year == year %} selected {% endif %}>{{ year }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-brown">Filter</button>
+      </form>
+    </div>
+    <table class="table table-hover mt-3">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Year</th>
+          <th>Total Quantity Sold</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in sales_data %}
+        <tr>
+          <td>{{ row.product_name }}</td>
+          <td>{% if row.year %}{{ row.year }}{% else %}No Sales{% endif %}</td>
+          <td>{{ row.total_quantity_sold }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 {% endblock %}
