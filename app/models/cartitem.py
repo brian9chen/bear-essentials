@@ -9,8 +9,8 @@ class CartItem:
         self.time_created = time_created
         self.time_modified = time_modified
         #self.order_id = order_id
-       #self.time_fulfilled = time_fulfilled
-       # self.is_fulfilled = is_fulfilled
+        #self.time_fulfilled = time_fulfilled
+        # self.is_fulfilled = is_fulfilled
 
     @staticmethod
     def get(id):

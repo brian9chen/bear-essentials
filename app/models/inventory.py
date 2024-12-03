@@ -22,28 +22,36 @@ class Inventory:
 
     @staticmethod
     def get_all_by_user(user_id):
+        user_id = int(user_id)  # Convert user_id to integer
         rows = app.db.execute('''
             SELECT i.id, i.user_id, i.pid, i.quantity_in_stock, i.quantity_to_fulfill, i.quantity_back_to_stock,
-                p.name, p.price, p.description, p.category, i.image_path
+                p.name, p.price, p.description, p.category, i.image_path, p.creator_id
             FROM Inventory i
             JOIN Products p ON i.pid = p.id
             WHERE i.user_id = :user_id
         ''', user_id=user_id)
 
-        return [{
-        "inventory_id": row[0],
-        "user_id": row[1],
-        "product_id": row[2],
-        "quantity_in_stock": row[3],
-        "quantity_to_fulfill": row[4],
-        "quantity_back_to_stock": row[5],
-        "product_name": row[6],
-        "product_price": row[7],
-        "product_description": row[8],
-        "product_category": row[9],
-        "image_path": row[10]  # Add this line
-    } for row in rows] if rows else []
+        inventory_items = []
+        for row in rows:
+            creator_id = int(row[11])  # Convert creator_id to integer
+            is_creator = (creator_id == user_id)
 
+            inventory_items.append({
+                "inventory_id": row[0],
+                "user_id": row[1],
+                "product_id": row[2],
+                "quantity_in_stock": row[3],
+                "quantity_to_fulfill": row[4],
+                "quantity_back_to_stock": row[5],
+                "product_name": row[6],
+                "product_price": row[7],
+                "product_description": row[8],
+                "product_category": row[9],
+                "image_path": row[10],
+                "is_creator": is_creator
+            })
+
+        return inventory_items
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
