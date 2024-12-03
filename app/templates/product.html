@@ -17,19 +17,23 @@
                 <p><strong></strong> {{ product.description }}</p>
                 <p class="product-rating">
                     Rating:
-                    {% set rating = product_rating if product_rating is not none else 0 %}
-                    
-                    <!-- Filled stars -->
-                    {% for _ in range(rating | round(0, 'floor') | int) %}
-                        <span class="star">&#9733;</span> <!-- Filled star -->
-                    {% endfor %}
-                    
-                    <!-- Empty stars -->
-                    {% for _ in range(5 - (rating | round(0, 'floor') | int)) %}
-                        <span class="star empty">&#9734;</span> <!-- Empty star -->
-                    {% endfor %}
-                    
-                    <span class="rating-value">({{ rating | round(1) }})</span> <!-- Show rating with one decimal -->
+                    {% if product_rating is none %}
+                        <span>(None)</span>
+                    {% else %}
+                        {% set rating = product_rating if product_rating is not none else 0 %}
+                        
+                        <!-- Filled stars -->
+                        {% for _ in range(rating | round(0, 'floor') | int) %}
+                            <span class="star">&#9733;</span> <!-- Filled star -->
+                        {% endfor %}
+                        
+                        <!-- Empty stars -->
+                        {% for _ in range(5 - (rating | round(0, 'floor') | int)) %}
+                            <span class="star empty">&#9734;</span> <!-- Empty star -->
+                        {% endfor %}
+                        
+                        <span class="rating-value">({{ rating | round(1) }})</span> <!-- Show rating with one decimal -->
+                    {% endif %}
                 </p>
                 {% if current_user.is_authenticated %}
                 <h3>Add to Cart</h3>
