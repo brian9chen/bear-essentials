@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<br><br>
+<br></br>
+<br></br>
 
 <h1>{{ product.name }}</h1>
 <div class="card shadow-sm mb-4">
@@ -224,4 +224,10 @@
     </ul>
 </nav>
 
+    <hr>
+
+    <!-- Link back to home page or previous page -->
+    <a href="{{ url_for('index.index') }}" class="btn btn-secondary">Back to all products</a>
+    <br></br>
+</div>
 {% endblock %}

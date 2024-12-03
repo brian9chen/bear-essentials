@@ -38,26 +38,28 @@ def index():
     categories = Product.get_categories()
 
     # Handle sorting, filtering, and keyword search 
-    sort_order = request.form.get('sort_order')
-    selected_category = request.form.get('category')
-    keyword = request.form.get('keyword', type=str)
+    sort_order = request.form.get('sort_order')  or request.args.get('sort_order')
+    selected_category = request.form.get('category', '') or request.args.get('category', '')
+    keyword = request.form.get('keyword', '', type=str) or request.args.get('keyword', '', type=str)
 
-    # Apply filtering by category if specified
-    if selected_category:
-        products = Product.filter_by_category(selected_category)
+    products = Product.sort_and_filter(category=selected_category, sort_order=sort_order, keyword=keyword)
 
-    # Apply keyword filtering if specified
-    if keyword:
-        products = Product.filter_by_keyword(keyword)
+    total_products = len(products)
+    product_ratings = {product.id: Review.get_avg_rating_by_pid(product.id) for product in products}
+    best_seller_ids = Product.get_best_seller_ids()
 
-    # Apply sorting based on price
-    if sort_order == 'asc':
-        products = Product.sort_by_price_asc()
-    elif sort_order == 'desc':
-        products = Product.sort_by_price_desc()
+    if sort_order == 'best_seller':
+        products = sorted(products, key=lambda p: best_seller_ids.index(p.id) if p.id in best_seller_ids else float('inf'))
+    elif sort_order == 'rating_desc':
+        products.sort(key=lambda p: product_ratings.get(p.id) or 0, reverse=True)
+    elif sort_order == 'rating_asc':
+        products.sort(key=lambda p: product_ratings.get(p.id) or 0)
+
+    p10 = max(1, int(len(best_seller_ids) * 0.10))
+    best_seller_ids_p10 = best_seller_ids[:p10]
 
     # Implement pagination
-    PRODUCTS_PER_PAGE = 25
+    PRODUCTS_PER_PAGE = 24
     page = request.args.get('page', 1, type=int)
     total_products = len(products)
     total_pages = (total_products + PRODUCTS_PER_PAGE - 1) // PRODUCTS_PER_PAGE
@@ -78,7 +80,8 @@ def index():
     # Render the page with relevant information
     return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
                            categories=categories, sort_order=sort_order, selected_category=selected_category,
-                           keyword=keyword, page=page, total_pages=total_pages)
+                           keyword=keyword, page=page, total_pages=total_pages, product_ratings=product_ratings,
+                           best_seller_ids_p10=best_seller_ids_p10)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():
@@ -88,28 +91,6 @@ def top_k():
         return render_template('index.html', avail_products=products)
     return render_template('index.html')
 
-# moved these to the main index 
-
-# @bp.route('/filter_by_keyword', methods=('GET', 'POST'))
-# def search_keyword():
-#     if request.method == 'POST':
-#         keyword = request.form.get('keyword', type=str)
-#         products = Product.filter_by_keyword(keyword)
-#         return render_template('index.html', avail_products=products)
-#     return render_template('index.html')
-
-#  sort by price 
-# @bp.route('/sort/<string:sort_order>', methods=['GET'])
-# def sort_by_price(sort_order):
-#     # Fetch products from the database
-#     if sort_order == 'asc':
-#         products = Product.sort_by_price_asc()  # Sort by price ascending
-#     else:
-#         products = Product.sort_by_price_desc()  # Sort by price descending
-    
-#     # Return the sorted products to the template
-#     return render_template('index.html', avail_products=products, sort_order=sort_order)
-
 @bp.route('/product/<int:id>', methods=['GET'])
 def product_detail(id):
     # Fetch the product by ID from the database
@@ -118,6 +99,7 @@ def product_detail(id):
         # Handle case if product is not found
         abort(404)
 
+    product_rating = Review.get_avg_rating_by_pid(product.id)
 
     sellers_list = Product.get_sellers(id)
 

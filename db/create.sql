@@ -21,7 +21,7 @@ CREATE TABLE Products (
     description TEXT,
     category VARCHAR(255) NOT NULL,
     discount_code VARCHAR(20),
-    prod_avg_rating DECIMAL(12,2) DEFAULT 0,
+    -- prod_avg_rating DECIMAL(12,2) DEFAULT 0, 
     image_path VARCHAR(255) DEFAULT NULL,
     available BOOLEAN DEFAULT FALSE
 );

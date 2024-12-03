@@ -2,52 +2,28 @@
 
 {% block content %}
 
-<br><br>
-
-<!-- Sort buttons-->
-<style>
-  button:active {
-    background-color: grey; /* Change to grey when pressed */
-    color: white; /* Change text color to white */
-  }
-</style>
-
-<style>
-  button:focus {
-    background-color: grey;
-    color: white;
-  }
-</style>
-
-<div>
-  <form action="{{ url_for('index.index') }}" method="post" style="display: inline;">
-    <input type="hidden" name="sort_order" value="asc">
-    <button type="submit">Price Lowest to Highest</button>
-  </form>
-
-  <form action="{{ url_for('index.index') }}" method="post" style="display: inline;">
-    <input type="hidden" name="sort_order" value="desc">
-    <button type="submit">Price Highest to Lowest</button>
-  </form>
-</div>
-
 <form method="POST" action="{{ url_for('index.index') }}">
-  <label for="category">Select Category:</label>
-  <select name="category" id="category">
-      <option value="">--Select a Category--</option>
-      {% for category in categories %}
-          <option value="{{ category }}" {% if category == selected_category %}selected{% endif %}>
-              {{ category }}
-          </option>
-      {% endfor %}
+  <input type="hidden" name="category" value="{{ selected_category }}">
+  {% if selected_category %}
+    <p style="margin-top: 20px;">Category: <strong>{{ selected_category }}</strong></p>
+  {% else %}
+    <p style="margin-top: 20px;">Category: All</p>
+  {% endif %}
+  <label for="sort_order">Sort by:</label>
+  <select name="sort_order" id="sort_order">
+      <option value="" {% if not sort_order %}selected{% endif %}>None</option>
+      <option value="price_asc" {% if sort_order == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+      <option value="price_desc" {% if sort_order == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+      <option value="name_asc" {% if sort_order == 'name_asc' %}selected{% endif %}>Name: A to Z</option>
+      <option value="name_desc" {% if sort_order == 'name_desc' %}selected{% endif %}>Name: Z to A</option>
+      <option value="best_seller" {% if sort_order == 'best_seller' %}selected{% endif %}>Best Selling</option>
+      <option value="rating_desc" {% if sort_order == 'rating_desc' %}selected{% endif %}>Best Rated</option>
+      <option value="rating_asc" {% if sort_order == 'rating_asc' %}selected{% endif %}>Worst Rated</option>
   </select>
-  <button type="submit">Filter</button>
-</form>
+  <label for="keyword">Keyword(s):</label>
+  <input type="text" name="keyword" id="keyword" value="{{ keyword }}">
 
-<form action="{{ url_for('index.index') }}" method="POST">
-  <label for="k">keyword:</label>
-  <input type="string" name="keyword" id="keyword" placeholder=" " required>
-  <input type="submit" value="submit"/>
+  <button type="submit">Apply Filters</button>
 </form>
 
 <br><br>
@@ -69,11 +45,15 @@
   {% for product in avail_products %}
   <div class="product-card">
     <div class="product-image">
+      {% if product.id in best_seller_ids_p10 %}
+        <span class="best-seller-sticker">Best Seller</span>
+      {% endif %}
       {% if product.image_path %}
-      <img src="{{ url_for('static', filename=product.image_path.strip()) }}" alt="Image of {{ product.name }}" style="width: 200px; height: auto;">
+      <img src="{{ url_for('static', filename=product.image_path) }}" alt="Image of {{ product.name }}">
       {% else %}
       <span>No image</span>
       {% endif %}
+
     </div>
     <div class="product-info">
       <h3 class="product-name">
@@ -81,7 +61,25 @@
       </h3>
       <p class="product-price">${{ product.price }}</p>
       <p class="product-description">{{ product.description }}</p>
-      <p class="product-category">Category: {{ product.category }}</p>
+      <p class="product-rating">
+        Rating: 
+        {% set rating = product_ratings[product.id] if product_ratings[product.id] is not none else None %}
+    
+        {% if rating is none %}
+            <span>(None)</span>
+        {% else %}
+            {% for _ in range(rating | round(0, 'floor') | int) %}
+                <span class="star">&#9733;</span> <!-- Filled star -->
+            {% endfor %}
+            
+            {% for _ in range(5 - (rating | round(0, 'floor') | int)) %}
+                <span class="star empty">&#9734;</span> <!-- Empty star -->
+            {% endfor %}
+            
+            <span class="rating-value">({{ rating | round(1) }})</span>
+        {% endif %}
+      </p>
+      <!-- <p class="product-category">Category: {{ product.category }}</p> -->
       <div class="product-actions">
         {% if current_user.is_authenticated %}
           {% if product.has_review %}
@@ -98,66 +96,16 @@
   {% endfor %}
 </div>
 
-<h2>Products for sale:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Description</th>
-      <th scope="col">Image</th>
-      <th scope="col">Category</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in avail_products %}
-      <tr>
-        <th scope="row">{{ product.id }}</th>
-        <!-- Link the product name to the product detail page -->
-        <td>
-          <a href="{{ url_for('index.product_detail', id=product.id) }}">
-            {{ product.name }}
-          </a>
-        </td>
-        <td>${{ product.price }}</td>
-        <td>{{ product.description }}</td>
-        <!-- Display the product image if available, otherwise show a placeholder -->
-        <td>
-          {% if product.image_path %}
-            <img src="{{ url_for('static', filename=product.image_path) }}" alt="Image of {{ product.name }}" style="width: 50px; height: auto;">
-          {% else %}
-            <span>No image</span>
-          {% endif %}
-        </td>
-        <td>{{ product.category }}</td>
-        <td>
-          {% if current_user.is_authenticated %}
-            {% if product.has_review %}
-              <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-success">Edit My Review</a>
-            {% else %}
-              <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
-            {% endif %}
-          {% else %}
-            <span>Login to review</span>
-          {% endif %}
-        </td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
 <!-- Pagination Controls -->
 <div class="pagination">
   {% if page > 1 %}
-      <a href="{{ url_for('index.index', page=page - 1) }}">Previous</a>
+      <a href="{{ url_for('index.index', page=page - 1, sort_order=sort_order, category=selected_category, keyword=keyword) }}" class="pagination-link previous">&laquo; Previous</a>
   {% endif %}
 
-  <span>Page {{ page }} of {{ total_pages }}</span>
+  <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
 
   {% if page < total_pages %}
-      <a href="{{ url_for('index.index', page=page + 1) }}">Next</a>
+      <a href="{{ url_for('index.index', page=page + 1, sort_order=sort_order, category=selected_category, keyword=keyword) }}" class="pagination-link next">Next &raquo;</a>
   {% endif %}
 </div>
 
