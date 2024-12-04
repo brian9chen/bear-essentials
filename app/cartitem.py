@@ -14,28 +14,33 @@ def cartitem():
         cart_items = CartItem.get_all_by_uid(current_user.id)
         total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
         return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
+    else:
+        return render_template('cartitem.html', cart_items=[], total_price=0.0)
     return jsonify({}), 404
 
 # adds new cartitem and also brings you to your cart with added cartitem
 @bp.route('/add/<int:id>', methods=['GET', 'POST'])
 def add(id):
-    # get product and associated creator id
-    product = Product.get(id)
-    creator_id = product.creator_id
-    quantity = request.form.get('quantity')
-    seller_name = request.form.get('seller_name')
-    # ADD CORRECT VARIABLE INPUTS TO ADD
-    added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
-    if added == False:
-        flash('Selected quantity exceeded quantity in stock for this product.')
-        return redirect(url_for('index.product_detail', id=id, page=1))
-    elif added == True:
-        flash('Invalid Seller.')
-        return redirect(url_for('index.product_detail', id=id, page=1))
+    if current_user.is_authenticated:
+        # get product and associated creator id
+        product = Product.get(id)
+        creator_id = product.creator_id
+        quantity = request.form.get('quantity')
+        seller_name = request.form.get('seller_name')
+        # ADD CORRECT VARIABLE INPUTS TO ADD
+        added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
+        if added == False:
+            flash('Selected quantity exceeded quantity in stock for this product.')
+            return redirect(url_for('index.product_detail', id=id, page=1))
+        elif added == True:
+            flash('Invalid Seller.')
+            return redirect(url_for('index.product_detail', id=id, page=1))
+        else:
+            cart_items = CartItem.get_all_by_uid(current_user.id)
+            total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
+            return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
     else:
-        cart_items = CartItem.get_all_by_uid(current_user.id)
-        total_price = sum(item['quantity'] * item['product_price'] for item in cart_items)
-        return render_template('cartitem.html', cart_items=cart_items, total_price=total_price)
+        return render_template('cartitem.html', cart_items=[], total_price=0.0)
 
 @bp.route('/delete/<int:id>', methods=['GET','POST'])
 def delete(id):
