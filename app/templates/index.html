@@ -26,21 +26,6 @@
   <button type="submit">Apply Filters</button>
 </form>
 
-<br><br>
-
-<!--form button for viewing public profile of users-->
-<div>
-  <form action="{{ url_for('index.view_user_profile') }}" method="post" style="display: inline;">
-    <label for="user_id" class="sr-only">User ID</label> <!-- Screen reader-only label -->
-    <input type="number" id="user_id" name="user_id" placeholder="User ID" required style="width: 80px;">
-    <button type="submit" class="btn btn-primary">View Public Profile</button>
-  </form>
-</div>
-
-<br><br>
-
-<!-- <a class="btn btn-secondary" href="{{url_for('reviews.review')}}" role="button">User Reviews</a> -->
-
 <div class="products-grid container-fluid">
   {% for product in avail_products %}
   <div class="product-card">
@@ -83,7 +68,7 @@
       <div class="product-actions">
         {% if current_user.is_authenticated %}
           {% if product.has_review %}
-            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-success">Edit My Review</a>
+            <a href="{{ url_for('reviews.edit_review', review_id=product.review_id) }}" class="btn btn-success">Edit Review</a>
           {% else %}
             <a href="{{ url_for('reviews.write_product_review', product_id=product.id) }}" class="btn btn-primary">Write a Review</a>
           {% endif %}
@@ -108,39 +93,5 @@
       <a href="{{ url_for('index.index', page=page + 1, sort_order=sort_order, category=selected_category, keyword=keyword) }}" class="pagination-link next">Next &raquo;</a>
   {% endif %}
 </div>
-
-<br><br>
-{% if current_user.is_authenticated %}
-
-<a class="btn btn-secondary" href="{{url_for('cartitem.cartitem')}}" role="button">My Cart</a>
-<br><br>
-<a class="btn btn-secondary" href="{{url_for('order.orders')}}" role="button">My Purchases</a>
-<br><br>
-<a class="btn btn-secondary" href="{{url_for('inventory.inventory')}}" role="button">My Inventory</a>
-
-<br><br>
-
-<h2>Your recent purchases:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Purchase ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Time Purchased</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for purchase in purchase_history%}
-      <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
-{% endif %}
 
 {% endblock %}

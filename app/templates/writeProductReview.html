@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<br></br>
 <h2>Write a Review for {{ product_name }}</h2>
 <form action="{{ url_for('reviews.submit_product_review', product_id=product_id) }}" method="POST">
   <div class="form-group">
