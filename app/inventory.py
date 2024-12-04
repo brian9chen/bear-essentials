@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app as app
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, current_app as app, flash
 from flask_login import current_user
 import os
 from werkzeug.utils import secure_filename
@@ -31,6 +31,15 @@ def inventory():
                                selected_year=selected_year)
     return jsonify({}), 404
 
+# to check whether price is a valid float
+def is_valid_float(value):
+    try:
+        float(value)
+        str(value)
+        return True
+    except ValueError:
+        return False
+
 @bp.route('/inventory/add', methods=['POST'])
 def add_product():
     if current_user.is_authenticated:
@@ -40,6 +49,15 @@ def add_product():
         category = request.form.get('category')
         description = request.form.get('description')  
 
+        if not is_valid_float(price) and not price.isdigit():
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
+        if price.isdigit() and int(price) <= 0:
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
+        elif is_valid_float(price) and float(price) <= 0:
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
         #add the product to the user's inventory
         Inventory.add_product(current_user.id, product_name, quantity, price, category, description)
         return redirect(url_for('inventory.inventory'))
@@ -67,9 +85,18 @@ def remove_product(inventory_id):
 @bp.route('/inventory/update_price/<int:inventory_id>', methods=['POST'])
 def update_price(inventory_id):
     if current_user.is_authenticated:
-        new_price = request.form.get('new_price', type=float)
+        new_price = request.form.get('new_price')
         if new_price is None:
             return "New price is required and must be a valid number", 400
+        if not is_valid_float(new_price) and not new_price.isdigit():
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
+        if new_price.isdigit() and int(new_price) <= 0:
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
+        elif is_valid_float(new_price) and float(new_price) <= 0:
+            flash('Invalid price.')
+            return redirect(url_for('inventory.inventory'))
         Inventory.update_price(inventory_id, new_price)
         
         return redirect(url_for('inventory.inventory'))
