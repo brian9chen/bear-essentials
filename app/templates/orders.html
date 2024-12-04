@@ -24,7 +24,11 @@
           <td>{{order.time_created}}</td>
           <td>{{order.total_price}}</td>
           <td>{{order.quantity}}</td>
-          <td>{{order.time_fulfilled}}</td>
+          <td>{% if order.time_fulfilled is none %}
+            No
+          {% else %}
+            Yes
+          {% endif %}</td>
           <td><a class="btn btn-secondary" href="{{url_for('order.pastorder', id=order.id)}}" role="button">View Order</a></td>
         </tr>
       {% endfor %}
