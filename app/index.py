@@ -146,10 +146,7 @@ def product_detail(id):
     
     # get num reviews and avg rating
     num_reviews = len(all_reviews)
-    if Review.get_avg_rating_by_pid(id) is not None:
-        avg_rating = round(Review.get_avg_rating_by_pid(id))
-    else:
-        avg_rating = 0
+    product_rating = Review.get_avg_rating_by_pid(product.id)
     
     # check if user has reviewed product
     if current_user.is_authenticated:
@@ -190,7 +187,7 @@ def product_detail(id):
                          page=page,
                          total_pages=total_pages,
                          num_reviews=num_reviews,
-                         avg_rating=avg_rating)
+                         product_rating=product_rating)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

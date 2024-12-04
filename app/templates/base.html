@@ -295,6 +295,13 @@
         z-index: 1;
     }
 
+    .custom-badge {
+        background-color: #702106; 
+        color: #f8edeb;           
+        font-size: 1em;           
+        padding: 5px 10px;       
+    } 
+
     @media (max-width: 768px) {
         .product-card {
         flex: 1 1 calc(50% - 16px); /* 2 items per row on smaller screens */
@@ -363,6 +370,7 @@
                 <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i> Profile</a> 
                 <a href="{{ url_for('cartitem.cartitem') }}" class="btn btn-brown" role="button"><i class="fas fa-shopping-cart"></i> Cart</a>
                 <a href="{{ url_for('inventory.inventory') }}" class="btn btn-brown" role="button"><i class="fas fa-box"></i> Inventory</a>
+                <a href="{{ url_for('order.orders') }}" class="btn btn-brown" role="button"><i class="fas fa-coins"></i> Purchases</a>
                 <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
             {% else %}
                 <a href="{{ url_for('users.login') }}" type="button" class="btn btn-brown">Log in</a>
@@ -372,8 +380,33 @@
     {% endblock %}
 </div>
   <div class="main">
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
   </div>
+  <br></br>
+    <footer style="background-color: #e4d6d4; color: #702106; padding: 20px; text-align: center; font-family: 'Gaegu', sans-serif;">
+        <div class="footer-content">
+            <p>Trying to find a user?</p>
+            <div>
+              <form action="{{ url_for('index.view_user_profile') }}" method="post" style="display: inline;">
+                <label for="user_id" class="sr-only">User ID</label> <!-- Screen reader-only label -->
+                <input type="number" id="user_id" name="user_id" placeholder="User ID" required style="width: 80px;">
+                <button type="submit" class="btn btn-brown">View Public Profile</button>
+              </form>
+            </div>
+            <br></br>
+            <h4>Returns</h4>
+            <p>We do not kindly accept returns.</p>
+            <h4>Contact Us</h4>
+            <p>If you have any questions or feedback, feel free to reach out to us at:</p>
+            <p>
+                <a href="mailto:bearessentials@kawaiikorner.com" style="color: #702106; text-decoration: underline;">
+                    bearessentials@kawaiikorner.com
+                </a>
+            </p>
+            <p>&copy; 2024 Bear Essentials. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>
