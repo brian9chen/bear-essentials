@@ -360,7 +360,7 @@
             {% if current_user.is_authenticated %}
                 <span style="margin-top: 10px;">What's up {{ current_user.firstname }}!</span>
                 <!-- added link to profile: -->
-                <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i> Profile</a> 
+                <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-brown"><i class="fas fa-user"></i> Account</a> 
                 <a href="{{ url_for('cartitem.cartitem') }}" class="btn btn-brown" role="button"><i class="fas fa-shopping-cart"></i> Cart</a>
                 <a href="{{ url_for('inventory.inventory') }}" class="btn btn-brown" role="button"><i class="fas fa-box"></i> Inventory</a>
                 <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-brown">Log out</a>
