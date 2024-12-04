@@ -223,6 +223,7 @@ class Order:
         FROM Orders o, CartItems c
         WHERE o.uid = :uid and o.id = c.order_id
         GROUP BY o.id
+        ORDER by o.time_created DESC
         ''', uid=uid)
         return [{
             "id": row[0],
