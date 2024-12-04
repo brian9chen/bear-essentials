@@ -15,6 +15,12 @@ def submit():
     if order_id == False:
         flash('The total price of this order exceeds your current balance.')
         return redirect(url_for('cartitem.cartitem'))
+    if order_id == "bad coupon":
+        flash('Invalid coupon code.')
+        return redirect(url_for('cartitem.cartitem'))
+    if order_id == "no cart items":
+        flash('No items in cart.')
+        return redirect(url_for('cartitem.cartitem'))
     cart_items = CartItem.get_items_by_order_id(order_id)
     discount = Order.get_discount(order_id)
     total_price = sum(item['quantity'] * float(item['product_price']) for item in cart_items) * (1-discount)

@@ -30,6 +30,8 @@ class Order:
 
         # loop through to check item quantity, available quantity, and price
         cart_items = CartItem.get_all_by_uid(uid)
+        if len(cart_items) == 0:
+            return "no cart items"
         total = 0
         for item in cart_items:
             total += item['product_price'] * item['quantity']
@@ -52,6 +54,8 @@ class Order:
             FROM Coupons
             WHERE word = :code
             """, code=code)
+            if not coupon:
+                return "bad coupon"
             coupon_id = coupon[0][0]
             discount = float(coupon[0][1])
 
