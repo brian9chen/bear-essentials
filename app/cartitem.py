@@ -27,6 +27,9 @@ def add(id):
         creator_id = product.creator_id
         quantity = request.form.get('quantity')
         seller_name = request.form.get('seller_name')
+        if not quantity.isdigit():
+            flash('Invalid quantity.')
+            return redirect(url_for('index.product_detail', id=id, page=1))
         # ADD CORRECT VARIABLE INPUTS TO ADD
         added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
         if added == "quantity too small":
