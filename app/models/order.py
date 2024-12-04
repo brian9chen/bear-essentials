@@ -32,7 +32,7 @@ class Order:
         cart_items = CartItem.get_all_by_uid(uid)
         total = 0
         for item in cart_items:
-            total += item['product_price']
+            total += item['product_price'] * item['quantity']
             quant = app.db.execute('''
             SELECT quantity_in_stock
             FROM Inventory

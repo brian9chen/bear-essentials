@@ -184,7 +184,9 @@ class Inventory:
     def get_sales_data(user_id, year=None):
         query = '''
         SELECT p.name, EXTRACT(YEAR FROM o.time_created) as year, COALESCE(SUM(c.quantity), 0) as total_quantity_sold
-        FROM Inventory i JOIN Products p ON i.pid = p.id LEFT JOIN CartItems c ON c.inv_id = i.id AND c.order_id IS NOT NULL 
+        FROM Inventory i
+        JOIN Products p ON i.pid = p.id
+        LEFT JOIN CartItems c ON c.inv_id = i.id AND c.order_id IS NOT NULL
         LEFT JOIN Orders o ON c.order_id = o.id
         WHERE i.user_id = :user_id
         '''
@@ -192,6 +194,7 @@ class Inventory:
         if year is not None:
             query += ' AND EXTRACT(YEAR FROM o.time_created) = :year'
             params['year'] = year
+
         query += '''
         GROUP BY p.name, year
         ORDER BY year DESC NULLS LAST, total_quantity_sold DESC
@@ -199,35 +202,63 @@ class Inventory:
         rows = app.db.execute(query, **params)
         results = []
         products_in_results = set()
-        # process rows with sales data ?? need to update
+
+        # Process rows with sales data
         for row in rows:
             product_name = row[0]
             year_value = row[1]
             if year_value is not None:
                 year_value = int(year_value)
             total_quantity_sold = int(row[2]) if row[2] is not None else 0
+
             results.append({
                 'product_name': product_name,
                 'year': year_value,
                 'total_quantity_sold': total_quantity_sold
             })
             products_in_results.add(product_name)
-        # needs all products so include all products even with no sale
-        query_no_sales = '''
-        SELECT p.name
-        FROM Inventory i JOIN Products p ON i.pid = p.id
-        WHERE i.user_id = :user_id AND p.name NOT IN :product_names
-        '''
-        params_no_sales = {'user_id': user_id, 'product_names': tuple(products_in_results)}
-        no_sales_rows = app.db.execute(query_no_sales, **params_no_sales)
-        for row in no_sales_rows:
-            product_name = row[0]
-            results.append({
-                'product_name': product_name,
-                'year': None,
-                'total_quantity_sold': 0
-            })
+
+        # Include products with no sales
+        inv = app.db.execute('''
+            SELECT *
+            FROM Inventory
+            WHERE user_id = :user_id
+        ''', user_id=user_id)
+
+        products_in_results = tuple(products_in_results)
+
+        if inv:
+            if products_in_results:
+                # If there are products with sales, exclude them from the next query
+                query_no_sales = '''
+                SELECT p.name
+                FROM Inventory i
+                JOIN Products p ON i.pid = p.id
+                WHERE i.user_id = :user_id AND p.name NOT IN :product_names
+                '''
+                params_no_sales = {'user_id': user_id, 'product_names': products_in_results}
+            else:
+                # No products had sales, so just select all products in inventory
+                query_no_sales = '''
+                SELECT p.name
+                FROM Inventory i
+                JOIN Products p ON i.pid = p.id
+                WHERE i.user_id = :user_id
+                '''
+                params_no_sales = {'user_id': user_id}
+
+            no_sales_rows = app.db.execute(query_no_sales, **params_no_sales)
+            for row in no_sales_rows:
+                product_name = row[0]
+                if product_name not in products_in_results:
+                    results.append({
+                        'product_name': product_name,
+                        'year': None,
+                        'total_quantity_sold': 0
+                    })
+
         return results
+
 
     @staticmethod
     def get_sales_years(user_id):

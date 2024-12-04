@@ -160,13 +160,27 @@ class User(UserMixin):
         else:
             raise ValueError("User not found.")
         
+    # @staticmethod
+    # def has_purchased_from_seller(buyer_id, seller_id):
+    #     rows = app.db.execute('''
+    #     SELECT 1
+    #     FROM Purchases p
+    #     JOIN Inventory i ON p.pid = i.id
+    #     WHERE p.uid = :buyer_id AND i.user_id = :seller_id
+    #     LIMIT 1
+    #     ''', buyer_id=buyer_id, seller_id=seller_id)
+    #     return len(rows) > 0
+        
     @staticmethod
     def has_purchased_from_seller(buyer_id, seller_id):
         rows = app.db.execute('''
         SELECT 1
-        FROM Purchases p
-        JOIN Inventory i ON p.pid = i.id
-        WHERE p.uid = :buyer_id AND i.user_id = :seller_id
+        FROM Orders o
+        JOIN CartItems ci ON o.id = ci.order_id
+        JOIN Inventory i ON ci.inv_id = i.id
+        WHERE o.uid = :buyer_id 
+        AND i.user_id = :seller_id
+        AND ci.time_fulfilled IS NOT NULL
         LIMIT 1
         ''', buyer_id=buyer_id, seller_id=seller_id)
         return len(rows) > 0

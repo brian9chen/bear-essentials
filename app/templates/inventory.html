@@ -124,12 +124,13 @@
       <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required>
       <input type="text" name="price" placeholder="Price" class="form-control form-control-sm mr-2" required>
       <textarea name="description" placeholder="Description" class="form-control form-control-sm mr-2" required></textarea>
-      <select name="year" id="year" class="form-control form-control-sm mr-2">
-        <option value="">All Years</option>
-        {% for year in available_years %}
-        <option value="{{ year }}" {% if selected_year == year %} selected {% endif %}>{{ year }}</option>
+      <select name="category" class="form-control form-control-sm mr-2" required>
+        <option value="" disabled selected>Category</option>
+        {% for category in categories %}
+        <option value="{{ category }}">{{ category }}</option>
         {% endfor %}
       </select>
+
       <button type="submit" class="btn btn-brown">Add Product</button>
     </form>
   </div>
