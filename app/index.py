@@ -187,7 +187,8 @@ def product_detail(id):
                          page=page,
                          total_pages=total_pages,
                          num_reviews=num_reviews,
-                         product_rating=product_rating)
+                         product_rating=product_rating,
+                         sellers_list=sellers_list)
 
 @bp.route('/view_user_profile', methods=['POST'])
 def view_user_profile():

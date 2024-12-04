@@ -60,7 +60,7 @@
         <!-- Quantity In Stock -->
         <td>
           <form action="{{ url_for('inventory.update_quantity', inventory_id=item['inventory_id']) }}" method="POST">
-            <input type="number" name="new_quantity" value="{{ item['quantity_in_stock'] }}" class="form-control form-control-sm" required>
+            <input type="number" name="new_quantity" value="{{ item['quantity_in_stock'] }}" class="form-control form-control-sm" required min="1">
             <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
           </form>
         </td>
@@ -68,7 +68,7 @@
         <td>
           {% if item['is_creator'] %}
             <form action="{{ url_for('inventory.update_price', inventory_id=item['inventory_id']) }}" method="POST">
-              <input type="text" name="new_price" value="{{ item['product_price'] }}" class="form-control form-control-sm" required>
+              <input type="text" name="new_price" value="{{ item['product_price'] }}" class="form-control form-control-sm">
               <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
             </form>
           {% else %}
@@ -133,8 +133,8 @@
     <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Add a Product:</h3>
     <form action="{{ url_for('inventory.add_product') }}" method="POST" class="form-inline">
       <input type="text" name="product_name" placeholder="Product Name" class="form-control form-control-sm mr-2" required>
-      <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required>
-      <input type="text" name="price" placeholder="Price" class="form-control form-control-sm mr-2" required>
+      <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required min="1">
+      <input type="text" name="price" placeholder="Price" class="form-control form-control-sm mr-2">
       <textarea name="description" placeholder="Description" class="form-control form-control-sm mr-2" required></textarea>
       <select name="category" class="form-control form-control-sm mr-2" required>
         <option value="" disabled selected>Category</option>

@@ -148,7 +148,9 @@ class CartItem:
         )
         inv_id = inv[0][0]
         inv_quant = inv[0][1]
-        if not quantity.isdigit() or int(quantity) >= inv_quant:
+        if int(quantity) <= 0:
+            return "quantity too small"
+        if not quantity.isdigit() or int(quantity) > inv_quant or inv_quant == 0:
             return False
         else:
             # uses attributes to make new cartitem
@@ -192,8 +194,17 @@ class CartItem:
     
     @staticmethod
     def change(item_id, new_quantity):
+        avail_quant = app.db.execute('''
+        SELECT i.quantity_in_stock
+        FROM Inventory i, CartItems c
+        WHERE c.inv_id = i.id AND c.id = :item_id
+        ''', item_id=item_id)
+        avail = int(avail_quant[0][0])
+        if avail < int(new_quantity):
+            return 'too little quantity'
         app.db.execute('''
         UPDATE CartItems
         SET quantity = :quantity
         WHERE id = :id
         ''', id=item_id, quantity=new_quantity)
+        return 0

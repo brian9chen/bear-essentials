@@ -145,11 +145,12 @@ ORDER BY p.time_purchased DESC
     def get_sellers(product_id):
         # Add DISTINCT to the SQL query to eliminate duplicates at the database level
         rows = app.db.execute('''
-        SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating
+        SELECT u.id, u.firstname, u.lastname, i.shop_name, i.seller_avg_rating, i.quantity_in_stock
         FROM Inventory i
         JOIN Users u ON i.user_id = u.id
         WHERE i.pid = :product_id
         AND u.is_seller = TRUE
+        ORDER BY i.quantity_in_stock DESC
     ''', product_id=product_id)
         
         # Simplify by using seller_id as the only key since it should be unique
@@ -162,7 +163,8 @@ ORDER BY p.time_purchased DESC
                     'firstname': seller[1],
                     'lastname': seller[2],
                     'shop_name': seller[3],
-                    'seller_avg_rating': seller[4]
+                    'seller_avg_rating': seller[4],
+                    'quantity_in_stock': seller[5]
                 }
         
         return list(unique_sellers.values())

@@ -81,8 +81,14 @@
                             <input type="string" name="quantity" id="quantity" placeholder=" " required>
                             </div>
                             <div class="col-sm-4">
-                            <label>Seller Name:</label>
-                            <input type="string" name="seller_name" id="seller_name" placeholder=" " required>
+                            <select name="seller_name" class="form-control form-control-sm mr-2" required>
+                                <option value="" disabled selected>Seller Name</option>
+                                {% for seller in sellers_list %}
+                                <option value="{{ seller.firstname }} {{ seller.lastname }}">
+                                    {{ seller.firstname}} {{ seller.lastname }} - Available Quantity: {{seller.quantity_in_stock}}
+                                </option>
+                                {% endfor %}
+                            </select>
                             </div>
                             <div class="col-sm-4">
                             <input type="submit" value="Add to Cart"/>
@@ -121,6 +127,9 @@
                         <a href="{{ url_for('users.public_view', user_id=seller.id) }}" class="text-decoration-none">
                             {{ seller.firstname }} {{ seller.lastname }}
                         </a>
+                    </strong>
+                    <strong>
+                         - Available Quantity: {{ seller.quantity_in_stock }}
                     </strong>
                 </div>
                 <div>

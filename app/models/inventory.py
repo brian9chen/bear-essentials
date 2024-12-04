@@ -75,6 +75,9 @@ class Inventory:
             WHERE name = :product_name AND category = :category
         ''', product_name=product_name, category=category)
 
+        if existing_product:
+            flash(f'Product "{product_name}" in category "{category}" already exists as a product. Existing product added to your inventory.')
+
         app.db.execute('''
             UPDATE Users
             SET is_seller = True

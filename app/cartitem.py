@@ -29,6 +29,9 @@ def add(id):
         seller_name = request.form.get('seller_name')
         # ADD CORRECT VARIABLE INPUTS TO ADD
         added = CartItem.add(id, creator_id, current_user.id, quantity, seller_name)
+        if added == "quantity too small":
+            flash('Quantity must be 1 or larger.')
+            return redirect(url_for('index.product_detail', id=id, page=1))
         if added == False:
             flash('Selected quantity exceeded quantity in stock for this product.')
             return redirect(url_for('index.product_detail', id=id, page=1))
@@ -50,5 +53,12 @@ def delete(id):
 @bp.route('/change/<int:id>', methods=['GET','POST'])
 def change(id):
     new_quantity = request.form.get('new_quantity')
-    CartItem.change(id, new_quantity)
+    if not new_quantity.isdigit():
+        flash('Invalid quantity.')
+        return redirect(url_for('cartitem.cartitem'))
+    if int(new_quantity) <= 0:
+        flash('Quantity must be 1 or larger.')
+    changed = CartItem.change(id, new_quantity)
+    if changed == 'too little quantity':
+        flash('Selected quantity exceeded quantity in stock for this product.')
     return redirect(url_for('cartitem.cartitem'))
