@@ -217,7 +217,7 @@ class Order:
         rows = app.db.execute('''
         SELECT o.id, o.total_price, o.time_created, o.time_fulfilled, sum(c.quantity)
         FROM Orders o, CartItems c
-        WHERE o.uid = 0 and o.id = c.order_id
+        WHERE o.uid = :uid and o.id = c.order_id
         GROUP BY o.id
         ''', uid=uid)
         return [{

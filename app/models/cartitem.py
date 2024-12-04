@@ -148,7 +148,7 @@ class CartItem:
         )
         inv_id = inv[0][0]
         inv_quant = inv[0][1]
-        if int(quantity) >= inv_quant:
+        if not quantity.isdigit() or int(quantity) >= inv_quant:
             return False
         else:
             # uses attributes to make new cartitem
