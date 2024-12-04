@@ -2,6 +2,18 @@
 
 {% block content %}
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-2" role="alert" style="background-color: #F8EBC2; font-size: 1.25rem; font-weight: bold; border: 1px solid #c7b88c; color: #5a4a2a;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <div class="sticky-nav">
   <div>
     <h1>Your Inventory</h1>

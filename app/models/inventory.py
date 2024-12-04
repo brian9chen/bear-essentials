@@ -1,4 +1,5 @@
 from flask import current_app as app
+from flask import flash
 
 class Inventory:
     def __init__(self, id, user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating):
@@ -55,22 +56,36 @@ class Inventory:
 
     @staticmethod
     def add_product(user_id, product_name, quantity, price, category, description):
+        # check if the product already exists in ur inventory
+        existing_inventory = app.db.execute('''
+            SELECT i.id 
+            FROM Inventory i
+            JOIN Products p ON i.pid = p.id
+            WHERE i.user_id = :user_id AND p.name = :product_name AND p.category = :category
+        ''', user_id=user_id, product_name=product_name, category=category)
+
+        if existing_inventory:
+            # flash message
+            flash(f'Product "{product_name}" in category "{category}" already exists in your inventory. No changes made.', 'info')
+            return
+
+        # if the product already exists but not in your inventory
         existing_product = app.db.execute('''
             SELECT id FROM Products
             WHERE name = :product_name AND category = :category
         ''', product_name=product_name, category=category)
 
         app.db.execute('''
-        UPDATE Users
-        SET is_seller = True
-        WHERE id = :user_id
+            UPDATE Users
+            SET is_seller = True
+            WHERE id = :user_id
         ''', user_id=user_id)
 
         if existing_product:
-            # if product exists, get the product ID
+            # if the product exists in products, get the id
             product_id = existing_product[0][0]
         else:
-            # create
+            #create the product in the products table
             new_product = app.db.execute('''
                 INSERT INTO Products (creator_id, name, price, category, description, available)
                 VALUES (:user_id, :product_name, :price, :category, :description, TRUE)
@@ -78,12 +93,10 @@ class Inventory:
             ''', user_id=user_id, product_name=product_name, price=price, category=category, description=description)
             product_id = new_product[0][0]
 
-        # add or update the product in the users inventory
+        #add the product to the users inventory
         app.db.execute('''
             INSERT INTO Inventory (user_id, pid, quantity_in_stock, quantity_to_fulfill, quantity_back_to_stock, shop_name, seller_avg_rating)
             VALUES (:user_id, :product_id, :quantity, 0, 0, :shop_name, 0)
-            ON CONFLICT (user_id, pid) DO UPDATE
-            SET quantity_in_stock = Inventory.quantity_in_stock + :quantity
         ''', user_id=user_id, product_id=product_id, quantity=quantity, shop_name="sample shop")
 
 

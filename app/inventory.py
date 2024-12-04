@@ -31,18 +31,16 @@ def inventory():
                                selected_year=selected_year)
     return jsonify({}), 404
 
-
-
 @bp.route('/inventory/add', methods=['POST'])
 def add_product():
     if current_user.is_authenticated:
         product_name = request.form.get('product_name')
         quantity = request.form.get('quantity_in_stock', type=int)
-        price = request.form.get('price')  # Optional for existing products
+        price = request.form.get('price') 
         category = request.form.get('category')
-        description = request.form.get('description')  # Optional for existing products
+        description = request.form.get('description')  
 
-        # Add the product to the user's inventory
+        #add the product to the user's inventory
         Inventory.add_product(current_user.id, product_name, quantity, price, category, description)
         return redirect(url_for('inventory.inventory'))
     return jsonify({}), 404
