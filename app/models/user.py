@@ -180,7 +180,7 @@ class User(UserMixin):
         JOIN Inventory i ON ci.inv_id = i.id
         WHERE o.uid = :buyer_id 
         AND i.user_id = :seller_id
-        AND ci.time_fulfilled IS NOT NULL
+        AND o.time_created IS NOT NULL
         LIMIT 1
         ''', buyer_id=buyer_id, seller_id=seller_id)
         return len(rows) > 0

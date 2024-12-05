@@ -31,7 +31,7 @@ def get_csv_writer(f):
     return csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\\', dialect='unix')
 
 def gen_users(num_users, seller_ids):
-    with open('db/customized/Users.csv', 'w', newline='') as f:
+    with open('Users.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Users...', end=' ', flush=True)
         
@@ -88,7 +88,7 @@ def gen_users(num_users, seller_ids):
 
 
 def gen_purchases(num_purchases, available_pids):
-    with open('db/customized/Purchases.csv', 'w') as f:
+    with open('Purchases.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Purchases...', end=' ', flush=True)
         for id in range(num_purchases):
@@ -102,16 +102,16 @@ def gen_purchases(num_purchases, available_pids):
     return
 
 def gen_reviews(num_reviews):
-    with open('db/customized/Reviews.csv', 'w') as f:
+    with open('Reviews.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Reviews...', end=' ', flush=True)
 
         userProductPairs = set()
 
-        with open("db/customized/goodReviews.txt", "r") as f:
+        with open("goodReviews.txt", "r") as f:
             positiveReview = f.read()
 
-        with open("db/customized/badReviews.txt", "r") as f:
+        with open("badReviews.txt", "r") as f:
             negativeReview = f.read()
 
         reviewModel = [positiveReview, negativeReview]
@@ -164,10 +164,10 @@ def gen_reviews(num_reviews):
     return
 
 def gen_inventory(num_inventory, seller_ids):
-    products_df = pd.read_csv('db/customized/Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
+    products_df = pd.read_csv('Products.csv', names=['pid', 'creator_id', 'name', 'price', 'description', 'category', 'discount_code', 'image_path', 'available'])
     joey_inventory_ids = [] #for demo purposes
 
-    with open('db/customized/Inventory.csv', 'w', newline='') as f:
+    with open('Inventory.csv', 'w', newline='') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end=' ', flush=True)
         
@@ -204,7 +204,7 @@ def gen_inventory(num_inventory, seller_ids):
     return joey_inventory_ids
 
 def gen_orders(num_orders):
-    with open('db/customized/Orders.csv', 'w') as f:
+    with open('Orders.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Orders...', end=' ', flush=True)
         order_ids = []
@@ -239,7 +239,7 @@ def gen_orders(num_orders):
     return order_ids
 
 def gen_cart_items(num_cart_items, order_ids, joey_inventory_ids):
-    with open('db/customized/CartItems.csv', 'w') as f:
+    with open('CartItems.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('CartItems...', end=' ', flush=True)
         # for every order, we choose a number 1-5 unique cart items
@@ -291,7 +291,7 @@ def gen_cart_items(num_cart_items, order_ids, joey_inventory_ids):
     return
 
 def gen_coupons(num_coupons):
-    with open('db/customized/Coupons.csv', 'w') as f:
+    with open('Coupons.csv', 'w') as f:
         print('CartItems...', end=' ', flush=True)
         writer = get_csv_writer(f)
         for i in range(num_coupons):
