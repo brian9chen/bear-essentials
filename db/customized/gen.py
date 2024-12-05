@@ -296,7 +296,7 @@ def gen_coupons(num_coupons):
         writer = get_csv_writer(f)
         for i in range(num_coupons):
             word = fake.word()
-            discount = f'0.{fake.random_int(min=0, max=99):02}'
+            discount = f'0.{fake.random_int(min=1, max=99):02}'
             writer.writerow([i, word, discount])
         return
 
