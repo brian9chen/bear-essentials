@@ -14,15 +14,13 @@
   {% endif %}
 {% endwith %}
 
-<div class="sticky-nav">
-  <div>
-    <h1>Your Inventory</h1>
-  </div>
-  <div>
-    <a href="{{ url_for('fulfillment.seller_fulfillment') }}" class="btn btn-brown">
-      Go to Order Fulfillment
-    </a>
-  </div>
+<div style="margin-top: 20px;">
+  <h1>Your Inventory</h1>
+</div>
+<div>
+  <a href="{{ url_for('fulfillment.seller_fulfillment') }}" class="btn btn-brown">
+    Go to Order Fulfillment
+  </a>
 </div>
 
 <div class="container mt-5">
