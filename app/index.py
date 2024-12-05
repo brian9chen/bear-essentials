@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask_login import current_user
 import datetime
 import pandas as pd
+import csv
  
 from .models.product import Product
 from .models.purchase import Purchase
@@ -77,11 +78,25 @@ def index():
             setattr(product, 'has_review', False)
             setattr(product, 'review_id', None)
 
+    coupons = []
+    discounts = []
+
+    with open('db/customized/Coupons.csv', 'r') as file:
+        csv_reader = csv.reader(file)
+        for row in csv_reader:
+            coupons.append(row[1])
+            discounts.append(row[2])
+
+    
+    selected_coupon = coupons[0] if coupons else "NOCOUPON" 
+    selected_discount = f"{float(discounts[0]) * 100:.0f}%" if coupons else "NODISCOUNT" 
+
+
     # Render the page with relevant information
     return render_template('index.html', avail_products=products_in_page, purchase_history=purchases, 
                            categories=categories, sort_order=sort_order, selected_category=selected_category,
                            keyword=keyword, page=page, total_pages=total_pages, product_ratings=product_ratings,
-                           best_seller_ids_p10=best_seller_ids_p10)
+                           best_seller_ids_p10=best_seller_ids_p10, selected_coupon=selected_coupon, selected_discount=selected_discount)
 
 @bp.route('/most_expensive_products', methods=('GET', 'POST'))
 def top_k():
