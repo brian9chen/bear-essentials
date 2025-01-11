@@ -7,9 +7,13 @@ various teaching staff in subsequent years.
 
 ## Team
 Brian Chen - responsible for Feedback / Messaging
+
 Claire Luo - responsible for Account / Purchases
+
 Hannah Wang - responsible for Inventory / Order Fulfillment
+
 Kayla Liang - responsible for Cart / Order
+
 Kunling Tong - responsible for Products
 
 ## Description
