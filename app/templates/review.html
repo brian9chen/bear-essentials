@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+<h2>User Reviews:</h2> 
+<form action="{{ url_for('reviews.review') }}" method="POST">
+  <label for="user_id">Enter a User's ID to see their 5 most recent reviews:</label>
+  <input type="number" name="user_id" id="user_id" placeholder=" " required>
+  <input type="submit" value="Submit"/>
+</form>
+
+<!-- Message if no reviews are found or user input is invalid -->
+{% if message %}
+  <p>{{ message }}</p>
+{% endif %}
+
+<!-- Table for showing reviews -->
+{% if my_reviews %}
+  <table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Review ID</th>
+        <th scope="col">User ID</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Description</th>
+        <th scope="col">Time Created</th>
+        <th scope="col">Time Modified</th>
+        <th scope="col">Upvotes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for review in my_reviews %}
+        <tr>
+          <td>{{ review.id }}</td>
+          <td>{{ review.user_id }}</td>
+          <td>{{ review.product_id }}</td>
+          <td>{{ review.rating }}</td>
+          <td>{{ review.description }}</td>
+          <td>{{ review.time_created }}</td>
+          <td>{{ review.time_modified }}</td>
+          <td>{{ review.num_upvotes }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+<br><br>
+<!-- 
+{% if current_user.is_authenticated %}
+<h2>My Reviews:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Review ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Rating</th>
+      <th scope="col">Description</th>
+      <th scope="col">Time Created</th>
+      <th scope="col">Upvotes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in top_reviews %}
+      <tr>
+        <th scope="row">{{ review.id }}</th>
+        <td>{{ review.product_id }}</td>
+        <td>{{ review.seller_id }}</td>
+        <td>{{ review.rating }}</td>
+        <td>{{ review.description }}</td>
+        <td>{{ review.time_created }}</td>
+        <td>{{ review.num_upvotes }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see more reviews!</p>
+{% endif %} -->
+
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="sticky-nav">
+  <div>
+    <h1>Your Inventory</h1>
+  </div>
+  <div>
+    <a href="{{ url_for('fulfillment.seller_fulfillment') }}" class="btn btn-brown">
+      Go to Order Fulfillment
+    </a>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <h2 style="font-family: 'Gaegu', sans-serif; color: #702106;">Inventory Products</h2>
+
+  <!-- inventory Table -->
+  <table class="table table-hover table-bordered">
+    <thead style="background-color: #702106; color: #f8edeb;">
+      <tr>
+        <th scope="col">Inventory ID</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Quantity In Stock</th>
+        <th scope="col">Price</th>
+        <th scope="col">Product Category</th>
+        <th scope="col">Product Description</th>
+        <th scope="col">Product Image</th>
+        <th scope="col">Remove Item</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in inventory_items %}
+      <tr>
+        <td>{{ item['inventory_id'] }}</td>
+        <td>
+          <form action="{{ url_for('inventory.update_name', inventory_id=item['inventory_id']) }}" method="POST">
+            <input type="text" name="new_name" value="{{ item['product_name'] }}" class="form-control form-control-sm" required>
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
+          </form>
+        </td>
+        <td>
+          <form action="{{ url_for('inventory.update_quantity', inventory_id=item['inventory_id']) }}" method="POST">
+            <input type="number" name="new_quantity" value="{{ item['quantity_in_stock'] }}" class="form-control form-control-sm" required>
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
+          </form>
+        </td>
+        <td>
+          <form action="{{ url_for('inventory.update_price', inventory_id=item['inventory_id']) }}" method="POST">
+            <input type="text" name="new_price" value="{{ item['product_price'] }}" class="form-control form-control-sm" required>
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
+          </form>
+        </td>
+        <td>
+          <form action="{{ url_for('inventory.update_category', inventory_id=item['inventory_id']) }}" method="POST">
+            <select name="new_category" class="form-control form-control-sm">
+              {% for category in categories %}
+              <option value="{{ category }}" {% if category == item['product_category'] %} selected {% endif %}>
+                {{ category }}
+              </option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
+          </form>
+        </td>
+        <td>
+          <form action="{{ url_for('inventory.update_description', inventory_id=item['inventory_id']) }}" method="POST">
+            <textarea name="new_description" class="form-control form-control-sm" required>{{ item['product_description'] }}</textarea>
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Update</button>
+          </form>
+        </td>
+        <td>
+          {% if item['image_path'] %}
+            <img src="{{ url_for('static', filename=item['image_path']) }}" alt="Product Image" style="max-width: 100px;">
+          {% else %}
+            <p>No image available</p>
+          {% endif %}
+          <form action="{{ url_for('inventory.update_image', inventory_id=item['inventory_id']) }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" class="form-control form-control-sm mt-2">
+            <button type="submit" class="btn btn-brown btn-sm mt-2">Upload</button>
+          </form>
+        </td>              
+        <td>
+          <form action="{{ url_for('inventory.remove_product', inventory_id=item['inventory_id']) }}" method="POST">
+            <button type="submit" class="btn btn-brown3 btn-sm">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- add new product -->
+  <div class="mt-5">
+    <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Add a Product:</h3>
+    <form action="{{ url_for('inventory.add_product') }}" method="POST" class="form-inline">
+      <input type="text" name="product_name" placeholder="Product Name" class="form-control form-control-sm mr-2" required>
+      <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required>
+      <input type="text" name="price" placeholder="Price" class="form-control form-control-sm mr-2" required>
+      <textarea name="description" placeholder="Description" class="form-control form-control-sm mr-2" required></textarea>
+      <select name="category" class="form-control form-control-sm mr-2" required>
+        <option value="" disabled selected>Category</option>
+        {% for category in categories %}
+        <option value="{{ category }}">{{ category }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-brown">Add Product</button>
+    </form>
+  </div>
+
+  <!-- search for existing products -->
+  <div class="mt-5">
+    <h3 style="font-family: 'Gaegu', sans-serif; color: #702106;">Search for an Existing Product:</h3>
+
+    <!-- search form -->
+    <form action="{{ url_for('inventory.search_products') }}" method="GET" class="mb-3">
+      <input type="text" name="query" placeholder="Search for an existing product" class="form-control form-control-sm mr-2" required>
+      <button type="submit" class="btn btn-brown">Search</button>
+    </form>
+
+    <!-- display search results -->
+    {% if search_results %}
+    <h4 style="font-family: 'Gaegu', sans-serif; color: #702106;">Search Results:</h4>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in search_results %}
+        <tr>
+          <td>{{ product['name'] }}</td>
+          <td>{{ product['category'] }}</td>
+          <td>{{ product['price'] }}</td>
+          <td>
+            <form action="{{ url_for('inventory.add_product') }}" method="POST">
+              <input type="hidden" name="product_name" value="{{ product['name'] }}">
+              <input type="hidden" name="category" value="{{ product['category'] }}">
+              <input type="hidden" name="price" value="{{ product['price'] }}">
+              <textarea name="description" placeholder="Description" class="form-control form-control-sm mr-2">{{ product['description'] }}</textarea>
+              <input type="number" name="quantity_in_stock" placeholder="Quantity" class="form-control form-control-sm mr-2" required>
+              <button type="submit" class="btn btn-brown btn-sm">Add to Inventory</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

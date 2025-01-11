@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 50px;">
+    <!-- update profile -->
+    <h2>Update Your Profile</h2>
+    <form method="POST" action="{{ url_for('users.profile') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <label for="{{ form.firstname.id }}">First Name</label>
+            {{ form.firstname(class="form-control", id=form.firstname.id) }}
+            {% for error in form.firstname.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.lastname.id }}">Last Name</label>
+            {{ form.lastname(class="form-control", id=form.lastname.id) }}
+            {% for error in form.lastname.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.email.id }}">Email</label>
+            {{ form.email(class="form-control", id=form.email.id) }}
+            {% for error in form.email.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.address.id }}">Address</label>
+            {{ form.address(class="form-control", id=form.address.id) }}
+            {% for error in form.address.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <hr>
+        <h4>Change Password</h4>
+        <div class="form-group">
+            <label for="{{ form.password.id }}">New Password</label>
+            {{ form.password(class="form-control", id=form.password.id) }}
+            {% for error in form.password.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password2.id }}">Repeat New Password</label>
+            {{ form.password2(class="form-control", id=form.password2.id) }}
+            {% for error in form.password2.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </form>
+
+    <hr>
+
+    <!-- Balance section -->
+    <h2>Your Current Balance: ${{ "%.2f"|format(balance) }}</h2>
+
+    <div class="row mt-4">
+        <!-- add -->
+        <div class="col-md-6">
+            <h4>Add to Balance</h4>
+            <form method="POST" action="{{ url_for('users.profile') }}">
+                {{ add_balance_form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="{{ add_balance_form.amount.id }}">Amount to Add ($)</label>
+                    {{ add_balance_form.amount(class="form-control", id=add_balance_form.amount.id) }}
+                    {% for error in add_balance_form.amount.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                {{ add_balance_form.submit_add(class="btn btn-success") }}
+            </form>
+        </div>
+
+        <!-- withdraw -->
+        <div class="col-md-6">
+            <h4>Withdraw from Balance</h4>
+            <form method="POST" action="{{ url_for('users.profile') }}">
+                {{ withdraw_balance_form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="{{ withdraw_balance_form.amount.id }}">Amount to Withdraw ($)</label>
+                    {{ withdraw_balance_form.amount(class="form-control", id=withdraw_balance_form.amount.id) }}
+                    {% for error in withdraw_balance_form.amount.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                {{ withdraw_balance_form.submit_withdraw(class="btn btn-warning") }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>User Purchases</h1>
+
+<form method="POST" action="{{ url_for('purchases.purchases') }}">
+    <div class="form-group">
+        <label for="user_id">Enter User ID:</label>
+        <input type="text" class="form-control" id="user_id" name="user_id" value="{{ user.id if user else '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">View Purchases</button>
+</form>
+
+{% if error %}
+    <p class="text-danger">{{ error }}</p>
+{% endif %}
+
+{% if purchases %}
+    <h2>Purchases for User: {{ user.firstname }} {{ user.lastname }} (ID: {{ user.id }})</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Purchase ID</th>
+                <th>Product</th>
+                <th>Purchase Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+            <tr>
+                <td>{{ purchase.id }}</td>
+                <td>
+                    {% if purchase.product %}
+                        {{ purchase.product.name }}
+                    {% else %}
+                        Product ID: {{ purchase.pid }}
+                    {% endif %}
+                </td>
+                <td>{{ purchase.time_purchased.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% elif user %}
+    <p>No purchases found for this user.</p>
+{% else %}
+    <p>Please enter a User ID to view purchases.</p>
+{% endif %}
+{% endblock %}

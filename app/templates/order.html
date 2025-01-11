@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+
+{% if current_user.is_authenticated %}
+<h2>Your Order:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Final Price</th>
+      <th scope="col">Fulfilled?</th>
+      <th scope="col">Discount?</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in cart_items %}
+      <tr>
+        <th scope="row">{{ item.product_name }}</th>
+        <td>{{ item.quantity }}</td>
+        <td>{{ "%.2f" | format(item.product_price | float * (1 - discount))}}</td>
+        <td>
+          {% if item.is_fulfilled %}
+            Yes
+          {% else %}
+            No
+          {% endif %}
+        </td>
+        <td>
+          {% if discount != 0 %}
+          {{ (discount * 100) | int }}% off
+          {% else %}
+          No discount
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+<h2>Final Price: ${{ "%.2f" | format(total_price) }}</h2>
+{% set fulfilled = cart_items|selectattr('is_fulfilled', 'eq', False)|list|length %}
+<h2>
+  {% if fulfilled == 0 %}
+    Your order has been fulfilled.
+  {% else %}
+    Your order has {{ fulfilled }} different product(s) to be fulfilled.
+  {% endif %}
+</h2>
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your order!</p>
+{% endif %}
+
+{% endblock %}

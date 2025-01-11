@@ -2,68 +2,135 @@ from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .. import login
-
-
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
+    def __init__(self, id, email, password, firstname, lastname, address, balance, is_seller):
         self.id = id
         self.email = email
+        self.password = password  # Assume this is the hashed password
         self.firstname = firstname
         self.lastname = lastname
+        self.address = address
+        self.balance = balance
+        self.is_seller = is_seller
+
+    @staticmethod
+    def get(user_id):
+        rows = app.db.execute('''
+        SELECT id, email, password, firstname, lastname, address, balance, is_seller
+        FROM Users
+        WHERE id = :user_id
+        ''', user_id=user_id)
+        
+        return User(*rows[0]) if rows else None
 
     @staticmethod
     def get_by_auth(email, password):
-        rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
-FROM Users
-WHERE email = :email
-""",
-                              email=email)
-        if not rows:  # email not found
-            return None
-        elif not check_password_hash(rows[0][0], password):
-            # incorrect password
-            return None
-        else:
-            return User(*(rows[0][1:]))
+        rows = app.db.execute('''
+        SELECT id, email, password, firstname, lastname, address, balance, is_seller
+        FROM Users
+        WHERE email = :email
+        ''', email=email)
+        
+        if not rows:
+            return None  # Email not found
+
+        # Verify the password
+        if not check_password_hash(rows[0][2], password):
+            return None  # Incorrect password
+
+        # Return the User object without re-hashing the password
+        return User(id=rows[0][0], email=rows[0][1], password=rows[0][2],
+                    firstname=rows[0][3], lastname=rows[0][4], address=rows[0][5],
+                    balance=rows[0][6], is_seller=rows[0][7])
 
     @staticmethod
     def email_exists(email):
-        rows = app.db.execute("""
-SELECT email
-FROM Users
-WHERE email = :email
-""",
-                              email=email)
+        rows = app.db.execute('''
+        SELECT email
+        FROM Users
+        WHERE email = :email
+        ''', email=email)
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(uid, email, password, firstname, lastname, address, balance=0, is_seller=False):
         try:
-            rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING id
-""",
-                                  email=email,
-                                  password=generate_password_hash(password),
-                                  firstname=firstname, lastname=lastname)
-            id = rows[0][0]
-            return User.get(id)
+            hashed_password = generate_password_hash(password)
+            app.db.execute('''
+            INSERT INTO Users(id, email, password, firstname, lastname, address, balance, is_seller)
+            VALUES(:id, :email, :password, :firstname, :lastname, :address, :balance, :is_seller)
+            ''',
+            id=uid, email=email, password=hashed_password,
+            firstname=firstname, lastname=lastname, address=address,
+            balance=balance, is_seller=is_seller)
+            return True
         except Exception as e:
-            # likely email already in use; better error checking and reporting needed;
-            # the following simply prints the error to the console:
             print(str(e))
-            return None
+            return False
 
     @staticmethod
-    @login.user_loader
-    def get(id):
-        rows = app.db.execute("""
-SELECT id, email, firstname, lastname
-FROM Users
-WHERE id = :id
-""",
-                              id=id)
-        return User(*(rows[0])) if rows else None
+    def get_total_users():
+        rows = app.db.execute(
+            '''
+            SELECT COUNT(*)
+            FROM Users
+            '''
+        )
+        return rows[0][0]
+    
+    #@staticmethod
+    def update_profile(self, firstname, lastname, email, address, password=None):
+        if password:
+            hashed_password = generate_password_hash(password)
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address,
+                    password = :password
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               password=hashed_password, user_id=self.id)
+        else:
+            app.db.execute('''
+                UPDATE Users
+                SET firstname = :firstname,
+                    lastname = :lastname,
+                    email = :email,
+                    address = :address
+                WHERE id = :user_id
+            ''', firstname=firstname, lastname=lastname,
+               email=email, address=address,
+               user_id=self.id)
+        self.firstname = firstname
+        self.lastname = lastname
+        self.email = email
+        self.address = address
+        if password:
+            self.password = hashed_password
+    
+    def add_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to add must be positive.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance + :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance += amount
+    
+    def withdraw_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount to withdraw must be positive.")
+        if amount > self.balance:
+            raise ValueError("Insufficient balance.")
+        
+        app.db.execute('''
+            UPDATE Users
+            SET balance = balance - :amount
+            WHERE id = :user_id
+        ''', amount=amount, user_id=self.id)
+        self.balance -= amount
