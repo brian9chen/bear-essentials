@@ -1,29 +1,47 @@
-# Skeleton Code for CompSci 316/516 Standard Course Project.
+# Bear Essentials.
 
 Originally created by [Rickard
 Stureborg](http://www.rickard.stureborg.com) and [Yihao
-Hu](https://www.linkedin.com/in/yihaoh/) for Fall 2021.  Amended by
+Hu](https://www.linkedin.com/in/yihaoh/) for CS 316 Fall 2021 at Duke University.  Amended by
 various teaching staff in subsequent years.
 
-We assume you are in your course container shell.  If you have a
-different setup, your mileage with the following instructions may
-vary.
+## Team
+Brian Chen - responsible for Feedback / Messaging
+Claire Luo - responsible for Account / Purchases
+Hannah Wang - responsible for Inventory / Order Fulfillment
+Kayla Liang - responsible for Cart / Order
+Kunling Tong - responsible for Products
 
-## Installing the Current Skeleton
+## Description
 
-1. One (and only one) team member should fork this repo by clicking
-   the small 'Fork' button at the very top right on GitLab.  It's
-   important that you fork first, because if you clone this repo
-   directly you won't be able to push changes (save your progress)
-   back to this repo (which is owned by the teaching staff).  Name
-   your forked repo as you prefer.
+This project is a comprehensive e-commerce platform designed to support a wide range of user, product, review, and order management functionalities. Below is a detailed list of implemented or attempted features, categorized by functionality and their statuses.
 
+## Features
+
+### Reviews
+Users can submit and manage reviews for both products and sellers. Each user is limited to one review per product or seller, with the option to edit or delete their reviews from their profile. Reviews include upvote and downvote functionality, allowing logged-in users to provide feedback on others’ reviews. Product and seller pages display average ratings and the total number of reviews, with reviews sorted by upvotes for easy visibility.
+
+### Users
+Users can create accounts, log in, and manage their profiles by updating details such as their name, email, address, and password. Each user starts with a balance they can add to or withdraw from, which is used for purchases. Users can browse their purchase history, view public profiles of other users, and see seller details associated with specific products. Format validation ensures inputs like email addresses are correct.
+
+### Products
+The platform supports browsing and searching for products by name, description, category, price, and rating. Each product includes detailed attributes such as a name, description, image, price, and average review rating. Sellers can add new products or add existing products to their inventory. Only the original creator of a product can edit its attributes, while other sellers can adjust quantities. Products are tagged as "Best Sellers" if they fall within the top 10% by purchases, with sorting options that include price, name, rating, and bestseller status.
+
+### Cart and Orders
+Users can add items to their cart by selecting a seller and quantity, with validations to ensure inputs are within stock limits and are positive integers. The cart page provides an overview of selected items, their prices, and available actions such as removing items, changing quantities, and applying coupon codes. Orders update inventories and user balances upon submission and include a fulfillment workflow for sellers, who can manage and track order status. The past orders page and individual order pages provide detailed breakdowns of purchases, including fulfillment statuses and applied discounts.
+
+### Inventory Management
+Sellers can manage their inventory by adding new products or incorporating existing products already listed on the platform. A search feature helps sellers find products by name and category. Once added, sellers can adjust stock quantities, and product creators can edit additional attributes like price and description. Inventory updates ensure that duplicate products cannot be added, maintaining consistency across the platform.
+
+### Data and Security
+The project uses synthetically generated realistic data for users, products, sellers, purchases, reviews, and orders, with a focus on realism in product descriptions, images, and review text. Security measures include parameterized SQL queries to prevent injection attacks and carefully validated user inputs. Demonstration users and manually created reviews showcase key features and support testing scenarios.
+
+## Instructions
+
+1. Fork this repo by clicking
+   the small 'Fork' button at the very top right on GitLab.
    In your newly forked repo, find the blue "Clone" button.  Copy the
-   "Clone with SSH" text.  Add your teammates as members of your
-   project as "Maintainers."  Share the copied text with your
-   teammates so they have access to this repo too.
-
-   The remaining steps should be carried out by all team members.
+   "Clone with SSH" text.
 
 2. In your container shell, issue the command `git clone
    THE_TEXT_YOU_JUST_COPIED` (make sure to replace
